@@ -20,15 +20,14 @@ TEMPLATE_DEBUG = True
 
 # ADMINS: receive emails during errors if DEBUG=False
 ADMINS = (
-    ('Sameen Karim', 'sameen@eventable.com'),
-    ('Nicolas Valcarcel', 'nicolas@eventable.com'),
+    ('Sameen Karim', 'sameenkarim@gmail.com'),
 )
 
 
 # ALLOWED HOSTS: which domains to allow to run on
 if not DEBUG:
     ALLOWED_HOSTS = [
-        'django_project',
+        'wis-application',
         'application.mcawis.org',
     ]
 
@@ -50,6 +49,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # custom apps
+    'authorization',
 )
 
 
@@ -63,24 +64,10 @@ MIDDLEWARE_CLASSES = (
 )
 
 
-ROOT_URLCONF = 'django_project.urls'
+ROOT_URLCONF = 'wis-application.urls'
 
 
-WSGI_APPLICATION = 'django_project.wsgi.application'
-
-
-# Database (IGNORED)
-# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'django',
-#         'USER': 'django',
-#         'PASSWORD': 'tn1sHlDzJo',
-#         'HOST': 'localhost',
-#         'PORT': '',
-#     }
-# }
+WSGI_APPLICATION = 'wis-application.wsgi.application'
 
 
 # Internationalization
@@ -95,3 +82,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 STATIC_URL = '/static/'
+
+
+# Database (IGNORED)
+# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'django',
+#         'USER': 'django',
+#         'PASSWORD': 'tn1sHlDzJo',
+#         'HOST': 'localhost',
+#         'PORT': '',
+#     }
+# }
