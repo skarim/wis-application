@@ -27,8 +27,8 @@ ADMINS = (
 # ALLOWED HOSTS: which domains to allow to run on
 if not DEBUG:
     ALLOWED_HOSTS = [
-        'wis-application',
-        'application.mcawis.org',
+        'application',
+        'app.mcawis.org',
     ]
 
 
@@ -64,10 +64,10 @@ MIDDLEWARE_CLASSES = (
 )
 
 
-ROOT_URLCONF = 'wis-application.urls'
+ROOT_URLCONF = 'application.urls'
 
 
-WSGI_APPLICATION = 'wis-application.wsgi.application'
+WSGI_APPLICATION = 'application.wsgi.application'
 
 
 # Internationalization

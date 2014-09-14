@@ -1,12 +1,11 @@
 from django.conf.urls import patterns, include, url
 
-# Django Admin
 # from django.contrib import admin
 # admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'wis-application.views.home', name='home'),
+    # url(r'^$', 'application.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
     # fallback to auth
