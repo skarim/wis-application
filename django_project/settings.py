@@ -1,5 +1,5 @@
 """
-Django settings for django_project project.
+Django settings for wis-application project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.6/topics/settings/
@@ -9,26 +9,40 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from mongoengine import *
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
+DEBUG = True
+TEMPLATE_DEBUG = True
+
+
+# ADMINS: receive emails during errors if DEBUG=False
+ADMINS = (
+    ('Sameen Karim', 'sameen@eventable.com'),
+    ('Nicolas Valcarcel', 'nicolas@eventable.com'),
+)
+
+
+# ALLOWED HOSTS: which domains to allow to run on
+if not DEBUG:
+    ALLOWED_HOSTS = [
+        'django_project',
+        'application.mcawis.org',
+    ]
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'rvW2yT9GB3HKB1eTv3gd63LcMdIebfCKDCjTXKssme7NgC7ZTZ'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-TEMPLATE_DEBUG = True
-
-ALLOWED_HOSTS = []
+# MONGO DB: ignore django ORM and use mongoengine
+DBNAME = 'wis_coredata'
+connect(DBNAME, tz_aware=True)
 
 
-# Application definition
-
+# Application definitions
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,6 +51,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 )
+
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -47,40 +62,36 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+
 ROOT_URLCONF = 'django_project.urls'
+
 
 WSGI_APPLICATION = 'django_project.wsgi.application'
 
 
-# Database
+# Database (IGNORED)
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'django',
+#         'USER': 'django',
+#         'PASSWORD': 'tn1sHlDzJo',
+#         'HOST': 'localhost',
+#         'PORT': '',
+#     }
+# }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'django',
-        'USER': 'django',
-        'PASSWORD': 'tn1sHlDzJo',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
-}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
+TIME_ZONE = 'America/Los_Angeles'
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-
 STATIC_URL = '/static/'
