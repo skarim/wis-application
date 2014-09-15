@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <title>Sign In | WIS Volunteer Portal</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-        <meta name="description" content="MCA Weekend Islamic School, MCA WIS, MCA, WIS">
+        <meta name="keywords" content="MCA Weekend Islamic School, MCA WIS, MCA, WIS">
         <meta name="author" content="MCA Weekend Islamic School">
 
         <!-- favicon icons -->
@@ -15,18 +15,11 @@
         <link rel="stylesheet" href="{{ STATIC_URL }}css/font-awesome.min.css">
         <link rel="stylesheet" href="{{ STATIC_URL }}css/font.css">
         <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/main.css">
         <!--[if lt IE 9]>
             <script src="{{ STATIC_URL }}js/ie/respond.min.js"></script>
             <script src="{{ STATIC_URL }}js/ie/html5.js"></script>
         <![endif]-->
-        <style type="text/css">
-            .navbar-brand {
-                margin-top: -3px;
-            }
-            .navbar-brand img {
-                max-height: 35px;
-            }
-        </style>
     </head>
 
     <body>
@@ -34,7 +27,7 @@
         <header id="header" class="navbar bg bg-black">
             <a href="#modal" data-toggle="modal" class="btn btn-link pull-right m-t-mini"><i class="fa fa-question fa-lg text-default"></i></a>
             <a class="navbar-brand" href="//mcawis.org">
-                <img src="{{ STATIC_URL }}images/logo-white.png">
+                <img src="{{ STATIC_URL }}images/logo.png">
             </a>
         </header>
         <!-- / header -->
@@ -80,8 +73,10 @@
         <footer id="footer">
             <div class="text-center padder clearfix">
                 <p>
-                    <small>&copy; {% now 'Y' %} MCA Weekend Islamic School, a registered California 501(c)(3) non-profit. All rights reserved.</small><br><br>
-                    <a href="mailto:wis@mcabayarea.org" class="btn btn-xs btn-circle btn-warning"><i class="fa fa-envelope"></i></a>
+                    <small>
+                        &copy; {% now 'Y' %} MCA Weekend Islamic School, a registered California 501(c)(3) non-profit.<br>
+                        All rights reserved. Questions? <a href="mailto:wis@mcabayarea.org">Contact Us</a>.
+                    </small>
                 </p>
             </div>
         </footer>

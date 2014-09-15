@@ -1,0 +1,18 @@
+/*!
+ * WIS Dashboard CSS
+ * Copyright 2014 MCA WIS
+ */
+
+/* Navbar styles ------------------------------------------------------------ */
+.navbar.bg.bg-black {
+    border-color: #1d2d3d;
+    box-shadow: none;
+}
+
+.navbar-brand {
+    margin-top: -3px;
+    border: none;
+}
+.navbar-brand img {
+    max-height: 35px;
+}

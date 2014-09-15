@@ -125,6 +125,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     # custom apps
     'authorization',
+    'dashboard',
 )
 
 # Session saving to extend logged in time

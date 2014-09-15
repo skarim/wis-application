@@ -8,6 +8,8 @@ urlpatterns = patterns('',
     # url(r'^$', 'application.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
+    url(r'dashboard/', include('dashboard.urls')),
+
     # fallback to auth
     url(r'', include('authorization.urls')),
 

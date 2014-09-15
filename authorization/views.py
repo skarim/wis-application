@@ -21,7 +21,7 @@ def sign_in(request):
                     login(request, user)
                     if 'next' in request.POST:
                         return redirect(request.POST['next'])
-                    return redirect('dashboard.views.dashboard')
+                    return redirect('dashboard.views.home')
                 else:
                     state = ("User has an inactive account. Please contact "
                              "support@eventable.com to reactivate.")
