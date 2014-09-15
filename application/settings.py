@@ -21,6 +21,7 @@ TEMPLATE_DEBUG = True
 # ADMINS: receive emails during errors if DEBUG=False
 ADMINS = (
     ('Sameen Karim', 'sameenkarim@gmail.com'),
+    ('Mebsah Karim', 'mesbahul.karim@intel.com'),
 )
 
 
@@ -32,14 +33,86 @@ if not DEBUG:
     ]
 
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'rvW2yT9GB3HKB1eTv3gd63LcMdIebfCKDCjTXKssme7NgC7ZTZ'
-
-
 # MONGO DB: ignore django ORM and use mongoengine
 DBNAME = 'wis_coredata'
 connect(DBNAME, tz_aware=True)
 
+
+# Internationalization
+# https://docs.djangoproject.com/en/1.6/topics/i18n/
+LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'America/Los_Angeles'
+USE_I18N = True
+USE_L10N = True
+USE_TZ = True
+
+
+# Absolute filesystem path to the directory that will hold user-uploaded files.
+# Example: "/home/media/media.lawrence.com/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, 'sitestatic/media')
+
+# URL that handles the media served from MEDIA_ROOT. Make sure to use a
+# trailing slash.
+# Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
+#MEDIA_URL = '/media/'
+MEDIA_URL = '/static/media/'
+
+# Absolute path to the directory static files should be collected to.
+# Don't put anything in this directory yourself; store your static files
+# in apps' "static/" subdirectories and in STATICFILES_DIRS.
+# Example: "/home/media/media.lawrence.com/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# URL prefix for static files.
+# Example: "http://media.lawrence.com/static/"
+#STATIC_URL = 'http://static.eventable.co/'
+STATIC_URL = '/static/'
+
+# Additional locations of static files
+STATICFILES_DIRS = (
+    # Put strings here, like "/home/html/static" or "C:/www/django/static".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+    os.path.join(BASE_DIR, 'sitestatic'),
+)
+
+# List of finder classes that know how to find static files in
+# various locations.
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
+)
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'rvW2yT9GB3HKB1eTv3gd63LcMdIebfCKDCjTXKssme7NgC7ZTZ'
+
+# List of callables that know how to import templates from various sources.
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+    #'django.template.loaders.eggs.Loader',
+)
+
+MIDDLEWARE_CLASSES = (
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+)
+
+ROOT_URLCONF = 'application.urls'
+
+WSGI_APPLICATION = 'application.wsgi.application'
+
+TEMPLATE_DIRS = (
+    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+    os.path.join(BASE_DIR, 'sitetemplates'),
+)
 
 # Application definitions
 INSTALLED_APPS = (
@@ -53,35 +126,38 @@ INSTALLED_APPS = (
     'authorization',
 )
 
+# Session saving to extend logged in time
+SESSION_SAVE_EVERY_REQUEST = True
 
-MIDDLEWARE_CLASSES = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+# Authentication Compatibility with MongoDB by MongoEngine
+AUTHENTICATION_BACKENDS = (
+    'mongoengine.django.auth.MongoEngineBackend',
 )
 
+# Sessions Compatibility with MongoDB by MongoEngine
+SESSION_ENGINE = 'mongoengine.django.sessions'
 
-ROOT_URLCONF = 'application.urls'
+# Template Context Processors
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.request',
+    'django.contrib.auth.context_processors.auth',
+    'django.contrib.messages.context_processors.messages',
+)
 
+# Custom Login URL
+LOGIN_URL = '/login/'
 
-WSGI_APPLICATION = 'application.wsgi.application'
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/1.6/topics/i18n/
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'America/Los_Angeles'
-USE_I18N = True
-USE_L10N = True
-USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
-STATIC_URL = '/static/'
+# Use SendGrid as Email Backend
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'mcawis'
+EMAIL_HOST_PASSWORD = 'mcawis00admin'
+EMAIL_PORT = 587
 
 
 # Database (IGNORED)

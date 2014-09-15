@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 
 
 urlpatterns = patterns(
-    '', #tesing
+    '',
     url(r'^logout/', 'authorization.views.logout_user'),
     url(r'^login/', 'authorization.views.sign_in'),
 

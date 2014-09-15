@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Sign In | WIS Volunteer Portal</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="description" content="MCA Weekend Islamic School, MCA WIS, MCA, WIS">
+        <meta name="author" content="MCA Weekend Islamic School">
+
+        <!-- favicon icons -->
+        <link rel="shortcut icon" href="{{ STATIC_URL }}images/favicon.ico">
+
+        <!-- styles -->
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/font-awesome.min.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/font.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css">
+        <!--[if lt IE 9]>
+            <script src="{{ STATIC_URL }}js/ie/respond.min.js"></script>
+            <script src="{{ STATIC_URL }}js/ie/html5.js"></script>
+        <![endif]-->
+        <style type="text/css">
+            .navbar-brand {
+                margin-top: -3px;
+            }
+            .navbar-brand img {
+                max-height: 35px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <!-- header -->
+        <header id="header" class="navbar bg bg-black">
+            <a href="#modal" data-toggle="modal" class="btn btn-link pull-right m-t-mini"><i class="fa fa-question fa-lg text-default"></i></a>
+            <a class="navbar-brand" href="//mcawis.org">
+                <img src="{{ STATIC_URL }}images/logo-white.png">
+            </a>
+        </header>
+        <!-- / header -->
+
+        <section id="content">
+            <div class="main padder">
+                <div class="row">
+                    <div class="col-lg-4 col-lg-offset-4 m-t-large">
+                        <section class="panel">
+                            <header class="panel-heading text-center">
+                                Sign in to your account
+                            </header>
+                            <form action="index.html" class="panel-body">
+                                {% if error %}
+                                    <div class="alert alert-danger">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <i class="fa fa-warning"></i>&nbsp;
+                                        Incorrect username/password
+                                    </div>
+                                {% endif %}
+                                <div class="block">
+                                    <label class="control-label">Email</label>
+                                    <input type="email" placeholder="youremail@mail.com" class="form-control" required>
+                                </div>
+                                <div class="block">
+                                    <label class="control-label">Password</label>
+                                    <input type="password" id="inputPassword" placeholder="your password" class="form-control" required>
+                                </div>
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-inverse btn-block m-b-small"><i class="fa fa-lock pull-left"></i>Sign In</button>
+                                <div class="line line-dashed"></div>
+                                <div class="text-muted text-center">
+                                    <a href="#" class="pull-right m-t-mini"><small>Forgot password?</small></a>
+                                </div>
+                            </form>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- footer -->
+        <footer id="footer">
+            <div class="text-center padder clearfix">
+                <p>
+                    <small>&copy; {% now 'Y' %} MCA Weekend Islamic School, a registered California 501(c)(3) non-profit. All rights reserved.</small><br><br>
+                    <a href="mailto:wis@mcabayarea.org" class="btn btn-xs btn-circle btn-warning"><i class="fa fa-envelope"></i></a>
+                </p>
+            </div>
+        </footer>
+        <!-- / footer -->
+
+        <!-- .modal -->
+        <div id="modal" class="modal fade">
+            <form class="m-b-none">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"></i></button>
+                            <h4 class="modal-title" id="myModalLabel">Need help?</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="block">
+                                <label class="control-label">What is this?</label>
+                                <p>
+                                    Welcome to the WIS Volunteer scheduling website.
+                                    You can sign up for, edit, and view all your volunteer appointments through this website.
+                                    You should have received a login in your email. If not, please contact the admin at wis@mcabayarea.org.
+                                </p>
+                            </div>
+                            <div class="block">
+                                <label class="control-label">How do I log in?</label>
+                                <p>
+                                    After you have registered your child with the school, you should have received an email with instructions.
+                                    You will be given a temporary password that you will need to change the first time your sign in.
+                                </p>
+                            </div>
+                            <div class="block">
+                                <label class="control-label">I never received an email. What should I do?</label>
+                                <p>
+                                    Try checking your spam folder and any other email inboxes first.
+                                    If you still cannot find an email, please contact the admin at <a href="mailto:wis@mcabayarea.org">wis@mcabayarea.org</a>.
+                                </p>
+                            </div>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div>
+            </form>
+        </div>
+        <!-- / .modal -->
+
+        <!-- javascript -->
+	    <script src="{{ STATIC_URL }}js/jquery.min.js"></script>
+        <script src="{{ STATIC_URL }}js/bootstrap.js"></script>
+</body>
+</html>
