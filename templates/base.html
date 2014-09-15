@@ -33,30 +33,30 @@
                     {% if user.is_admin and not user.is_volunteer %}
                         <li>
                             <div class="m-t-small">
-                                <a href="#" class="btn btn-sm btn-inverse">
-                                    <i class="fa fa-fw fa-users"></i> Manage Volunteers
+                                <a href="/dashboard/volunteers/" class="btn btn-sm btn-inverse">
+                                    <i class="fa fa-fw fa-users"></i>&nbsp; Manage Volunteers
                                 </a>
                             </div>
                         </li>
                         <li>
                             <div class="m-t-small">
-                                <a href="#" class="btn btn-sm btn-inverse">
-                                    <i class="fa fa-fw fa-calendar"></i> Volunteering Dates
+                                <a href="/dashboard/dates/" class="btn btn-sm btn-inverse">
+                                    <i class="fa fa-fw fa-calendar"></i>&nbsp; Volunteering Dates
                                 </a>
                             </div>
                         </li>
                     {% else %}
                         <li>
                             <div class="m-t-small">
-                                <a href="#" class="btn btn-sm btn-inverse">
-                                    <i class="fa fa-fw fa-plus"></i> Volunteer Sign Up
+                                <a href="/dashboard/register/" class="btn btn-sm btn-inverse">
+                                    <i class="fa fa-fw fa-plus"></i>&nbsp; Volunteer Sign Up
                                 </a>
                             </div>
                         </li>
                         <li>
                             <div class="m-t-small">
-                                <a href="#" class="btn btn-sm btn-inverse">
-                                    <i class="fa fa-fw fa-edit"></i> Edit Sign Ups
+                                <a href="/dashboard/manage/" class="btn btn-sm btn-inverse">
+                                    <i class="fa fa-fw fa-edit"></i>&nbsp; Edit Sign Ups
                                 </a>
                             </div>
                         </li>
@@ -67,7 +67,7 @@
                             <b class="caret hidden-xs-only"></b>
                         </a>
                         <ul class="dropdown-menu pull-right">
-                            <li><a href="#">Account Settings</a></li>
+                            <li><a href="/dashboard/settings/">Account Settings</a></li>
                             <li class="divider"></li>
                             <li><a href="/logout/">Logout</a></li>
                         </ul>

@@ -1,14 +1,9 @@
 from django.contrib.auth import login, logout
-from django.http import HttpResponse, HttpResponseBadRequest,\
-    HttpResponseNotAllowed
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.core.validators import validate_email
 
-from mongoengine import ValidationError, DoesNotExist, MultipleObjectsReturned
-
 from application.models import *
-from application.settings import DEBUG
 
 
 def create_account(request):

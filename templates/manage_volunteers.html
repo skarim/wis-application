@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Volunteers{% endblock %}
+
+{% block content %}
+    <div class="clearfix">
+        <h3>Manage Volunteers</h3>
+    </div>
+    {% if error %}
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <i class="fa fa-warning"></i>
+                    <strong>Error</strong>&nbsp;
+                    {{ error }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if success %}
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <i class="fa fa-check-circle"></i>
+                    <strong>Success</strong>&nbsp;
+                    {{ success }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-md-9">
+            <section class="panel">
+                <header class="panel-heading">
+                    <i class="fa fa-users"></i>&nbsp;
+                    Current Volunteers
+                </header>
+                <div class="table-responsive">
+                    <table class="table table-striped m-b-none" data-ride="datatables">
+                        <thead>
+                            <tr>
+                                <th width="20%">Last Name</th>
+                                <th width="20%">First Name</th>
+                                <th width="20%">Email</th>
+                                <th width="10%">Days Registered</th>
+                                <th width="10%">Days Completed</th>
+                                <th width="10%">Days Missed</th>
+                                <th width="10%">View</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                                {% if user.is_volunteer %}
+                                    <tr>
+                                        <td class="cat-title">{{ user.last_name }}</td>
+                                        <td>{{ user.first_name }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ user.signup_count }}</td>
+                                        <td>{{ user.completed_count }}</td>
+                                        <td>{{ user.missed_count }}</td>
+                                        <td class="cat-btn">
+                                            <a href="/dashboard/volunteers/view/?id={{ user.id }}" class="btn btn-sm btn-white"><i class="icon-edit"></i> View</a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="col-md-3">
+            <section class="panel">
+                <header class="panel-heading">
+                    <i class="fa fa-plus-circle"></i>&nbsp;
+                    Add a Volunteer
+                </header>
+                <form action="/dashboard/volunteers/" method="POST" class="panel-body">
+                    <div class="block">
+                        <label class="control-label">First Name</label>
+                        <input type="text" name="first_name" placeholder="Joe" class="form-control" required>
+                    </div>
+                    <div class="block">
+                        <label class="control-label">First Name</label>
+                        <input type="text" name="last_name" placeholder="Smith" class="form-control" required>
+                    </div>
+                    <div class="block">
+                        <label class="control-label">Email</label>
+                        <input type="email" name="email" placeholder="volunteer@email.com" class="form-control" required>
+                    </div>
+                    <input type="hidden" name="type" value="single">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-inverse btn-block">Add Volunteer</button>
+                </form>
+            </section>
+            <p>&nbsp;</p>
+            <section class="panel">
+                <header class="panel-heading">
+                    <i class="fa fa-cloud-upload"></i>&nbsp;
+                    Bulk Import Volunteers
+                </header>
+                <div class="panel-body">
+                    form TBD
+                </div>
+            </section>
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{{ STATIC_URL }}js/datatables/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        // set up table of locations
+        $('[data-ride="datatables"]').each(function(){
+            $(this).dataTable({
+                "bProcessing": true,
+                "sDom": "<'row'<'col-sm-6'l><'col-sm-6'f>r>t<'row'<'col-sm-6'i><'col col-sm-6'p>>",
+                "sPaginationType": "full_numbers",
+                "aoColumnDefs": [
+                    {
+                        "bSortable": false,
+                        "aTargets": [6]
+                    }
+                ]
+            });
+        });
+    </script>
+{% endblock %}

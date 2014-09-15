@@ -17,7 +17,10 @@ class Volunteer_Date(Document):
 class WIS_User(User):
     is_admin = BooleanField(default=False)
     is_volunteer = BooleanField(default=True)
+    # volunteer data fields
     signup_count = IntField(default=0)
+    completed_count = IntField(default=0)
+    missed_count = IntField(default=0)
     registrations = ListField(ReferenceField(Volunteer_Date))
     # newsletter = BooleanField(default=False)
     # is_admin = BooleanField(default=False)
