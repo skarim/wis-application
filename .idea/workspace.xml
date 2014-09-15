@@ -28,7 +28,7 @@
       <file leaf-file-name="settings.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="114" column="44" selection-start="3678" selection-end="3678" vertical-scroll-proportion="0.6005917" vertical-offset="1289" max-vertical-offset="2685">
+            <state line="115" column="1" selection-start="3681" selection-end="3681" vertical-scroll-proportion="0.823389" vertical-offset="1365" max-vertical-offset="2685">
               <folding />
             </state>
           </provider>
@@ -477,7 +477,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24959481" sideWeight="0.67045456" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Mongo Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24959481" sideWeight="0.47017047" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32954547" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -562,7 +562,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/application/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="114" column="44" selection-start="3678" selection-end="3678" vertical-scroll-proportion="0.6005917" vertical-offset="1289" max-vertical-offset="2685">
+        <state line="115" column="1" selection-start="3681" selection-end="3681" vertical-scroll-proportion="0.823389" vertical-offset="1365" max-vertical-offset="2685">
           <folding />
         </state>
       </provider>
