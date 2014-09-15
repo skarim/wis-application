@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="150bbadb-af5c-454c-827e-e09a0ddf5fe6" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/settings.py" afterPath="$PROJECT_DIR$/application/settings.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/authorization/urls.py" afterPath="$PROJECT_DIR$/authorization/urls.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/authorization/views.py" afterPath="$PROJECT_DIR$/authorization/views.py" />
     </list>
     <ignored path="wis-application.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,10 +25,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="settings.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="settings.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="57" column="27" selection-start="1457" selection-end="1457" vertical-scroll-proportion="0.0" vertical-offset="1469" max-vertical-offset="2670">
+            <state line="114" column="44" selection-start="3678" selection-end="3678" vertical-scroll-proportion="0.6005917" vertical-offset="1289" max-vertical-offset="2685">
               <folding />
             </state>
           </provider>
@@ -70,7 +68,7 @@
       <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/authorization/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="35" column="9" selection-start="1434" selection-end="1434" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="735">
+            <state line="27" column="17" selection-start="1135" selection-end="1135" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="735">
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
               </folding>
@@ -78,10 +76,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="login.html" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="login.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sitetemplates/login.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="70" column="38" selection-start="3636" selection-end="3636" vertical-scroll-proportion="0.75" vertical-offset="735" max-vertical-offset="2070">
+            <state line="70" column="38" selection-start="3636" selection-end="3636" vertical-scroll-proportion="-43.75" vertical-offset="0" max-vertical-offset="2070">
               <folding />
             </state>
           </provider>
@@ -111,10 +109,10 @@
         <option value="$PROJECT_DIR$/wis-application/models.py" />
         <option value="$PROJECT_DIR$/wis-application/settings.py" />
         <option value="$PROJECT_DIR$/wis-application/urls.py" />
-        <option value="$PROJECT_DIR$/application/settings.py" />
         <option value="$PROJECT_DIR$/authorization/views.py" />
         <option value="$PROJECT_DIR$/authorization/urls.py" />
         <option value="$PROJECT_DIR$/sitetemplates/login.html" />
+        <option value="$PROJECT_DIR$/application/settings.py" />
       </list>
     </option>
   </component>
@@ -479,7 +477,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24959481" sideWeight="0.67045456" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Mongo Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24959481" sideWeight="0.47017047" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32954547" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -537,13 +535,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="57" column="27" selection-start="1457" selection-end="1457" vertical-scroll-proportion="0.0" vertical-offset="1469" max-vertical-offset="2670">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/authorization/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="7" column="51" selection-start="223" selection-end="223" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="255">
@@ -555,7 +546,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/authorization/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="9" selection-start="1434" selection-end="1434" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="735">
+        <state line="27" column="17" selection-start="1135" selection-end="1135" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="735">
           <folding>
             <element signature="e#0#37#0" expanded="true" />
           </folding>
@@ -564,7 +555,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sitetemplates/login.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="70" column="38" selection-start="3636" selection-end="3636" vertical-scroll-proportion="0.75" vertical-offset="735" max-vertical-offset="2070">
+        <state line="70" column="38" selection-start="3636" selection-end="3636" vertical-scroll-proportion="-43.75" vertical-offset="0" max-vertical-offset="2070">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="114" column="44" selection-start="3678" selection-end="3678" vertical-scroll-proportion="0.6005917" vertical-offset="1289" max-vertical-offset="2685">
           <folding />
         </state>
       </provider>
