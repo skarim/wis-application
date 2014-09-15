@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %}Sign In{% endblock %}
+{% block title %}Create Account{% endblock %}
 
 {% block navbar %}
     <header id="header" class="navbar bg bg-black">
         <a href="#modal" data-toggle="modal" class="btn btn-link pull-right m-t-mini"><i class="fa fa-question fa-lg text-default"></i></a>
-        <a class="navbar-brand" href="//mcawis.org">
+        <a class="navbar-brand" href="/">
             <img src="{{ STATIC_URL }}images/logo.png">
         </a>
     </header>
@@ -16,7 +16,7 @@
         <div class="col-lg-4 col-lg-offset-4 m-t-large">
             <section class="panel">
                 <header class="panel-heading text-center">
-                    Sign in to your account
+                    Create your account
                 </header>
                 <form action="" method="POST" class="panel-body">
                     {% if state %}
@@ -29,15 +29,36 @@
                     {% endif %}
                     <div class="block">
                         <label class="control-label">Email</label>
-                        <input type="email" name="email" placeholder="youremail@mail.com" class="form-control" required>
+                        <input type="email" name="email" placeholder="youremail@mail.com" class="form-control" value="{{ request.GET.email }}" required {% if request.GET.email %}readonly{% endif %}>
+                    </div>
+                    <div class="block">
+                        <label class="control-label">First Name</label>
+                        <input type="text" name="first_name" placeholder="John" class="form-control" value="{{ request.GET.first_name }}" required>
+                    </div>
+                    <div class="block">
+                        <label class="control-label">Last Name</label>
+                        <input type="text" name="last_name" placeholder="Smith" class="form-control" value="{{ request.GET.last_name }}" required>
                     </div>
                     <div class="block">
                         <label class="control-label">Password</label>
                         <input type="password" name="password" placeholder="your password" class="form-control" required>
                     </div>
-                    <input type="hidden" name="next" value="{{ request.GET.next }}">
+                    <div class="block">
+                        <label class="control-label">Confirm Password</label>
+                        <input type="password" name="confirm_password" placeholder="retype password" class="form-control" required>
+                    </div>
+                    {% if request.GET.admin == 'true' %}
+                        <div class="block">
+                            <label class="control-label">Admin Sign Up Key</label>
+                            <input type="text" name="admin_key" placeholder="admin signup key" class="form-control" value="{{ request.GET.key }}" required readonly>
+                        </div>
+                    {% endif %}
+                    <input type="hidden" name="type" value="{% if request.GET.admin == 'true' %}admin{% else %}volunteer{% endif %}">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-inverse btn-block"><i class="fa fa-lock pull-left"></i>Sign In</button>
+                    <button type="submit" class="btn btn-inverse btn-block m-b-small"><i class="fa fa-lock pull-left"></i>Create Account</button>
+                    <div class="line line-dashed"></div>
+                    <p class="text-muted text-center"><small>Already have an account?</small></p>
+                    <a href="/login/" class="btn btn-white btn-block">Sign in</a>
                 </form>
             </section>
         </div>

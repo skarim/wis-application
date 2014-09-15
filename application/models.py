@@ -5,7 +5,7 @@ from mongoengine import Document, StringField, URLField, DateTimeField, \
 from mongoengine.django.auth import User
 
 
-class VolunteerDate(Document):
+class Volunteer_Date(Document):
     event_date = DateTimeField()
     event_begin = DateTimeField()
     event_end = DateTimeField()
@@ -14,11 +14,18 @@ class VolunteerDate(Document):
     volunteers = ListField(ReferenceField('VolunteerUser'))
 
 
-class VolunteerUser(User):
+class WIS_User(User):
+    is_admin = BooleanField(default=False)
+    is_volunteer = BooleanField(default=True)
     signup_count = IntField(default=0)
-    registrations = ListField(ReferenceField(VolunteerDate))
+    registrations = ListField(ReferenceField(Volunteer_Date))
     # newsletter = BooleanField(default=False)
     # is_admin = BooleanField(default=False)
     # is_creator = BooleanField(default=False)
     # is_analyst = BooleanField(default=False)
     # act_code = StringField()
+
+class Allowed_User(Document):
+    email = StringField()
+    first_name = StringField()
+    last_name = StringField()

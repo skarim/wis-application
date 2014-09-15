@@ -7,6 +7,9 @@
         <meta name="author" content="MCA Weekend Islamic School">
         <meta name="robots" content="noindex, nofollow">
 
+        <!-- favicon icons -->
+        <link rel="shortcut icon" href="{{ STATIC_URL }}images/favicon.ico">
+
         <!-- styles -->
         <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css">
         <link rel="stylesheet" href="{{ STATIC_URL }}css/font-awesome.min.css">
@@ -24,41 +27,60 @@
 
     <body>
         <!-- header -->
-        <header id="header" class="navbar bg bg-black">
-            <ul class="nav navbar-nav pull-right">
-                <li>
-                    <div class="m-t-small">
-                        <a href="#" class="btn btn-sm btn-inverse">
-                            <i class="fa fa-fw fa-plus"></i> Volunteer Sign Up
+        {% block navbar %}
+            <header id="header" class="navbar bg bg-black">
+                <ul class="nav navbar-nav pull-right">
+                    {% if user.is_admin and not user.is_volunteer %}
+                        <li>
+                            <div class="m-t-small">
+                                <a href="#" class="btn btn-sm btn-inverse">
+                                    <i class="fa fa-fw fa-users"></i> Manage Volunteers
+                                </a>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="m-t-small">
+                                <a href="#" class="btn btn-sm btn-inverse">
+                                    <i class="fa fa-fw fa-calendar"></i> Volunteering Dates
+                                </a>
+                            </div>
+                        </li>
+                    {% else %}
+                        <li>
+                            <div class="m-t-small">
+                                <a href="#" class="btn btn-sm btn-inverse">
+                                    <i class="fa fa-fw fa-plus"></i> Volunteer Sign Up
+                                </a>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="m-t-small">
+                                <a href="#" class="btn btn-sm btn-inverse">
+                                    <i class="fa fa-fw fa-edit"></i> Edit Sign Ups
+                                </a>
+                            </div>
+                        </li>
+                    {% endif %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="hidden-xs-only">{{ user.first_name }}&nbsp;{{ user.last_name }}</span>&nbsp;
+                            <b class="caret hidden-xs-only"></b>
                         </a>
-                    </div>
-                </li>
-                <li>
-                    <div class="m-t-small">
-                        <a href="#" class="btn btn-sm btn-inverse">
-                            <i class="fa fa-fw fa-edit"></i> Edit Sign Ups
-                        </a>
-                    </div>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <span class="hidden-xs-only">My Account</span>
-                        <b class="caret hidden-xs-only"></b>
-                    </a>
-                    <ul class="dropdown-menu pull-right">
-                        <li><a href="/dashboard/account/">Account Settings</a></li>
-                        <li class="divider"></li>
-                        <li><a href="/logout/">Logout</a></li>
-                    </ul>
-                </li>
-            </ul>
-            <a class="navbar-brand" href="/dashboard/">
-                <img src="{{ STATIC_URL }}images/logo.png">
-            </a>
-            <button type="button" class="btn btn-link pull-left nav-toggle visible-xs" data-toggle="class:slide-nav slide-nav-left" data-target="body">
-                <i class="fa fa-bars fa-lg text-default"></i>
-            </button>
-	    </header>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a href="#">Account Settings</a></li>
+                            <li class="divider"></li>
+                            <li><a href="/logout/">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <a class="navbar-brand" href="/dashboard/">
+                    <img src="{{ STATIC_URL }}images/logo.png">
+                </a>
+                <button type="button" class="btn btn-link pull-left nav-toggle visible-xs" data-toggle="class:slide-nav slide-nav-left" data-target="body">
+                    <i class="fa fa-bars fa-lg text-default"></i>
+                </button>
+            </header>
+        {% endblock %}
         <!-- / header -->
 
         <!-- main content -->
@@ -74,9 +96,10 @@
         <footer id="footer">
             <div class="text-center padder clearfix">
                 <p>
-                    <small>&copy; {% now 'Y' %} MCA Weekend Islamic School, a registered California 501(c)(3) non-profit. All rights reserved.</small><br><br>
-                    <a href="tel:408-727-7277ext413" class="btn btn-xs btn-circle btn-success"><i class="fa fa-phone"></i></a>
-                    <a href="mailto:wis@mcabayarea.org" class="btn btn-xs btn-circle btn-warning"><i class="fa fa-envelope"></i></a>
+                    <small>
+                        &copy; {% now 'Y' %} MCA Weekend Islamic School, a registered California 501(c)(3) non-profit.<br>
+                        All rights reserved. Questions? <a href="mailto:wis@mcabayarea.org">Contact Us</a>.
+                    </small>
                 </p>
             </div>
         </footer>

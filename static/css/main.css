@@ -16,3 +16,7 @@
 .navbar-brand img {
     max-height: 35px;
 }
+
+form.panel-body {
+    margin-bottom: 0;
+}

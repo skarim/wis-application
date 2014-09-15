@@ -11,9 +11,9 @@ from application.models import *
 from application.settings import DEBUG
 
 
-#@login_required
+@login_required
 def dashboard(request):
     return render_to_response(
-        'base.html',
+        'dashboard.html',
         context_instance=RequestContext(request)
     )

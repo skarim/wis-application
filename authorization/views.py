@@ -1,8 +1,9 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.http import HttpResponse, HttpResponseBadRequest,\
     HttpResponseNotAllowed
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
+from django.core.validators import validate_email
 
 from mongoengine import ValidationError, DoesNotExist, MultipleObjectsReturned
 
@@ -10,28 +11,104 @@ from application.models import *
 from application.settings import DEBUG
 
 
-def sign_in(request):
-    state, next_page = ('',)*2
+def create_account(request):
+    state = ''
     if request.method == 'POST':
         try:
-            user = VolunteerUser.objects.get(email=request.POST['username'])
-            if user.check_password(request.POST['password']):
-                if user.company:
-                    user.backend = 'mongoengine.django.auth.MongoEngineBackend'
-                    login(request, user)
-                    if 'next' in request.POST:
-                        return redirect(request.POST['next'])
-                    return redirect('dashboard.views.home')
-                else:
-                    state = ("User has an inactive account. Please contact "
-                             "support@eventable.com to reactivate.")
+            # get data from form
+            email = request.POST.get('email')
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+            password = request.POST.get('password')
+            confirm_password = request.POST.get('confirm_password')
+            account_type = request.POST.get('type', 'volunteer')
+
+            # validate form data
+            if account_type == 'admin':
+                if request.POST.get('admin_key') != 'mcawis3003':
+                    state = 'Invalid admin sign up key'
+            else:
+                # check to see if volunteer user is allowed
+                try:
+                    Allowed_User.objects.get(email=email)
+                except DoesNotExist:
+                    state = 'Email not registered with WIS. ' \
+                            'Please contact the admin for help.'
+
+            # check to make sure user is unique
+            if not state:
+                try:
+                    WIS_User.objects.get(email=email)
+                    state = 'A user with that email already exists'
+                except DoesNotExist:
+                    pass
+
+            # validate email address
+            if not state:
+                try:
+                    validate_email(email)
+                except:
+                    state = 'Invalid email address'
+
+            # make sure first and last name are filled
+            if not state:
+                if not first_name or not last_name:
+                    state = 'Please enter a first and last name'
+
+            # make sure password is longer than 8 chars
+            if not state:
+                if len(password) < 8:
+                    state = 'Passwords must be at least 8 characters'
+
+            # check to make sure passwords match
+            if not state:
+                if password != confirm_password:
+                    state = 'Passwords do not match'
+
+            # if no errors, create account and login
+            if not state:
+                user = WIS_User(
+                    username=email,
+                    email=email,
+                    first_name=first_name,
+                    last_name=last_name
+                )
+                if account_type == 'admin':
+                    user.is_admin = True
+                    user.is_volunteer = False
+                user.set_password(password)
+                user.backend = 'mongoengine.django.auth.MongoEngineBackend'
+                login(request, user)
+                return redirect('dashboard.views.dashboard')
+        except:
+            state = 'Unable to process request'
+    params = {
+        'state': state
+    }
+    return render_to_response(
+        'signup.html', params,
+        context_instance=RequestContext(request)
+    )
+
+
+def sign_in(request):
+    state = ''
+    if request.method == 'POST':
+        try:
+            user = WIS_User.objects.get(email=request.POST.get('email'))
+            if user.check_password(request.POST.get('password')):
+                user.backend = 'mongoengine.django.auth.MongoEngineBackend'
+                login(request, user)
+                if 'next' in request.POST:
+                    return redirect(request.POST.get('next'))
+                return redirect('dashboard.views.dashboard')
             else:
                 state = "Incorrect username/password combination"
         except DoesNotExist:
             state = "User does not exist"
-    elif 'next' in request.GET:
-        next_page = request.GET['next']
-    params = {'state': state, 'next': next_page}
+    params = {
+        'state': state
+    }
     return render_to_response(
         'login.html', params,
         context_instance=RequestContext(request)
@@ -39,6 +116,5 @@ def sign_in(request):
 
 
 def logout_user(request):
-    from django.contrib.auth import logout
     logout(request)
     return redirect('authorization.views.sign_in')
