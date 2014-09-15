@@ -16,7 +16,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
 DEBUG = False
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
 
 # ADMINS: receive emails during errors if DEBUG=False
