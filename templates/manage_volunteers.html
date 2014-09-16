@@ -6,18 +6,6 @@
     <div class="clearfix">
         <h3>Manage Volunteers</h3>
     </div>
-    {% if error %}
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="alert alert-danger">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <i class="fa fa-warning"></i>
-                    <strong>Error</strong>&nbsp;
-                    {{ error }}
-                </div>
-            </div>
-        </div>
-    {% endif %}
     {% if success %}
         <div class="row">
             <div class="col-xs-12">
@@ -26,6 +14,18 @@
                     <i class="fa fa-check-circle"></i>
                     <strong>Success</strong>&nbsp;
                     {{ success }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if error %}
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <i class="fa fa-warning"></i>
+                    <strong>Error</strong>&nbsp;
+                    {{ error }}
                 </div>
             </div>
         </div>
@@ -101,15 +101,24 @@
                     <i class="fa fa-cloud-upload"></i>&nbsp;
                     Bulk Import Volunteers
                 </header>
-                <div class="panel-body">
-                    form TBD
-                </div>
+                <form action="/dashboard/volunteers/" method="POST" enctype="multipart/form-data" class="panel-body">
+                    <ul class="breadcrumb">
+                        <li class="active">
+                            <i class="fa fa-info-circle"></i>&nbsp; CSV files need to be formatted with 3 colums in this exact order: First Name, Last Name, Email. Do not include any column headings.
+                        </li>
+                    </ul>
+                    <input type="file" name="csv_user_list" title="Choose CSV file" accept=".csv" class="btn btn-sm btn-default m-b-small" style="left: -168.75px; top: 14px;">
+                    <input type="hidden" name="type" value="csv">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-xs btn-inverse btn-block">Upload & Import</button>
+                </form>
             </section>
         </div>
     </div>
 {% endblock %}
 
 {% block custom_js %}
+    <script src="{{ STATIC_URL }}js/file-input/bootstrap.file-input.js"></script>
     <script src="{{ STATIC_URL }}js/datatables/jquery.dataTables.min.js"></script>
     <script type="text/javascript">
         // set up table of locations

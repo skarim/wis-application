@@ -4,12 +4,12 @@ from django.http import HttpResponse, HttpResponseBadRequest,\
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
-from django.core.validators import validate_email
 
 from mongoengine import ValidationError, DoesNotExist, MultipleObjectsReturned
 
 from application.models import *
-from application.settings import DEBUG
+
+from dashboard.utils import import_volunteer
 
 
 @login_required
@@ -35,38 +35,33 @@ def manage_volunteers(request):
                 email = request.POST.get('email')
                 first_name = request.POST.get('first_name')
                 last_name = request.POST.get('last_name')
-                if email and first_name and last_name:
-                    try:
-                        validate_email(email)
-                        # check to make sure user is new and unique
-                        unique_user = True
-                        try:
-                            Allowed_User.objects.get(email=email)
-                            unique_user = False
-                        except DoesNotExist:
-                            pass
-                        try:
-                            WIS_User.objects.get(email=email)
-                            unique_user = False
-                        except DoesNotExist:
-                            pass
-
-                        if unique_user:
-                            new_user = Allowed_User()
-                            new_user.email = email
-                            new_user.first_name = first_name
-                            new_user.last_name = last_name
-                            new_user.save()
-                            success = 'Sent email to %s for account activation'\
-                                      % new_user.email
-                        else:
-                            error = 'A volunteer with that email already exists'
-                    except:
-                        error = 'Invalid email address'
-                else:
-                    error = 'Please fill out all fields'
+                success, error = import_volunteer(email, first_name, last_name)
             elif type == 'csv':
-                pass
+                # create vars to keep track of successes and errors
+                num_success = 0
+                error_users = []
+                # parse csv file
+                csv_user_list = request.FILES.get('csv_user_list')
+                user_list = csv_user_list.read().split('\r')
+                for user in user_list:
+                    user = user.split(',')
+                    email = user[2]
+                    first_name = user[0]
+                    last_name = user[1]
+                    user_success, user_error = import_volunteer(
+                        email, first_name, last_name
+                    )
+                    if user_success:
+                        num_success+=1
+                    if user_error:
+                        error_users.append(email)
+                if num_success:
+                    success = 'Sent emails to %s users for account activation'\
+                          % num_success
+                if error_users:
+                    error = 'Unable to add the following emails:'
+                    for error_user in error_users:
+                        error += '\n %s' % error_user
             else:
                 error = 'Unable to process request'
     except:
