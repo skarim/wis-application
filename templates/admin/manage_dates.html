@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Volunteering Dates{% endblock %}
+
+{% block content %}
+    <div class="clearfix">
+        <h3>Manage Volunteering Dates</h3>
+    </div>
+    {% if success %}
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <i class="fa fa-check-circle"></i>
+                    <strong>Success</strong>&nbsp;
+                    {{ success }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if error %}
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <i class="fa fa-warning"></i>
+                    <strong>Error</strong>&nbsp;
+                    {{ error }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-md-8">
+            <section class="panel">
+                <header class="panel-heading">
+                    <i class="fa fa-calendar"></i>&nbsp;
+                    Upcoming Volunteering Dates
+                </header>
+                <div class="panel-body">
+                    <table class="table table-striped m-b-none" data-ride="datatables">
+                        <thead>
+                            <tr>
+                                <th width="30%">Date</th>
+                                <th width="20%">Begin Time</th>
+                                <th width="20%">End Time</th>
+                                <th width="10%">Slots Available</th>
+                                <th width="10%">Slots Total</th>
+                                <th width="10%">View</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for date in upcoming_dates %}
+                                <tr>
+                                    <td class="cat-title">{{ date.date }}</td>
+                                    <td>{{ date.begin_time }}</td>
+                                    <td>{{ date.end_time }}</td>
+                                    <td>{{ date.slots_available }}</td>
+                                    <td>{{ date.slots_total }}</td>
+                                    <td class="cat-btn">
+                                        <a href="/dashboard/dates/view/?id={{ date.id }}" class="btn btn-sm btn-white">View</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <p>&nbsp;</p>
+            <section class="panel">
+                <header class="panel-heading">
+                    <i class="fa fa-archive"></i>&nbsp;
+                    Past Volunteering Dates
+                </header>
+                <div class="panel-body">
+                    <table class="table table-striped m-b-none" data-ride="datatables">
+                        <thead>
+                            <tr>
+                                <th width="30%">Date</th>
+                                <th width="20%">Begin Time</th>
+                                <th width="20%">End Time</th>
+                                <th width="10%">Slots Filled</th>
+                                <th width="10%">Slots Total</th>
+                                <th width="10%">View</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for date in past_dates %}
+                                <tr>
+                                    <td class="cat-title">{{ date.date }}</td>
+                                    <td>{{ date.begin_time }}</td>
+                                    <td>{{ date.end_time }}</td>
+                                    <td>{{ date.slots_available }}</td>
+                                    <td>{{ date.slots_total }}</td>
+                                    <td class="cat-btn">
+                                        <a href="/dashboard/dates/view/?id={{ date.id }}" class="btn btn-sm btn-white">View</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="col-md-4">
+            <section class="panel">
+                <header class="panel-heading">
+                    <i class="fa fa-plus-circle"></i>&nbsp;
+                    Add a Volunteering Date
+                </header>
+                <form action="/dashboard/dates/" method="POST" class="panel-body">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                            <input type="date" name="date" class="form-control" placeholder="mm/dd/yyyy">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="fa fa-clock-o"></i>
+                            </div>
+                            <input type="time" name="start_time" class="form-control" placeholder="hh:mm (24 hour format)">
+                            <div class="input-group-addon">
+                                to
+                            </div>
+                            <input type="time" name="end_time" class="form-control" placeholder="hh:mm (24 hour format)">
+                        </div>
+                    </div>
+                    <div class="block">
+                        <label class="control-label">Number of volunteering slots</label>
+                        <input type="number" name="slots" placeholder="enter a number" class="form-control" required>
+                    </div>
+                    <input type="hidden" name="type" value="single">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-inverse btn-block">Add Volunteering Date</button>
+                </form>
+            </section>
+            <p>&nbsp;</p>
+            <section class="panel">
+                <header class="panel-heading">
+                    <i class="fa fa-cloud-upload"></i>&nbsp;
+                    Bulk Import Volunteering Dates
+                </header>
+                <form action="/dashboard/dates/" method="POST" enctype="multipart/form-data" class="panel-body">
+                    <ul class="breadcrumb">
+                        <li class="active">
+                            <i class="fa fa-info-circle"></i>&nbsp; CSV files need to be formatted with 3 columns in this exact order: Date (MM/DD/YYYY), Start Time (HH:MM), End Time (HH:MM), Total Slots Number. Make sure that start and end times are in 24-hour format. Do not include any column headings.
+                        </li>
+                    </ul>
+                    <input type="file" name="csv_date_list" title="Choose CSV file" accept=".csv" class="btn btn-sm btn-default m-b-small" style="left: -168.75px; top: 14px;">
+                    <input type="hidden" name="type" value="csv">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-xs btn-inverse btn-block">Upload & Import</button>
+                </form>
+            </section>
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{{ STATIC_URL }}js/file-input/bootstrap.file-input.js"></script>
+    <script src="{{ STATIC_URL }}js/datatables/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        // set up table of locations
+        $('[data-ride="datatables"]').each(function(){
+            $(this).dataTable({
+                "bProcessing": true,
+                "sDom": "<'row'<'col-sm-6'l><'col-sm-6'f>r>t<'row'<'col-sm-6'i><'col col-sm-6'p>>",
+                "sPaginationType": "full_numbers",
+                "aoColumnDefs": [
+                    {
+                        "bSortable": false,
+                        "aTargets": [5]
+                    }
+                ]
+            });
+        });
+    </script>
+{% endblock %}

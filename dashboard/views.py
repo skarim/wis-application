@@ -74,6 +74,36 @@ def manage_volunteers(request):
         'users': users,
     }
     return render_to_response(
-        'manage_volunteers.html', params,
+        'admin/manage_volunteers.html', params,
+        context_instance=RequestContext(request)
+    )
+
+
+@login_required
+def view_volunteer(request):
+    # send regular users back to dashboard
+    if request.user.is_volunteer:
+        return redirect('dashboard.views.dashboard')
+
+    # if there's no user_id, redirect back to dashboard
+    if not request.GET.get('id'):
+        return redirect('dashboard.views.dashboard')
+
+    # handle volunteer user editing/deleting
+    return render_to_response(
+        'admin/view_volunteer.html',
+        context_instance=RequestContext(request)
+    )
+
+
+@login_required
+def manage_dates(request):
+    # send regular users back to dashboard
+    if request.user.is_volunteer:
+        return redirect('dashboard.views.dashboard')
+
+    # handle volunteer date add/editing
+    return render_to_response(
+        'admin/manage_dates.html',
         context_instance=RequestContext(request)
     )
