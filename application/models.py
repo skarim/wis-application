@@ -11,7 +11,12 @@ class Volunteer_Date(Document):
     event_end = DateTimeField()
     slots_total = IntField()
     slots_available = IntField()
-    volunteers = ListField(ReferenceField('VolunteerUser'))
+    volunteers = ListField(ReferenceField('WIS_User'))
+
+
+class Volunteer_Date_Registration(Document):
+    volunteer_date = ReferenceField(Volunteer_Date)
+    attended = BooleanField(default=False)
 
 
 class WIS_User(User):
@@ -22,11 +27,7 @@ class WIS_User(User):
     completed_count = IntField(default=0)
     missed_count = IntField(default=0)
     registrations = ListField(ReferenceField(Volunteer_Date))
-    # newsletter = BooleanField(default=False)
-    # is_admin = BooleanField(default=False)
-    # is_creator = BooleanField(default=False)
-    # is_analyst = BooleanField(default=False)
-    # act_code = StringField()
+
 
 class Allowed_User(Document):
     email = StringField()
