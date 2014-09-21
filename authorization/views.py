@@ -94,9 +94,9 @@ def sign_in(request):
             if user.check_password(request.POST.get('password')):
                 user.backend = 'mongoengine.django.auth.MongoEngineBackend'
                 login(request, user)
-                if 'next' in request.POST:
-                    return redirect(request.POST.get('next'))
-                return redirect('dashboard.views.dashboard')
+                next_page = request.GET.get('next',
+                                            'dashboard.views.dashboard')
+                return redirect(next_page)
             else:
                 state = "Incorrect username/password combination"
         except DoesNotExist:
