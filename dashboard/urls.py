@@ -9,6 +9,7 @@ urlpatterns = patterns(
     url(r'^volunteers/$', 'dashboard.views.manage_volunteers'),
     url(r'^volunteers/view/', 'dashboard.views.view_volunteer'),
     url(r'^dates/', 'dashboard.views.manage_dates'),
+    url(r'^dates/view/', 'dashboard.views.view_date'),
 
     # volunteer views
     # go here

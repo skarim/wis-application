@@ -50,17 +50,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for date in upcoming_dates %}
-                                <tr>
-                                    <td class="cat-title">{{ date.date }}</td>
-                                    <td>{{ date.begin_time }}</td>
-                                    <td>{{ date.end_time }}</td>
-                                    <td>{{ date.slots_available }}</td>
-                                    <td>{{ date.slots_total }}</td>
-                                    <td class="cat-btn">
-                                        <a href="/dashboard/dates/view/?id={{ date.id }}" class="btn btn-sm btn-white">View</a>
-                                    </td>
-                                </tr>
+                            {% for date in dates %}
+                                {% if not date.is_past %}
+                                    <tr>
+                                        <td class="cat-title">{{ date.event_date }}</td>
+                                        <td>{{ date.event_begin }}</td>
+                                        <td>{{ date.event_end }}</td>
+                                        <td>{{ date.slots_available }}</td>
+                                        <td>{{ date.slots_total }}</td>
+                                        <td class="cat-btn">
+                                            <a href="/dashboard/dates/view/?id={{ date.id }}" class="btn btn-sm btn-white">View</a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
                             {% endfor %}
                         </tbody>
                     </table>
@@ -85,17 +87,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for date in past_dates %}
-                                <tr>
-                                    <td class="cat-title">{{ date.date }}</td>
-                                    <td>{{ date.begin_time }}</td>
-                                    <td>{{ date.end_time }}</td>
-                                    <td>{{ date.slots_available }}</td>
-                                    <td>{{ date.slots_total }}</td>
-                                    <td class="cat-btn">
-                                        <a href="/dashboard/dates/view/?id={{ date.id }}" class="btn btn-sm btn-white">View</a>
-                                    </td>
-                                </tr>
+                            {% for date in dates %}
+                                {% if date.is_past %}
+                                    <tr>
+                                        <td class="cat-title">{{ date.event_date }}</td>
+                                        <td>{{ date.event_begin }}</td>
+                                        <td>{{ date.event_end }}</td>
+                                        <td>{{ date.slots_filled }}</td>
+                                        <td>{{ date.slots_total }}</td>
+                                        <td class="cat-btn">
+                                            <a href="/dashboard/dates/view/?id={{ date.id }}" class="btn btn-sm btn-white">View</a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
                             {% endfor %}
                         </tbody>
                     </table>

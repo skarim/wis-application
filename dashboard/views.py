@@ -1,4 +1,5 @@
-from django.contrib.auth import login
+import datetime
+
 from django.http import HttpResponse, HttpResponseBadRequest,\
     HttpResponseNotAllowed
 from django.contrib.auth.decorators import login_required
@@ -85,9 +86,9 @@ def view_volunteer(request):
     if request.user.is_volunteer:
         return redirect('dashboard.views.dashboard')
 
-    # if there's no user_id, redirect back to dashboard
+    # if there's no user_id, redirect back to manage volunteers page
     if not request.GET.get('id'):
-        return redirect('dashboard.views.dashboard')
+        return redirect('dashboard.views.manage_volunteers')
 
     # handle volunteer user editing/deleting
     return render_to_response(
@@ -103,7 +104,51 @@ def manage_dates(request):
         return redirect('dashboard.views.dashboard')
 
     # handle volunteer date add/editing
+    success, error = ('',)*2
+    try:
+        if request.method == 'POST':
+            # get form data
+            date = request.POST.get('date')
+            start_time = request.POST.get('start_time')
+            end_time = request.POST.get('end_time')
+            slots = request.POST.get('slots')
+            # create the object
+            new_date = Volunteer_Date(date, start_time, end_time, slots)
+            # handle errors
+            if new_date.event_begin >= new_date.event_end:
+                error = 'End time must be after start time'
+            elif new_date.slots_total < 1:
+                error = 'Must have at least one slot per volunteer date'
+            else:
+                new_date.save()
+                success = 'Added a volunteering date on %(d)s with %(s)s slots'\
+                          % {'d': date, 's':slots}
+    except:
+        error = 'Error adding event'
+    dates = Volunteer_Date.objects
+    params = {
+        'success': success,
+        'error': error,
+        'dates': dates,
+    }
     return render_to_response(
-        'admin/manage_dates.html',
+        'admin/manage_dates.html', params,
+        context_instance=RequestContext(request)
+    )
+
+
+@login_required
+def view_date(request):
+    # send regular users back to dashboard
+    if request.user.is_volunteer:
+        return redirect('dashboard.views.dashboard')
+
+    # if there's no date_id, redirect back to manage dates page
+    if not request.GET.get('id'):
+        return redirect('dashboard.views.manage_dates')
+
+    # handle volunteer date reports/editing/deleting
+    return render_to_response(
+        'admin/view_date.html',
         context_instance=RequestContext(request)
     )
