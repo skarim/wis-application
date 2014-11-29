@@ -9,5 +9,5 @@ urlpatterns = patterns(
     url(r'^logout/', 'authorization.views.logout_user'),
 
     # redirect everything else to login
-    url(r'', lambda x: redirect('/login/')),
+    url(r'', lambda _: redirect('/login/')),
 )
