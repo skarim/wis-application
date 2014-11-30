@@ -4,6 +4,7 @@ from django.conf.urls import patterns, url
 urlpatterns = patterns(
     '',
     url(r'^$', 'dashboard.views.dashboard'),
+    url(r'^settings/$', 'dashboard.views.account_settings'),
 
     # admin views
     url(r'^volunteers/$', 'dashboard.views.manage_volunteers'),

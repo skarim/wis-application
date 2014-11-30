@@ -3,6 +3,7 @@ import datetime
 from django.http import HttpResponse, HttpResponseBadRequest,\
     HttpResponseNotAllowed
 from django.contrib.auth.decorators import login_required
+from django.core.validators import validate_email
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 
@@ -150,5 +151,75 @@ def view_date(request):
     # handle volunteer date reports/editing/deleting
     return render_to_response(
         'admin/view_date.html',
+        context_instance=RequestContext(request)
+    )
+
+
+@login_required
+def account_settings(request):
+    success, error = ('',)*2
+    try:
+        if request.method == 'POST':
+            user = request.user
+            identifier = request.POST.get('identifier')
+            # update name
+            if identifier == 'name':
+                first_name = request.POST.get('first_name')
+                last_name = request.POST.get('last_name')
+                if first_name and last_name:
+                    try:
+                        user.first_name = first_name
+                        user.last_name = last_name
+                        user.save()
+                        success = 'Name successfully updated to %s' \
+                                  % ' '.join([first_name, last_name])
+                    except:
+                        error = 'Error saving new name'
+                else:
+                    error = 'You must enter both a first and last name'
+            # update email address
+            elif identifier == 'email':
+                email = request.POST.get('email')
+                if email:
+                    try:
+                        validate_email(email)
+                        try:
+                            WIS_User.objects.get(email=email, is_active=True)
+                            error = 'That email address is already in use'
+                        except DoesNotExist:
+                            user.email = email
+                            user.save()
+                            success = 'Email successfully updated to %s' % email
+                    except ValidationError:
+                        error = 'You must enter a valid email address'
+                else:
+                    error = 'You must enter an email address'
+            # update password
+            elif identifier == 'password':
+                old_password = request.POST.get('old_password')
+                new_password = request.POST.get('new_password')
+                confirm_password = request.POST.get('confirm_password')
+                if old_password and new_password and confirm_password:
+                    if user.check_password(old_password):
+                        if new_password == confirm_password:
+                            user.set_password(new_password)
+                            user.save()
+                            success = 'Password successfully changed'
+                        else:
+                            error = 'New passwords do not match'
+                    else:
+                        error = 'Current password incorrect'
+                else:
+                    error = 'You must fill in all the fields before submitting'
+            else:
+                error = 'Invalid submission'
+    except:
+        error = 'Error saving changes'
+    params = {
+        'success': success,
+        'error': error
+    }
+    return render_to_response(
+        'settings.html', params,
         context_instance=RequestContext(request)
     )

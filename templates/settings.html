@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}Account Settings{% endblock %}
+
+{% block content %}
+    <div class="clearfix">
+        <h3>Account Settings</h3>
+    </div>
+    <div class="row">
+        <div class="col-xs-9">
+            {% if success %}
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="alert alert-success">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <i class="fa fa-check-circle"></i>
+                            <strong>Success</strong>&nbsp;
+                            {{ success }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if error %}
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="alert alert-danger">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <i class="fa fa-warning"></i>
+                            <strong>Error</strong>&nbsp;
+                            {{ error }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <section class="panel">
+                <header class="panel-heading">
+                    <ul class="nav nav-tabs nav-justified">
+                        <li class="active"><a href="#name" data-toggle="tab"><i class="fa fa-user text-default"></i>&nbsp; Name</a></li>
+                        <li><a href="#email" data-toggle="tab"><i class="fa fa-envelope text-default"></i>&nbsp; Email</a></li>
+                        <li><a href="#password" data-toggle="tab"><i class="fa fa-lock text-default"></i>&nbsp; Password</a></li>
+                    </ul>
+                </header>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="name">
+                        <div class="panel-body">
+                            <div class="well m-b-none">
+                                <div class="row">
+                                    <div class="col-xs-5">
+                                        <p></p>
+                                        Current Name: <b>{{ user.first_name }} {{ user.last_name }}</b>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <form action="/dashboard/settings/" method="POST" class="m-b-none">
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <div class="input-group">
+                                                        <span class="input-group-btn">
+                                                            <button class="btn btn-inverse" style="margin-right:-1px" disabled><i class="fa fa-edit"></i></button>
+                                                        </span>
+                                                        <input type="text" name="first_name" placeholder="New First Name" class="form-control" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-6">
+                                                    <div class="input-group">
+                                                        <input type="text" name="last_name" placeholder="New Last Name" class="form-control" required>
+                                                        <input type="hidden" name="identifier" value="name">
+                                                        {% csrf_token %}
+                                                        <span class="input-group-btn">
+                                                            <button class="btn btn-inverse" type="submit">Save</button>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="email">
+                        <div class="panel-body">
+                            <div class="well m-b-none">
+                                <div class="row">
+                                    <div class="col-xs-5">
+                                        <p></p>
+                                        Current Email: <b>{{ user.email }}</b>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <form action="/dashboard/settings/" method="POST" class="m-b-none">
+                                            <div class="input-group">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-inverse" style="margin-right:-1px" disabled><i class="fa fa-edit"></i></button>
+                                                </span>
+                                                <input type="email" name="email" placeholder="New Email Address" class="form-control" required>
+                                                <input type="hidden" name="identifier" value="email">
+                                                {% csrf_token %}
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-inverse" type="submit">Save</button>
+                                                </span>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="password">
+                        <div class="panel-body">
+                            <form action="/dashboard/settings/" method="POST" class="well m-b-none">
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <div class="input-group">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-inverse" style="margin-right:-1px" disabled><i class="fa fa-edit"></i></button>
+                                            </span>
+                                            <input type="password" name="old_password" placeholder="Current Password" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <input type="password" name="new_password" placeholder="New Password" class="form-control" required>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <input type="password" name="confirm_password" placeholder="New Password (again)" class="form-control" required>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="hidden" name="identifier" value="password">
+                                        {% csrf_token %}
+                                        <button class="btn btn-inverse col-xs-12" type="submit">Save</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="col-xs-3">
+            <section class="panel">
+                <header class="panel-heading font-bold"><i class="fa fa-wrench"></i>&nbsp; Current Account Settings</header>
+                <div class="panel-body">
+                    Name: <b>{{ user.first_name }} {{ user.last_name }}</b><br>
+                    Email: <b>{{ user.email }}</b><br><br>
+                    Account type:
+                    <b>
+                        {% if user.is_admin %}
+                            Administrator
+                        {% elif user.is_volunteer %}
+                            Volunteer
+                        {% endif %}
+                    </b>
+                </div>
+            </section>
+        </div>
+    </div>
+{% endblock %}
