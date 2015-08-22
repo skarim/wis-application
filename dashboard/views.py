@@ -174,15 +174,26 @@ def view_date(request):
     if request.user.is_volunteer:
         return redirect('dashboard.views.dashboard')
 
+    date_id = request.GET.get('id')
     # if there's no date_id, redirect back to manage dates page
     if not request.GET.get('id'):
         return redirect('dashboard.views.manage_dates')
 
     # handle volunteer date reports/editing/deleting
-    return render_to_response(
-        'admin/view_date.html',
-        context_instance=RequestContext(request)
-    )
+    try:
+        volunteer_date = Volunteer_Date.objects.get(id=date_id)
+        registrations = Volunteer_Date_Registration.objects(volunteer_date=
+                                                            volunteer_date)
+        params = {
+            'volunteer_date': volunteer_date,
+            'registrations': registrations,
+        }
+        return render_to_response(
+            'admin/view_date.html', params,
+            context_instance=RequestContext(request)
+        )
+    except DoesNotExist:
+        return redirect('dashboard.views.manage_dates')
 
 
 @login_required

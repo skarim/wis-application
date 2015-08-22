@@ -6,9 +6,11 @@
     <div class="clearfix">
         <h3>
             Volunteer: {{ volunteer.last_name }}, {{ volunteer.first_name }}
-            <span class="h5 pull-right">
-                <i class="fa fa-user"></i>&nbsp; Admin Access
-            </span>
+            {% if volunteer.is_admin %}
+                <span class="h5 pull-right">
+                    <i class="fa fa-user"></i>&nbsp; Admin Access
+                </span>
+            {% endif %}
         </h3>
     </div>
     <div class="row">
