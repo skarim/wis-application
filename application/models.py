@@ -32,6 +32,7 @@ class Volunteer_Date_Registration(Document):
     volunteer_date = ReferenceField(Volunteer_Date)
     signed_up = BooleanField(default=True)
     attended = BooleanField(default=False)
+    signup_time = DateTimeField(default=datetime.datetime.utcnow)
 
 
 class WIS_User(User):
@@ -41,7 +42,7 @@ class WIS_User(User):
     signup_count = IntField(default=0)
     completed_count = IntField(default=0)
     missed_count = IntField(default=0)
-    registrations = ListField(ReferenceField(Volunteer_Date))
+    registrations = ListField(ReferenceField(Volunteer_Date_Registration))
 
 
 class Allowed_User(Document):

@@ -87,15 +87,23 @@ def view_volunteer(request):
     if request.user.is_volunteer:
         return redirect('dashboard.views.dashboard')
 
+    volunteer_id = request.GET.get('id')
     # if there's no user_id, redirect back to manage volunteers page
     if not request.GET.get('id'):
         return redirect('dashboard.views.manage_volunteers')
 
     # handle volunteer user editing/deleting
-    return render_to_response(
-        'admin/view_volunteer.html',
-        context_instance=RequestContext(request)
-    )
+    try:
+        volunteer = WIS_User.objects.get(id=volunteer_id)
+        params = {
+            'volunteer': volunteer,
+        }
+        return render_to_response(
+            'admin/view_volunteer.html', params,
+            context_instance=RequestContext(request)
+        )
+    except DoesNotExist:
+        return redirect('dashboard.views.manage_volunteers')
 
 
 @login_required
