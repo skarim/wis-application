@@ -8,30 +8,14 @@ import datetime
 
 
 class Volunteer_Date(Document):
-    event_date = DateTimeField()
     event_begin = DateTimeField()
     event_end = DateTimeField()
     slots_total = IntField()
     volunteers = ListField(ReferenceField('WIS_User'))
 
-    def __init__(self, date, start_time, end_time, slots):
-        # parse event date
-        self.event_date = datetime.datetime.strptime(date, '%Y-%m-%d')
-        # add date to start and end time strings
-        start_time += ' %s' % date
-        end_time += ' %s' % date
-        # parse start and end times
-        self.event_begin = datetime.datetime.strptime(start_time,
-                                                      '%H:%M %Y-%m-%d')
-        self.event_end = datetime.datetime.strptime(end_time,
-                                                    '%H:%M %Y-%m-%d')
-        # save number of slots
-        self.slots_total = int(slots)
-        pass
-
     @property
     def is_past(self):
-        if datetime.date.today() > self.event_date.date():
+        if datetime.date.today() > self.event_end.date():
             return True
         return False
 

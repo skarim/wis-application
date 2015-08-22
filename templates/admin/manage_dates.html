@@ -53,9 +53,9 @@
                             {% for date in dates %}
                                 {% if not date.is_past %}
                                     <tr>
-                                        <td class="cat-title">{{ date.event_date }}</td>
-                                        <td>{{ date.event_begin }}</td>
-                                        <td>{{ date.event_end }}</td>
+                                        <td class="cat-title">{{ date.event_begin|date:'D, N j' }}</td>
+                                        <td>{{ date.event_begin|date:'g:i a' }}</td>
+                                        <td>{{ date.event_end|date:'g:i a' }}</td>
                                         <td>{{ date.slots_available }}</td>
                                         <td>{{ date.slots_total }}</td>
                                         <td class="cat-btn">
@@ -90,9 +90,9 @@
                             {% for date in dates %}
                                 {% if date.is_past %}
                                     <tr>
-                                        <td class="cat-title">{{ date.event_date }}</td>
-                                        <td>{{ date.event_begin }}</td>
-                                        <td>{{ date.event_end }}</td>
+                                        <td class="cat-title">{{ date.event_begin|date:'D, N j' }}</td>
+                                        <td>{{ date.event_begin|date:'g:i a' }}</td>
+                                        <td>{{ date.event_end|date:'g:i a' }}</td>
                                         <td>{{ date.slots_filled }}</td>
                                         <td>{{ date.slots_total }}</td>
                                         <td class="cat-btn">
@@ -118,7 +118,7 @@
                             <div class="input-group-addon">
                                 <i class="fa fa-calendar"></i>
                             </div>
-                            <input type="date" name="date" class="form-control" placeholder="mm/dd/yyyy">
+                            <input type="date" name="date" class="form-control" placeholder="YYYY-MM-DD">
                         </div>
                     </div>
                     <div class="form-group">
@@ -151,7 +151,7 @@
                 <form action="/dashboard/dates/" method="POST" enctype="multipart/form-data" class="panel-body">
                     <ul class="breadcrumb">
                         <li class="active">
-                            <i class="fa fa-info-circle"></i>&nbsp; CSV files need to be formatted with 3 columns in this exact order: Date (MM/DD/YYYY), Start Time (HH:MM), End Time (HH:MM), Total Slots Number. Make sure that start and end times are in 24-hour format. Do not include any column headings.
+                            <i class="fa fa-info-circle"></i>&nbsp; CSV files need to be formatted with 3 columns in this exact order: Date (YYYY-MM-DD), Start Time (HH:MM), End Time (HH:MM), Total Slots Number. Make sure that start and end times are in 24-hour format. Do not include any column headings.
                         </li>
                     </ul>
                     <input type="file" name="csv_date_list" title="Choose CSV file" accept=".csv" class="btn btn-sm btn-default m-b-small" style="left: -168.75px; top: 14px;">

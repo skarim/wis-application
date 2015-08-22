@@ -1,6 +1,7 @@
 from django.core.validators import validate_email
 
 from services.emails import send_email
+from services.localization import localize
 from application.models import *
 
 
@@ -59,17 +60,27 @@ def create_volunteering_date(date, start_time, end_time, slots):
     success, error = ('',)*2
     if date and start_time and end_time and slots:
         try:
-            new_date = Volunteer_Date(date, start_time, end_time, slots)
+            # parse values
+            event_begin = localize(date, start_time)
+            event_end = localize(date, end_time)
+            slots_total = int(slots)
+
             # handle errors
-            if new_date.event_begin >= new_date.event_end:
+            if event_begin >= event_end:
                 error = 'End time must be after start time'
-            elif new_date.slots_total < 1:
+            elif slots_total < 1:
                 error = 'Must have at least one slot per volunteer date'
             else:
+                new_date = Volunteer_Date(event_begin=event_begin,
+                                          event_end=event_end,
+                                          slots_total=slots_total)
                 new_date.save()
+                print 'new_date begin: {0}'.format(new_date.event_begin)
+                print 'new_date end: {0}'.format(new_date.event_end)
                 success = 'Added a volunteering date on %(d)s with %(s)s slots'\
                           % {'d': date, 's':slots}
-        except:
+        except Exception as e:
+            print e
             error = 'An unexpected error occurred. Please try again.'
     else:
         error = 'Please fill out all fields'
