@@ -11,7 +11,7 @@ from mongoengine import ValidationError, DoesNotExist, MultipleObjectsReturned
 
 from application.models import *
 
-from dashboard.utils import import_volunteer
+from dashboard.utils import import_volunteer, create_volunteering_date
 
 
 @login_required
@@ -108,22 +108,44 @@ def manage_dates(request):
     success, error = ('',)*2
     try:
         if request.method == 'POST':
-            # get form data
-            date = request.POST.get('date')
-            start_time = request.POST.get('start_time')
-            end_time = request.POST.get('end_time')
-            slots = request.POST.get('slots')
-            # create the object
-            new_date = Volunteer_Date(date, start_time, end_time, slots)
-            # handle errors
-            if new_date.event_begin >= new_date.event_end:
-                error = 'End time must be after start time'
-            elif new_date.slots_total < 1:
-                error = 'Must have at least one slot per volunteer date'
+            type = request.POST.get('type')
+            if type == 'single':
+                # get form data
+                date = request.POST.get('date')
+                start_time = request.POST.get('start_time')
+                end_time = request.POST.get('end_time')
+                slots = request.POST.get('slots')
+                # create the object
+                success, error = create_volunteering_date(date, start_time, end_time, slots)
+            elif type == 'csv':
+                # create vars to keep track of successes and errors
+                num_success = 0
+                error_dates = []
+                # parse csv file
+                csv_date_list = request.FILES.get('csv_date_list')
+                date_list = csv_date_list.read().split('\r')
+                for volunteer_date in date_list:
+                    volunteer_date = volunteer_date.split(',')
+                    date = volunteer_date[0]
+                    start_time = volunteer_date[1]
+                    end_time = volunteer_date[2]
+                    slots = volunteer_date[3]
+                    date_success, date_error = create_volunteering_date(
+                        date, start_time, end_time, slots
+                    )
+                    if date_success:
+                        num_success+=1
+                    if date_error:
+                        error_dates.append(date)
+                if num_success:
+                    success = 'Successfully added %s volunteering dates'\
+                          % num_success
+                if error_dates:
+                    error = 'Unable to add the following dates:'
+                    for error_date in error_dates:
+                        error += '\n %s' % error_date
             else:
-                new_date.save()
-                success = 'Added a volunteering date on %(d)s with %(s)s slots'\
-                          % {'d': date, 's':slots}
+                error = 'Unable to process request'
     except:
         error = 'Error adding event'
     dates = Volunteer_Date.objects

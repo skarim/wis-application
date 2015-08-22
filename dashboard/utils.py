@@ -37,3 +37,24 @@ def import_volunteer(email, first_name, last_name):
     else:
         error = 'Please fill out all fields'
     return (success, error,)
+
+
+def create_volunteering_date(date, start_time, end_time, slots):
+    success, error = ('',)*2
+    if date and start_time and end_time and slots:
+        try:
+            new_date = Volunteer_Date(date, start_time, end_time, slots)
+            # handle errors
+            if new_date.event_begin >= new_date.event_end:
+                error = 'End time must be after start time'
+            elif new_date.slots_total < 1:
+                error = 'Must have at least one slot per volunteer date'
+            else:
+                new_date.save()
+                success = 'Added a volunteering date on %(d)s with %(s)s slots'\
+                          % {'d': date, 's':slots}
+        except:
+            error = 'An unexpected error occurred. Please try again.'
+    else:
+        error = 'Please fill out all fields'
+    return (success, error,)
