@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Create Account{% endblock %}
+{% block title %}Activate Account{% endblock %}
 
 {% block navbar %}
     <header id="header" class="navbar bg bg-black">
@@ -16,7 +16,7 @@
         <div class="col-lg-4 col-lg-offset-4 m-t-large">
             <section class="panel">
                 <header class="panel-heading text-center">
-                    Create your account
+                    Activate your account
                 </header>
                 <form action="" method="POST" class="panel-body">
                     {% if state %}
@@ -41,7 +41,7 @@
                     </div>
                     <div class="block">
                         <label class="control-label">Password</label>
-                        <input type="password" name="password" placeholder="your password" class="form-control" required>
+                        <input type="password" name="password" placeholder="your password (minimum 8 characters)" class="form-control" required>
                     </div>
                     <div class="block">
                         <label class="control-label">Confirm Password</label>
@@ -55,7 +55,7 @@
                     {% endif %}
                     <input type="hidden" name="type" value="{% if request.GET.admin == 'true' %}admin{% else %}volunteer{% endif %}">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-inverse btn-block m-b-small"><i class="fa fa-lock pull-left"></i>Create Account</button>
+                    <button type="submit" class="btn btn-inverse btn-block m-b-small"><i class="fa fa-lock pull-left"></i>Activate Account</button>
                     <div class="line line-dashed"></div>
                     <p class="text-muted text-center"><small>Already have an account?</small></p>
                     <a href="/login/" class="btn btn-white btn-block">Sign in</a>
