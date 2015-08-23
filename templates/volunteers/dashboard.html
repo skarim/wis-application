@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <div class="clearfix m-b">
+        <h3>
+            Welcome, {{ user.first_name }}!
+        </h3>
+    </div>
+    {% if not user.registrations %}
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-info">
+                    <i class="fa fa-info-circle"></i>&nbsp;
+                    Looks like you haven't signed up for any volunteering dates yet. Go ahead and click <b>Volunteering Sign Up</b> above to get started!
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="row">
+            <div class="col-md-4">
+                <section class="panel text-center">
+                    <div class="panel-body">
+                        <a href="/dashboard/manage/" class="btn btn-circle btn-info btn-lg">
+                            <i class="fa fa-calendar"></i>
+                        </a>
+                        <div class="h4">
+                            REGISTRATIONS
+                        </div>
+                        <div class="line m-l m-r"></div>
+                        <h4 class="text-success">
+                            <strong>
+                                {{ user.signup_count }}
+                            </strong>
+                        </h4>
+                        <small>TOTAL VOLUNTEERING DATE REGISTRATIONS</small>
+                    </div>
+                </section>
+            </div>
+            <div class="col-md-4">
+                <section class="panel text-center">
+                    <div class="panel-body">
+                        <a href="/dashboard/manage/" class="btn btn-circle btn-success btn-lg">
+                            <i class="fa fa-check"></i>
+                        </a>
+                        <div class="h4">
+                            COMPLETED
+                        </div>
+                        <div class="line m-l m-r"></div>
+                        <h4 class="text-success">
+                            <strong>
+                                {{ user.completed_count }}
+                            </strong>
+                        </h4>
+                        <small>TOTAL VOLUNTEERING DATES COMPLETED</small>
+                    </div>
+                </section>
+            </div>
+            <div class="col-md-4">
+                <section class="panel text-center">
+                    <div class="panel-body">
+                        <a href="/dashboard/manage/" class="btn btn-circle btn-danger btn-lg">
+                            <i class="fa fa-warning"></i>
+                        </a>
+                        <div class="h4">
+                            NO SHOWS
+                        </div>
+                        <div class="line m-l m-r"></div>
+                        <h4 class="text-success">
+                            <strong>
+                                {{ user.missed_count }}
+                            </strong>
+                        </h4>
+                        <small>VOLUNTEERING DATES MISSED</small>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div class="row m-t">
+            <div class="col-lg-12">
+                <section class="panel">
+                    <header class="panel-heading">
+                        <i class="fa fa-list-alt"></i>&nbsp;
+                        Your Volunteering Registrations
+                    </header>
+                    <div class="table-responsive">
+                        <table class="table table-striped m-b-none" data-ride="datatables">
+                            <thead>
+                                <tr>
+                                    <th width="30%">Date</th>
+                                    <th width="20%">Start Time</th>
+                                    <th width="20%">End Time</th>
+                                    <th width="20%">Signed Up</th>
+                                    <th width="10%">Attended</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for registration in user.registrations %}
+                                    <tr>
+                                        <td class="cat-title">{{ registration.volunteer_date.event_begin|date:'D, N j' }}</td>
+                                        <td>{{ registration.volunteer_date.event_begin|date:'g:i a' }}</td>
+                                        <td>{{ registration.volunteer_date.event_end|date:'g:i a' }}</td>
+                                        <td>{{ registration.signup_time }}</td>
+                                        <td>
+                                            {% if registration.attended %}
+                                                <span class="text-success">
+                                                    <i class="fa fa-check"></i> Yes
+                                                </span>
+                                            {% elif registration.volunteer_date.is_past %}
+                                                <span class="text-danger">
+                                                    <i class="fa fa-times"></i> Absent
+                                                </span>
+                                            {% else %}
+                                                <span class="text-warning">
+                                                    <i class="fa fa-circle"></i> Pending
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{{ STATIC_URL }}js/datatables/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        // set up table of locations
+        $('[data-ride="datatables"]').each(function(){
+            $(this).dataTable({
+                "bProcessing": true,
+                "sDom": "<'row'<'col-sm-6'l><'col-sm-6'f>r>t<'row'<'col-sm-6'i><'col col-sm-6'p>>",
+                "sPaginationType": "full_numbers"
+            });
+        });
+    </script>
+{% endblock %}

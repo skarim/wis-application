@@ -17,8 +17,20 @@ from dashboard.utils import import_volunteer, create_volunteering_date, \
 
 @login_required
 def dashboard(request):
+    params = {}
+    # send users to appropriate dashboard
+    if request.user.is_admin:
+        template = 'admin/dashboard.html'
+        params = {
+            'num_volunteers': len(WIS_User.objects),
+            'num_registrations': len(Volunteer_Date_Registration.objects),
+            'num_dates': len(Volunteer_Date.objects),
+        }
+    else:
+        template = 'volunteers/dashboard.html'
+
     return render_to_response(
-        'dashboard.html',
+        template, params,
         context_instance=RequestContext(request)
     )
 

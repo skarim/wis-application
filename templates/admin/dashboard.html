@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+    <div class="clearfix m-b">
+        <h3>
+            Welcome, {{ user.first_name }}!
+            <span class="h5 pull-right">
+                <i class="fa fa-user"></i>&nbsp; Admin Access
+            </span>
+        </h3>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <section class="panel text-center">
+                <div class="panel-body">
+                    <a href="/dashboard/volunteers/" class="btn btn-circle btn-primary btn-lg">
+                        <i class="fa fa-users"></i>
+                    </a>
+                    <div class="h4">
+                        VOLUNTEERS
+                    </div>
+                    <div class="line m-l m-r"></div>
+                    <h4 class="text-success">
+                        <strong>
+                            {{ num_volunteers }}
+                        </strong>
+                    </h4>
+                    <small>REGISTERED VOLUNTEERS</small>
+                </div>
+            </section>
+        </div>
+        <div class="col-md-4">
+            <section class="panel text-center">
+                <div class="panel-body">
+                    <a href="/dashboard/dates/" class="btn btn-circle btn-info btn-lg">
+                        <i class="fa fa-calendar"></i>
+                    </a>
+                    <div class="h4">
+                        VOLUNTEERING DATES
+                    </div>
+                    <div class="line m-l m-r"></div>
+                    <h4 class="text-success">
+                        <strong>
+                            {{ num_dates }}
+                        </strong>
+                    </h4>
+                    <small>TOTAL VOLUNTEERING DATES</small>
+                </div>
+            </section>
+        </div>
+        <div class="col-md-4">
+            <section class="panel text-center">
+                <div class="panel-body">
+                    <a href="/dashboard/dates/" class="btn btn-circle btn-success btn-lg">
+                        <i class="fa fa-check"></i>
+                    </a>
+                    <div class="h4">
+                        REGISTRATIONS
+                    </div>
+                    <div class="line m-l m-r"></div>
+                    <h4 class="text-success">
+                        <strong>
+                            {{ num_registrations }}
+                        </strong>
+                    </h4>
+                    <small>TOTAL VOLUNTEERING REGISTRATIONS</small>
+                </div>
+            </section>
+        </div>
+    </div>
+{% endblock %}
