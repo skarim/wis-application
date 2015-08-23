@@ -181,9 +181,21 @@
             </section>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="pull-right">
+                <button class="btn btn-sm btn-white" data-toggle="modal" data-target="#deleteModal">
+                    <span class="text-danger">
+                        <i class="fa fa-trash-o"></i>&nbsp;
+                        Delete this volunteering date
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel">
+    <!-- Remove Volunteer Registration Modal -->
+    <div class="modal fade" id="removeModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -203,16 +215,46 @@
         </div>
     </div>
 
-    <form action="/dashboard/dates/view/?id={{ request.GET.id }}" method="POST" class="hidden hide text-hide" id="registration_form" style="display: none">
+    <!-- Delete Volunteering Date Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Confirm Deletion</h4>
+                </div>
+                <div class="modal-body">
+                    Deleting this Volunteering Date will cancel all corresponding volunteers' registrations.
+                    <br><br>
+                    Please confirm this is the correct date you want to delete:<br>
+                    <b class="text-danger">{{ volunteer_date.event_begin|date:'D, N j' }} from {{ volunteer_date.event_begin|date:'g:i a' }} to {{ volunteer_date.event_end|date:'g:i a' }}</b>
+                    <br><br>
+                    This action cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
+                    <button type="button" class="btn btn-danger" id="confirm_delete">Yes, Delete Volunteering Date</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form action="/dashboard/dates/view/?id={{ volunteer_date.id }}" method="POST" class="hidden hide text-hide" id="registration_form" style="display: none">
         <input type="hidden" name="registration_id" id="registration_id_remove">
         <input type="hidden" name="form_type" value="remove_volunteer_registration">
         {% csrf_token %}
     </form>
 
-    <form action="/dashboard/dates/view/?id={{ request.GET.id }}" method="POST" class="hidden hide text-hide" id="attendance_form" style="display: none">
+    <form action="/dashboard/dates/view/?id={{ volunteer_date.id }}" method="POST" class="hidden hide text-hide" id="attendance_form" style="display: none">
         <input type="hidden" name="registration_id" id="registration_id_attendance">
         <input type="hidden" name="attendance_state" id="attendance_state">
         <input type="hidden" name="form_type" value="volunteer_attendance">
+        {% csrf_token %}
+    </form>
+
+    <form action="/dashboard/dates/" method="POST" class="hidden hide text-hide" id="delete_form" style="display: none">
+        <input type="hidden" name="date_id" value="{{ volunteer_date.id }}">
+        <input type="hidden" name="form_type" value="delete_volunteer_date">
         {% csrf_token %}
     </form>
 {% endblock %}
@@ -253,6 +295,12 @@
             $('#registration_id_attendance').val(registration_id);
             $('#attendance_state').val(registration_state);
             $('#attendance_form').submit();
+        });
+    </script>
+    <script type="text/javascript">
+        // delete volunteering date
+        $('#confirm_delete').click(function(){
+            $('#delete_form').submit();
         });
     </script>
 {% endblock %}

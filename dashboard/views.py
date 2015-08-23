@@ -13,7 +13,8 @@ from application.models import *
 
 from dashboard.utils import import_volunteer, create_volunteering_date, \
     volunteer_date_register, volunteer_date_cancellation, \
-    admin_remove_volunteer_from_date, admin_set_volunteer_attendance
+    admin_remove_volunteer_from_date, admin_set_volunteer_attendance, \
+    admin_delete_volunteering_date
 
 
 @login_required
@@ -128,48 +129,49 @@ def manage_dates(request):
 
     # handle volunteer date add/editing
     success, error = ('',)*2
-    try:
-        if request.method == 'POST':
-            type = request.POST.get('type')
-            if type == 'single':
-                # get form data
-                date = request.POST.get('date')
-                start_time = request.POST.get('start_time')
-                end_time = request.POST.get('end_time')
-                slots = request.POST.get('slots')
-                # create the object
-                success, error = create_volunteering_date(date, start_time, end_time, slots)
-            elif type == 'csv':
-                # create vars to keep track of successes and errors
-                num_success = 0
-                error_dates = []
-                # parse csv file
-                csv_date_list = request.FILES.get('csv_date_list')
-                date_list = csv_date_list.read().split('\r')
-                for volunteer_date in date_list:
-                    volunteer_date = volunteer_date.split(',')
-                    date = volunteer_date[0]
-                    start_time = volunteer_date[1]
-                    end_time = volunteer_date[2]
-                    slots = volunteer_date[3]
-                    date_success, date_error = create_volunteering_date(
-                        date, start_time, end_time, slots
-                    )
-                    if date_success:
-                        num_success+=1
-                    if date_error:
-                        error_dates.append(date)
-                if num_success:
-                    success = 'Successfully added %s volunteering dates'\
-                          % num_success
-                if error_dates:
-                    error = 'Unable to add the following dates:'
-                    for error_date in error_dates:
-                        error += '\n %s' % error_date
-            else:
-                error = 'Unable to process request'
-    except:
-        error = 'Error adding event'
+    if request.method == 'POST':
+        form_type = request.POST.get('form_type')
+        if form_type == 'single':
+            # get form data
+            date = request.POST.get('date')
+            start_time = request.POST.get('start_time')
+            end_time = request.POST.get('end_time')
+            slots = request.POST.get('slots')
+            # create the object
+            success, error = create_volunteering_date(date, start_time, end_time, slots)
+        elif form_type == 'csv':
+            # create vars to keep track of successes and errors
+            num_success = 0
+            error_dates = []
+            # parse csv file
+            csv_date_list = request.FILES.get('csv_date_list')
+            date_list = csv_date_list.read().split('\r')
+            for volunteer_date in date_list:
+                volunteer_date = volunteer_date.split(',')
+                date = volunteer_date[0]
+                start_time = volunteer_date[1]
+                end_time = volunteer_date[2]
+                slots = volunteer_date[3]
+                date_success, date_error = create_volunteering_date(
+                    date, start_time, end_time, slots
+                )
+                if date_success:
+                    num_success+=1
+                if date_error:
+                    error_dates.append(date)
+            if num_success:
+                success = 'Successfully added %s volunteering dates'\
+                      % num_success
+            if error_dates:
+                error = 'Unable to add the following dates:'
+                for error_date in error_dates:
+                    error += '\n %s' % error_date
+        elif form_type == 'delete_volunteer_date':
+            # delete volunteering date
+            date_id = request.POST.get('date_id')
+            success, error = admin_delete_volunteering_date(date_id)
+        else:
+            error = 'Unable to process request'
     dates = Volunteer_Date.objects
     params = {
         'success': success,

@@ -62,3 +62,16 @@ def send_admin_date_cancelled_email(user, start, end):
                     '\nWIS Admin'.format(user.first_name, user.last_name,
                                          start.strftime('%A, %B %-d, %Y at %-I:%M %p'))
     send_email(user.email, subject, email_message)
+
+
+def send_admin_date_deleted_email(user, start, end):
+    subject = 'WIS Volunteering Duty on {0}'.format(start.strftime('%A, %B %-d, %Y at %-I:%M %p'))
+    email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\n This is a ' \
+                    'notification email that the volunteering date you had ' \
+                    'signed up for on {2} has been cancelled by the administration. Please login ' \
+                    'to the WIS Volunteering Portal at http://app.mcawis.org to sign up' \
+                    'for a new volunteering date. If you have any questions, ' \
+                    'please contact the admin at wis@mcabayarea.org.\n\nJazakAllah Khairan ' \
+                    '\nWIS Admin'.format(user.first_name, user.last_name,
+                                         start.strftime('%A, %B %-d, %Y at %-I:%M %p'))
+    send_email(user.email, subject, email_message)

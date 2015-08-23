@@ -137,7 +137,7 @@
                         <label class="control-label">Number of volunteering slots</label>
                         <input type="number" name="slots" placeholder="enter a number" class="form-control" required>
                     </div>
-                    <input type="hidden" name="type" value="single">
+                    <input type="hidden" name="form_type" value="single">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-inverse btn-block">Add Volunteering Date</button>
                 </form>
@@ -155,7 +155,7 @@
                         </li>
                     </ul>
                     <input type="file" name="csv_date_list" title="Choose CSV file" accept=".csv" class="btn btn-sm btn-default m-b-small" style="left: -168.75px; top: 14px;">
-                    <input type="hidden" name="type" value="csv">
+                    <input type="hidden" name="form_type" value="csv">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-xs btn-inverse btn-block">Upload & Import</button>
                 </form>

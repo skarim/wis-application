@@ -1,7 +1,8 @@
 from django.core.validators import validate_email
 
 from services.emails import send_welcome_email, send_date_registered_email, \
-    send_date_cancelled_email, send_admin_date_cancelled_email
+    send_date_cancelled_email, send_admin_date_cancelled_email, \
+    send_admin_date_deleted_email
 from services.timing import universalize, localize
 from application.models import *
 
@@ -193,6 +194,9 @@ def admin_remove_volunteer_from_date(registration_id):
 
             # send notification email
             send_admin_date_cancelled_email(volunteer_user, localized_start, localized_end)
+
+            success = 'Successfully removed {0} {1} from volunteering date'.format(volunteer_user.first_name,
+                                                                                   volunteer_user.last_name)
         except DoesNotExist:
             error = 'Selected date does not exist'
     else:
@@ -221,6 +225,42 @@ def admin_set_volunteer_attendance(registration_id, attendance_state):
                                                                                volunteer_user.last_name)
         except DoesNotExist:
             error = 'Registration does not exist'
+    else:
+        error = 'Incomplete form data'
+    return (success, error,)
+
+
+def admin_delete_volunteering_date(date_id):
+    success, error = ('',)*2
+    if date_id:
+        try:
+            volunteer_date = Volunteer_Date.objects.get(id=date_id)
+
+            # localize the volunteer date times for emailing
+            localized_start = localize(volunteer_date.event_begin)
+            localized_end = localize(volunteer_date.event_end)
+
+            # remove registrations from volunteer objects
+            for volunteer in volunteer_date.volunteers:
+                for registration in volunteer.registrations:
+                    if registration.volunteer_date.id == volunteer_date.id:
+                        volunteer.registrations.remove(registration)
+                        registration.delete()
+                        # send notification email
+                        send_admin_date_deleted_email(volunteer,
+                                                      localized_start,
+                                                      localized_end)
+                volunteer.save()
+
+            # finally, delete volunteer_date object
+            volunteer_date.delete()
+
+            success = 'Successfully deleted volunteering date on ' \
+                      '{0} from {1} to {2}'.format(localized_start.strftime('%A, %B %-d, %Y'),
+                                                   localized_start.strftime('%-I:%M %p'),
+                                                   localized_end.strftime('%-I:%M %p'))
+        except DoesNotExist:
+            error = 'Volunteering date does not exist'
     else:
         error = 'Incomplete form data'
     return (success, error,)
