@@ -1,7 +1,7 @@
 from django.core.validators import validate_email
 
 from services.emails import send_email
-from services.localization import localize
+from services.localization import localize, get_diff_from_now
 from application.models import *
 
 
@@ -79,9 +79,46 @@ def create_volunteering_date(date, start_time, end_time, slots):
                 print 'new_date end: {0}'.format(new_date.event_end)
                 success = 'Added a volunteering date on %(d)s with %(s)s slots'\
                           % {'d': date, 's':slots}
-        except Exception as e:
-            print e
+        except:
             error = 'An unexpected error occurred. Please try again.'
     else:
         error = 'Please fill out all fields'
+    return (success, error,)
+
+
+def volunteer_date_register(volunteer_id, date_id):
+    success, error = ('',)*2
+    if volunteer_id and date_id:
+        try:
+            volunteer_user = WIS_User.objects.get(id=volunteer_id)
+            volunteer_date = Volunteer_Date.objects.get(id=date_id)
+            if volunteer_date.slots_available < 1:
+                error = 'There are no slots available for that date'
+            elif volunteer_date.is_past:
+                error = 'You cannot signup for a date that has already passed'
+            elif get_diff_from_now(volunteer_date.event_begin) < 48:
+                error = 'You cannot signup for a date less than 48 hours in advance'
+            elif volunteer_user in volunteer_date.volunteers:
+                error = 'You have already registered for this date'
+            else:
+                # create registration object
+                registration = Volunteer_Date_Registration(volunteer_date=
+                                                           volunteer_date)
+                registration.save()
+
+                # add registration to the volunteer's list
+                volunteer_user.registrations.append(registration)
+                volunteer_user.signup_count+=1
+                volunteer_user.save()
+
+                # add volunteer to list of volunteers for the date
+                volunteer_date.volunteers.append(volunteer_user)
+                volunteer_date.save()
+
+                success = 'You have successfully signed up for volunteering on ' \
+                          'the selected date'
+        except DoesNotExist:
+            error = 'Selected date does not exist'
+    else:
+        error = 'Incomplete form data'
     return (success, error,)

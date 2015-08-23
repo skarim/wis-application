@@ -14,3 +14,15 @@ def localize(date, time):
         pytz.utc
     ).replace(tzinfo=None)
     return dt
+
+
+def get_diff_from_now(date):
+    # get the delta between a datetime and current time (in hours)
+    local_tz = pytz.timezone(TIME_ZONE)
+    current = datetime.datetime.now()
+    current = local_tz.localize(current).astimezone(
+        pytz.utc
+    ).replace(tzinfo=None)
+    delta = (date.replace(tzinfo=None) - current)
+    hours_delta = (delta.days*24) + delta.seconds//3600
+    return hours_delta

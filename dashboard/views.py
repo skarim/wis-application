@@ -11,7 +11,8 @@ from mongoengine import ValidationError, DoesNotExist, MultipleObjectsReturned
 
 from application.models import *
 
-from dashboard.utils import import_volunteer, create_volunteering_date
+from dashboard.utils import import_volunteer, create_volunteering_date, \
+    volunteer_date_register
 
 
 @login_required
@@ -194,6 +195,39 @@ def view_date(request):
         )
     except DoesNotExist:
         return redirect('dashboard.views.manage_dates')
+
+
+@login_required
+def volunteer_register(request):
+    success, error = ('',)*2
+    volunteer = request.user
+
+    # handle volunteer date registration
+    if request.method == 'POST':
+        date_id = request.POST.get('date_id')
+        success, error = volunteer_date_register(volunteer.id, date_id)
+
+    dates = Volunteer_Date.objects
+    params = {
+        'success': success,
+        'error': error,
+        'dates': dates,
+    }
+    return render_to_response(
+        'volunteers/volunteer_register.html', params,
+        context_instance=RequestContext(request)
+    )
+
+
+@login_required
+def volunteer_manage_registrations(request):
+    params = {
+        'user': request.user,
+    }
+    return render_to_response(
+        'volunteers/volunteer_manage_registrations.html', params,
+        context_instance=RequestContext(request)
+    )
 
 
 @login_required

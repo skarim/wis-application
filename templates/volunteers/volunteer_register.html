@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up for Volunteering Dates{% endblock %}
+
+{% block content %}
+    <div class="clearfix">
+        <h3>Sign Up for Volunteering Dates</h3>
+    </div>
+    {% if success %}
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <i class="fa fa-check-circle"></i>
+                    <strong>Success</strong>&nbsp;
+                    {{ success }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if error %}
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <i class="fa fa-warning"></i>
+                    <strong>Error</strong>&nbsp;
+                    {{ error }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-md-8">
+            <section class="panel">
+                <header class="panel-heading">
+                    <i class="fa fa-calendar"></i>&nbsp;
+                    Available Volunteering Dates
+                </header>
+                <div class="table-responsive">
+                    <table class="table table-striped m-b-none" data-ride="datatables">
+                        <thead>
+                            <tr>
+                                <th width="18%">Date</th>
+                                <th width="18%">Begin Time</th>
+                                <th width="18%">End Time</th>
+                                <th width="18%">Slots Available</th>
+                                <th width="18%">Slots Total</th>
+                                <th width="10%">Sign Up</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for date in dates %}
+                                {% if not date.is_past %}
+                                    <tr>
+                                        <td class="cat-title">{{ date.event_begin|date:'D, N j' }}</td>
+                                        <td>{{ date.event_begin|date:'g:i a' }}</td>
+                                        <td>{{ date.event_end|date:'g:i a' }}</td>
+                                        <td>{{ date.slots_available }}</td>
+                                        <td>{{ date.slots_total }}</td>
+                                        <td class="cat-btn">
+                                            {% if user in date.volunteers %}
+                                                <button class="btn btn-sm btn-success" disabled>
+                                                    <i class="fa fa-check"></i>
+                                                    Signed Up
+                                                </button>
+                                            {% elif date.slots_available %}
+                                                <button class="btn btn-sm btn-white date_signup" data-date-id="{{ date.id }}">
+                                                    Sign Up
+                                                </button>
+                                            {% else %}
+                                                <button class="btn btn-sm btn-white disabled" disabled>
+                                                    Unavailable
+                                                </button>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="col-md-4">
+            <section class="panel">
+                <header class="panel-heading">
+                    <i class="fa fa-info-circle"></i>&nbsp;
+                    WIS Volunteering Policies
+                </header>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <div class="media">
+                            <div class="pull-right text-success m-t-small fa fa-calendar-o"></div>
+                            <div class="media-body">
+                                <div>
+                                    <span class="h5">
+                                        Sign Up Cutoff Times
+                                    </span>
+                                </div>
+                                <small class="text-muted">
+                                    You can only sign up for a volunteering slot 48 hours in advance.
+                                </small>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <div class="media">
+                            <div class="pull-right text-danger m-t-small fa fa-times-circle"></div>
+                            <div class="media-body">
+                                <div>
+                                    <span class="h5">
+                                        Cancellation Policy
+                                    </span>
+                                </div>
+                                <small class="text-muted">
+                                    You can cancel your registration anytime, but will be unable to change or cancel within one week of the volunteer date.
+                                </small>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <div class="media">
+                            <div class="pull-right text-warning m-t-small fa fa-bell"></div>
+                            <div class="media-body">
+                                <div>
+                                    <span class="h5">
+                                        No-Show Policy
+                                    </span>
+                                </div>
+                                <small class="text-muted">
+                                    You must check-in with the designated volunteer coordinator 15 minutes <b>prior</b> to the start of your assigned time. In the case that you are late or do not show, you will be marked as a no-show and will have to make up those hours on a later date.
+                                </small>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+        </div>
+    </div>
+
+    <form action="/dashboard/register/" method="POST" class="hidden hide text-hide" id="date_form" style="display: none">
+        <input type="hidden" name="date_id" id="date_id">
+        {% csrf_token %}
+    </form>
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{{ STATIC_URL }}js/file-input/bootstrap.file-input.js"></script>
+    <script src="{{ STATIC_URL }}js/datatables/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        // set up table of locations
+        $('[data-ride="datatables"]').each(function(){
+            $(this).dataTable({
+                "bProcessing": true,
+                "sDom": "<'row'<'col-sm-6'l><'col-sm-6'f>r>t<'row'<'col-sm-6'i><'col col-sm-6'p>>",
+                "sPaginationType": "full_numbers",
+                "aoColumnDefs": [
+                    {
+                        "bSortable": false,
+                        "aTargets": [5]
+                    }
+                ]
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        // volunteer date signup
+        $('.date_signup').click(function(){
+            var date_id = $(this).attr('data-date-id');
+            $('#date_id').val(date_id);
+            $('#date_form').submit();
+        });
+    </script>
+{% endblock %}
