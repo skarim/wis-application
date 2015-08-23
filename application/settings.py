@@ -8,14 +8,21 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from mongoengine import *
 import os
+
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-#BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
+ENVIRONMENT = os.getenv('SERVER_ENV', 'development')
+DBNAME = os.getenv('DB', 'wis_coredata')
+SENDGRID_USER = os.getenv('SENDGRID_USER', 'mcawis-test')
+SENDGRID_PASSWORD = os.getenv('SENDGRID_PASSWORD', 'mcawis00admin')
 
 
-DEBUG = True
+if ENVIRONMENT == 'production':
+    DEBUG = False
+else:
+    DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 
@@ -35,7 +42,6 @@ if not DEBUG:
 
 
 # MONGO DB: ignore django ORM and use mongoengine
-DBNAME = 'wis_coredata'
 connect(DBNAME, tz_aware=True)
 
 
@@ -157,8 +163,8 @@ LOGIN_URL = '/login/'
 # Use SendGrid as Email Backend
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = 'mcawis'
-EMAIL_HOST_PASSWORD = 'mcawis00admin'
+EMAIL_HOST_USER = SENDGRID_USER
+EMAIL_HOST_PASSWORD = SENDGRID_PASSWORD
 EMAIL_PORT = 587
 
 
