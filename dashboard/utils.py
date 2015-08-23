@@ -1,7 +1,7 @@
 from django.core.validators import validate_email
 
 from services.emails import send_email
-from services.localization import localize, get_diff_from_now
+from services.timing import universalize, get_diff_from_now, localize
 from application.models import *
 
 
@@ -42,12 +42,12 @@ def import_volunteer(email, first_name, last_name):
 
 
 def send_welcome_email(user):
-    activate_link = 'http://app.mcawis.org/activate/?email={0}&first_name={2}' \
-                    '&last_name={3}'.format(user.email, user.first_name,
+    activate_link = 'http://app.mcawis.org/activate/?email={0}&first_name={1}' \
+                    '&last_name={2}'.format(user.email, user.first_name,
                                             user.last_name)
-    email_message = 'Dear {0} {2}, \n\nAssalamuAlaikum \n\nAn account has been ' \
+    email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\nAn account has been ' \
                     'created for you on the WIS Volunteer Scheduling website. ' \
-                    'Please go to {0} to activate up your account and set your ' \
+                    'Please go to {2} to activate up your account and set your ' \
                     'password. After activating your account, you can login at ' \
                     'http://app.mcawis.org. If you have any questions, please ' \
                     'contact the admin at wis@mcabayarea.org.\n\nJazakAllah ' \
@@ -61,8 +61,8 @@ def create_volunteering_date(date, start_time, end_time, slots):
     if date and start_time and end_time and slots:
         try:
             # parse values
-            event_begin = localize(date, start_time)
-            event_end = localize(date, end_time)
+            event_begin = universalize(date, start_time)
+            event_end = universalize(date, end_time)
             slots_total = int(slots)
 
             # handle errors
@@ -115,10 +115,36 @@ def volunteer_date_register(volunteer_id, date_id):
                 volunteer_date.volunteers.append(volunteer_user)
                 volunteer_date.save()
 
+                # localize the volunteer date times for displaying
+                localized_start = localize(volunteer_date.event_begin)
+                localized_end = localize(volunteer_date.event_end)
+
+                # send confirmation email
+                send_date_registered_email(volunteer_user, localized_start, localized_end)
+
                 success = 'You have successfully signed up for volunteering on ' \
-                          'the selected date'
+                          '{0} from {1} to {2}'.format(localized_start.strftime('%A, %B %-d, %Y'),
+                                                       localized_start.strftime('%-I:%M %p'),
+                                                       localized_end.strftime('%-I:%M %p'))
         except DoesNotExist:
             error = 'Selected date does not exist'
     else:
         error = 'Incomplete form data'
     return (success, error,)
+
+
+def send_date_registered_email(user, start, end):
+    subject = 'WIS Volunteering Duty on {0}'.format(start.strftime('%A, %B %-d, %Y at %-I:%M %p'))
+    email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\n This is a ' \
+                    'confirmation email for your volunteering duty on' \
+                    '{2}. Please make sure that you are at the school office 15 ' \
+                    'minutes prior to get your assignment. You are required to stay ' \
+                    'for the entire time until {3}. \n\n Please note that you cannot ' \
+                    'change your volunteering registration within 1 week of ' \
+                    'the date. If you can no longer make this date, please ' \
+                    'update your settings immediately or contact the admin ' \
+                    'at wis@mcabayarea.org.\n\nJazakAllah Khairan ' \
+                    '\nWIS Admin'.format(user.first_name, user.last_name,
+                                         start.strftime('%A, %B %-d, %Y at %-I:%M %p'),
+                                         end.strftime('%-I:%M %p'))
+    send_email(user.email, subject, email_message)

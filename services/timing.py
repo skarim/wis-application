@@ -5,8 +5,8 @@ import datetime
 from application.settings import TIME_ZONE
 
 
-def localize(date, time):
-    # shift datetimes for storing
+def universalize(date, time):
+    # shift datetimes to utc for storing
     dt_str = '%s %s' % (date.strip(), time.strip())
     local_tz = pytz.timezone(TIME_ZONE)
     dt = datetime.datetime.strptime(dt_str, '%Y-%m-%d %H:%M')
@@ -26,3 +26,10 @@ def get_diff_from_now(date):
     delta = (date.replace(tzinfo=None) - current)
     hours_delta = (delta.days*24) + delta.seconds//3600
     return hours_delta
+
+
+def localize(date):
+    # shift datetimes to local timezone for rendering
+    local_tz = pytz.timezone(TIME_ZONE)
+    date = date.astimezone(local_tz)
+    return date
