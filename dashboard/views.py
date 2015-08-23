@@ -12,7 +12,7 @@ from mongoengine import ValidationError, DoesNotExist, MultipleObjectsReturned
 from application.models import *
 
 from dashboard.utils import import_volunteer, create_volunteering_date, \
-    volunteer_date_register
+    volunteer_date_register, volunteer_date_cancellation
 
 
 @login_required
@@ -221,8 +221,17 @@ def volunteer_register(request):
 
 @login_required
 def volunteer_manage_registrations(request):
+    success, error = ('',)*2
+    volunteer = request.user
+
+    # handle volunteer date cancellation
+    if request.method == 'POST':
+        date_id = request.POST.get('date_id')
+        success, error = volunteer_date_cancellation(volunteer.id, date_id)
+
     params = {
-        'user': request.user,
+        'success': success,
+        'error': error,
     }
     return render_to_response(
         'volunteers/volunteer_manage_registrations.html', params,

@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %}Manage Volunteering Dates{% endblock %}
+{% block title %}Manage Volunteering Registrations{% endblock %}
 
 {% block content %}
     <div class="clearfix">
-        <h3>Manage Volunteering Dates</h3>
+        <h3>Manage your Volunteering Registrations</h3>
     </div>
     {% if success %}
         <div class="row">
@@ -30,5 +30,175 @@
             </div>
         </div>
     {% endif %}
-    TBD
+    <div class="row">
+        <div class="col-md-8">
+            <section class="panel">
+                <header class="panel-heading">
+                    <i class="fa fa-list-alt"></i>&nbsp;
+                    Volunteering Dates you have Registered for
+                </header>
+                <div class="table-responsive">
+                    <table class="table table-striped m-b-none" data-ride="datatables">
+                        <thead>
+                            <tr>
+                                <th width="30%">Date</th>
+                                <th width="20%">Start Time</th>
+                                <th width="20%">End Time</th>
+                                <th width="20%">Attended</th>
+                                <th width="10%">Cancel</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for registration in user.registrations %}
+                                {% if not registration.cancelled %}
+                                    <tr>
+                                        <td class="cat-title">{{ registration.volunteer_date.event_begin|date:'D, N j' }}</td>
+                                        <td>{{ registration.volunteer_date.event_begin|date:'g:i a' }}</td>
+                                        <td>{{ registration.volunteer_date.event_end|date:'g:i a' }}</td>
+                                        <td>
+                                            {% if registration.attended %}
+                                                <span class="text-success">
+                                                    <i class="fa fa-check"></i> Yes
+                                                </span>
+                                            {% elif registration.volunteer_date.is_past %}
+                                                <span class="text-danger">
+                                                    <i class="fa fa-times"></i> Absent
+                                                </span>
+                                            {% else %}
+                                                <span class="text-warning">
+                                                    <i class="fa fa-circle"></i> Pending
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="cat-btn">
+                                            {% if registration.volunteer_date.is_past %}
+                                                <button class="btn btn-sm btn-white disabled" disabled>
+                                                    Past
+                                                </button>
+                                            {% elif registration.volunteer_date.is_one_week_or_less_prior %}
+                                                <button class="btn btn-sm btn-white disabled" disabled>
+                                                    Cannot Cancel
+                                                </button>
+                                            {% else %}
+                                                <button class="btn btn-sm btn-danger date_signup" data-date-id="{{ registration.volunteer_date.id }}" data-toggle="modal" data-target="#cancelModal">
+                                                    Cancel
+                                                </button>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+        <div class="col-md-4">
+            <section class="panel">
+                <header class="panel-heading">
+                    <i class="fa fa-info-circle"></i>&nbsp;
+                    WIS Volunteering Policies
+                </header>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <div class="media">
+                            <div class="pull-right text-success m-t-small fa fa-calendar-o"></div>
+                            <div class="media-body">
+                                <div>
+                                    <span class="h5">
+                                        Sign Up Cutoff Times
+                                    </span>
+                                </div>
+                                <small class="text-muted">
+                                    You can only sign up for a volunteering slot 48 hours in advance.
+                                </small>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <div class="media">
+                            <div class="pull-right text-danger m-t-small fa fa-times-circle"></div>
+                            <div class="media-body">
+                                <div>
+                                    <span class="h5">
+                                        Cancellation Policy
+                                    </span>
+                                </div>
+                                <small class="text-muted">
+                                    You can cancel your registration anytime, but will be unable to change or cancel within one week of the volunteer date.
+                                </small>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <div class="media">
+                            <div class="pull-right text-warning m-t-small fa fa-bell"></div>
+                            <div class="media-body">
+                                <div>
+                                    <span class="h5">
+                                        No-Show Policy
+                                    </span>
+                                </div>
+                                <small class="text-muted">
+                                    You must check-in with the designated volunteer coordinator 15 minutes <b>prior</b> to the start of your assigned time. In the case that you are late or do not show, you will be marked as a no-show and will have to make up those hours on a later date.
+                                </small>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="cancelModalLabel">
+                        Confirm Cancellation
+                        <small>This action cannot be undone</small>
+                    </h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
+                    <button type="button" class="btn btn-danger" id="confirm_cancel">Yes, Cancel my Registration</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form action="/dashboard/manage/" method="POST" class="hidden hide text-hide" id="date_form" style="display: none">
+        <input type="hidden" name="date_id" id="date_id">
+        {% csrf_token %}
+    </form>
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{{ STATIC_URL }}js/datatables/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        // set up table of locations
+        $('[data-ride="datatables"]').each(function(){
+            $(this).dataTable({
+                "bProcessing": true,
+                "sDom": "<'row'<'col-sm-6'l><'col-sm-6'f>r>t<'row'<'col-sm-6'i><'col col-sm-6'p>>",
+                "sPaginationType": "full_numbers"
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        // volunteer date cancellation
+        $('.date_signup').click(function(){
+            var date_id = $(this).attr('data-date-id');
+            $('#date_id').val(date_id);
+        });
+        $('#confirm_cancel').click(function(){
+            $('#date_form').submit();
+        });
+    </script>
 {% endblock %}

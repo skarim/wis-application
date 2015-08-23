@@ -6,6 +6,8 @@ from mongoengine.django.auth import User
 
 import datetime
 
+from services.timing import get_diff_from_now
+
 
 class Volunteer_Date(Document):
     event_begin = DateTimeField()
@@ -18,6 +20,14 @@ class Volunteer_Date(Document):
         if datetime.date.today() > self.event_end.date():
             return True
         return False
+
+    @property
+    def is_one_week_or_less_prior(self):
+        return get_diff_from_now(self.event_begin) < 168
+
+    @property
+    def is_two_days_or_less_prior(self):
+        return get_diff_from_now(self.event_begin) < 48
 
     @property
     def slots_available(self):
@@ -33,6 +43,8 @@ class Volunteer_Date_Registration(Document):
     signed_up = BooleanField(default=True)
     attended = BooleanField(default=False)
     signup_time = DateTimeField(default=datetime.datetime.utcnow)
+    cancelled = BooleanField(default=False)
+    cancelled_date = DateTimeField()
 
 
 class WIS_User(User):

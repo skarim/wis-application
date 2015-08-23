@@ -51,7 +51,7 @@
                         </thead>
                         <tbody>
                             {% for date in dates %}
-                                {% if not date.is_past %}
+                                {% if not date.is_past and not date.is_two_days_or_less_prior %}
                                     <tr>
                                         <td class="cat-title">{{ date.event_begin|date:'D, N j' }}</td>
                                         <td>{{ date.event_begin|date:'g:i a' }}</td>
