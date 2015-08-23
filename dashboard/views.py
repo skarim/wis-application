@@ -12,7 +12,8 @@ from mongoengine import ValidationError, DoesNotExist, MultipleObjectsReturned
 from application.models import *
 
 from dashboard.utils import import_volunteer, create_volunteering_date, \
-    volunteer_date_register, volunteer_date_cancellation
+    volunteer_date_register, volunteer_date_cancellation, \
+    admin_remove_volunteer_from_date, admin_set_volunteer_attendance
 
 
 @login_required
@@ -193,11 +194,28 @@ def view_date(request):
         return redirect('dashboard.views.manage_dates')
 
     # handle volunteer date reports/editing/deleting
+    success, error = ('',)*2
     try:
+        # handle form submissions
+        if request.method == 'POST':
+            form_type = request.POST.get('form_type')
+            if form_type == 'remove_volunteer_registration':
+                # remove volunteer registration
+                registration_id = request.POST.get('registration_id')
+                success, error = admin_remove_volunteer_from_date(registration_id)
+            elif form_type == 'volunteer_attendance':
+                # set volunteer attendance
+                registration_id = request.POST.get('registration_id')
+                attendance_state = request.POST.get('attendance_state')
+                success, error = admin_set_volunteer_attendance(registration_id, attendance_state)
+
+        # get objects for page rendering
         volunteer_date = Volunteer_Date.objects.get(id=date_id)
         registrations = Volunteer_Date_Registration.objects(volunteer_date=
                                                             volunteer_date)
         params = {
+            'success': success,
+            'error': error,
             'volunteer_date': volunteer_date,
             'registrations': registrations,
         }

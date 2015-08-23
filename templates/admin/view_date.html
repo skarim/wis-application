@@ -5,7 +5,7 @@
 {% block content %}
     <div class="clearfix">
         <h3>
-            {{ volunteer_date.event_begin|date:'D, N j' }} Volunteering Date
+            Volunteering Date: {{ volunteer_date.event_begin|date:'D, N j' }} from {{ volunteer_date.event_begin|date:'g:i a' }} to {{ volunteer_date.event_end|date:'g:i a' }}
             {% if volunteer_date.is_past %}
                 <span class="h5 pull-right">
                     <i class="fa fa-archive"></i>&nbsp; Past
@@ -17,6 +17,30 @@
             {% endif %}
         </h3>
     </div>
+    {% if success %}
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <i class="fa fa-check-circle"></i>
+                    <strong>Success</strong>&nbsp;
+                    {{ success }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if error %}
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <i class="fa fa-warning"></i>
+                    <strong>Error</strong>&nbsp;
+                    {{ error }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
     <div class="row">
         <div class="col-lg-12">
             <section class="panel">
@@ -41,31 +65,73 @@
         <div class="col-lg-12">
             <section class="panel">
                 <header class="panel-heading">
-                    <i class="fa fa-list-alt"></i>&nbsp;
-                    Registrations
+                    <i class="fa fa-users"></i>&nbsp;
+                    Registered Volunteers
                 </header>
                 <div class="table-responsive">
                     <table class="table table-striped m-b-none" data-ride="datatables">
                         <thead>
                             <tr>
-                                <th width="20%">Last Name</th>
-                                <th width="20%">First Name</th>
-                                <th width="30%">Email</th>
+                                <th width="15%">Last Name</th>
+                                <th width="15%">First Name</th>
+                                <th width="20%">Email</th>
                                 <th width="20%">Signed Up</th>
-                                <th width="10%">Attended</th>
+                                <th width="20%">Attended</th>
+                                <th width="10%">Remove</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for volunteer in volunteer_date.volunteers %}
-                                <tr>
-                                    <td class="cat-title">{{ volunteer.last_name }}</td>
-                                    <td>{{ volunteer.first_name }}</td>
-                                    <td>{{ volunteer.email }}</td>
-                                    <td>Yes</td>
-                                    <td class="cat-btn">
-                                        <a href="#" class="btn btn-sm btn-white">TBD</a>
-                                    </td>
-                                </tr>
+                            {% for registration in registrations %}
+                                {% if not registration.cancelled %}
+                                    <tr>
+                                        <td class="cat-title">{{ registration.volunteer.last_name }}</td>
+                                        <td>{{ registration.volunteer.first_name }}</td>
+                                        <td>{{ registration.volunteer.email }}</td>
+                                        <td>{{ registration.signup_time }}</td>
+                                        <td class="cat-btn">
+                                            {% if registration.marked %}
+                                                <div id="attendance_display_{{ registration.id }}">
+                                                    {% if  registration.attended %}
+                                                        <span class="text-success">
+                                                            <i class="fa fa-check"></i> Yes
+                                                        </span>
+                                                    {% else %}
+                                                        <span class="text-danger">
+                                                            <i class="fa fa-warning"></i> No
+                                                        </span>
+                                                    {% endif %}
+                                                    &nbsp;
+                                                    <button type="button" class="btn btn-xs btn-white show_attendance_actions" data-registration-id="{{ registration.id }}">
+                                                        <span class="text-muted">
+                                                            Change
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                            {% endif %}
+                                            <div id="attendance_actions_{{ registration.id }}" {% if registration.marked %}style="display: none"{% endif %}>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-sm btn-white record_attendance" data-registration-id="{{ registration.id }}" data-registration-state="no">
+                                                        <span class="text-danger">
+                                                            <i class="fa fa-times"></i>
+                                                            No
+                                                        </span>
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm btn-white record_attendance" data-registration-id="{{ registration.id }}" data-registration-state="yes">
+                                                        <span class="text-success">
+                                                            <i class="fa fa-check"></i>
+                                                            Yes
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger registration_remove" data-registration-id="{{ registration.id }}" data-toggle="modal" data-target="#removeModal">
+                                                Remove
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endif %}
                             {% endfor %}
                         </tbody>
                     </table>
@@ -73,6 +139,82 @@
             </section>
         </div>
     </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <i class="fa fa-times-circle"></i>&nbsp;
+                    Volunteers who Cancelled their Registrations
+                </header>
+                <div class="table-responsive">
+                    <table class="table table-striped m-b-none" data-ride="datatables">
+                        <thead>
+                            <tr>
+                                <th width="15%">Last Name</th>
+                                <th width="15%">First Name</th>
+                                <th width="20%">Email</th>
+                                <th width="20%">Signed Up</th>
+                                <th width="10%">Status</th>
+                                <th width="20%">Cancelled</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for registration in registrations %}
+                                {% if registration.cancelled %}
+                                    <tr>
+                                        <td class="cat-title">{{ registration.volunteer.last_name }}</td>
+                                        <td>{{ registration.volunteer.first_name }}</td>
+                                        <td>{{ registration.volunteer.email }}</td>
+                                        <td>{{ registration.signup_time }}</td>
+                                        <td class="cat-btn">
+                                            <span class="text-danger">
+                                                <i class="fa fa-times"></i> Cancelled
+                                            </span>
+                                        </td>
+                                        <td>{{ registration.cancel_time }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Confirm Removing Volunteer</h4>
+                </div>
+                <div class="modal-body">
+                    Removing a volunteer will erase them from the list for this volunteering date.
+                    If you are looking to set the volunteer as absent, use the buttons in the <b>Attended</b> column instead.
+                    This action cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
+                    <button type="button" class="btn btn-danger" id="confirm_remove">Yes, Remove Volunteer's Registration</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form action="/dashboard/dates/view/?id={{ request.GET.id }}" method="POST" class="hidden hide text-hide" id="registration_form" style="display: none">
+        <input type="hidden" name="registration_id" id="registration_id_remove">
+        <input type="hidden" name="form_type" value="remove_volunteer_registration">
+        {% csrf_token %}
+    </form>
+
+    <form action="/dashboard/dates/view/?id={{ request.GET.id }}" method="POST" class="hidden hide text-hide" id="attendance_form" style="display: none">
+        <input type="hidden" name="registration_id" id="registration_id_attendance">
+        <input type="hidden" name="attendance_state" id="attendance_state">
+        <input type="hidden" name="form_type" value="volunteer_attendance">
+        {% csrf_token %}
+    </form>
 {% endblock %}
 
 {% block custom_js %}
@@ -83,14 +225,34 @@
             $(this).dataTable({
                 "bProcessing": true,
                 "sDom": "<'row'<'col-sm-6'l><'col-sm-6'f>r>t<'row'<'col-sm-6'i><'col col-sm-6'p>>",
-                "sPaginationType": "full_numbers",
-                "aoColumnDefs": [
-                    {
-                        "bSortable": false,
-                        "aTargets": [4]
-                    }
-                ]
+                "sPaginationType": "full_numbers"
             });
+        });
+    </script>
+    <script type="text/javascript">
+        // registration cancellation
+        $('.registration_remove').click(function(){
+            var registration_id = $(this).attr('data-registration-id');
+            $('#registration_id_remove').val(registration_id);
+        });
+        $('#confirm_remove').click(function(){
+            $('#registration_form').submit();
+        });
+    </script>
+    <script type="text/javascript">
+        // show attendance action buttons
+        $('.show_attendance_actions').click(function(){
+            var registration_id = $(this).attr('data-registration-id');
+            $('#attendance_display_'+registration_id).hide();
+            $('#attendance_actions_'+registration_id).show();
+        });
+        // set volunteer attendance
+        $('.record_attendance').click(function(){
+            var registration_id = $(this).attr('data-registration-id');
+            var registration_state = $(this).attr('data-registration-state');
+            $('#registration_id_attendance').val(registration_id);
+            $('#attendance_state').val(registration_state);
+            $('#attendance_form').submit();
         });
     </script>
 {% endblock %}

@@ -17,9 +17,7 @@ class Volunteer_Date(Document):
 
     @property
     def is_past(self):
-        if datetime.date.today() > self.event_end.date():
-            return True
-        return False
+        return get_diff_from_now(self.event_end) < 0
 
     @property
     def is_one_week_or_less_prior(self):
@@ -40,11 +38,12 @@ class Volunteer_Date(Document):
 
 class Volunteer_Date_Registration(Document):
     volunteer_date = ReferenceField(Volunteer_Date)
-    signed_up = BooleanField(default=True)
+    volunteer = ReferenceField('WIS_User')
+    marked = BooleanField(default=False)
     attended = BooleanField(default=False)
     signup_time = DateTimeField(default=datetime.datetime.utcnow)
     cancelled = BooleanField(default=False)
-    cancelled_date = DateTimeField()
+    cancel_time = DateTimeField()
 
 
 class WIS_User(User):

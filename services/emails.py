@@ -49,6 +49,16 @@ def send_date_cancelled_email(user, start, end):
                     'please update your settings immediately and contact the ' \
                     'admin at wis@mcabayarea.org.\n\nJazakAllah Khairan ' \
                     '\nWIS Admin'.format(user.first_name, user.last_name,
-                                         start.strftime('%A, %B %-d, %Y at %-I:%M %p'),
-                                         end.strftime('%-I:%M %p'))
+                                         start.strftime('%A, %B %-d, %Y at %-I:%M %p'))
+    send_email(user.email, subject, email_message)
+
+
+def send_admin_date_cancelled_email(user, start, end):
+    subject = 'WIS Volunteering Duty on {0}'.format(start.strftime('%A, %B %-d, %Y at %-I:%M %p'))
+    email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\n This is a ' \
+                    'notification email that your volunteering duty on {2} has been cancelled' \
+                    'If you have any questions or believe this message is an error, ' \
+                    'please contact the admin at wis@mcabayarea.org.\n\nJazakAllah Khairan ' \
+                    '\nWIS Admin'.format(user.first_name, user.last_name,
+                                         start.strftime('%A, %B %-d, %Y at %-I:%M %p'))
     send_email(user.email, subject, email_message)
