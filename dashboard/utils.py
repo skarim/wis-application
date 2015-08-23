@@ -95,7 +95,6 @@ def volunteer_date_register(volunteer_id, date_id):
 
                 # add registration to the volunteer's list
                 volunteer_user.registrations.append(registration)
-                volunteer_user.signup_count+=1
                 volunteer_user.save()
 
                 # add volunteer to list of volunteers for the date
@@ -143,7 +142,6 @@ def volunteer_date_cancellation(volunteer_id, date_id):
                         volunteer_registration.cancelled = True
                         volunteer_registration.cancel_time = datetime.datetime.utcnow()
                         volunteer_registration.save()
-                volunteer_user.signup_count-=1
                 volunteer_user.save()
 
                 # remove volunteer from list of volunteers for the date
@@ -183,13 +181,6 @@ def admin_remove_volunteer_from_date(registration_id):
 
             # remove registration from the volunteer's list
             volunteer_user.registrations.remove(volunteer_registration)
-            # update completed and missed counts as necessary
-            if volunteer_registration.marked:
-                if volunteer_registration.attended:
-                    volunteer_user.completed_count-=1
-                else:
-                    volunteer_user.missed_count-=1
-            volunteer_user.signup_count-=1
             volunteer_user.save()
 
             # remove volunteer from list of volunteers for the date
@@ -216,19 +207,11 @@ def admin_set_volunteer_attendance(registration_id, attendance_state):
             volunteer_registration = Volunteer_Date_Registration.objects.get(id=registration_id)
             volunteer_user = volunteer_registration.volunteer
 
-            # undo any previous user count for the registration
-            if volunteer_registration.marked:
-                if volunteer_registration.attended:
-                    volunteer_user.completed_count-=1
-                else:
-                    volunteer_user.missed_count-=1
-
             # set appropriate attendance state
             if attendance_state == 'yes':
                 volunteer_registration.attended = True
-                volunteer_user.completed_count+=1
             else:
-                volunteer_user.missed_count+=1
+                volunteer_registration.attended = False
             volunteer_registration.marked = True
 
             volunteer_user.save()

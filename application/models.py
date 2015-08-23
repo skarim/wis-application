@@ -39,7 +39,7 @@ class Volunteer_Date(Document):
 class Volunteer_Date_Registration(Document):
     volunteer_date = ReferenceField(Volunteer_Date)
     volunteer = ReferenceField('WIS_User')
-    marked = BooleanField(default=False)
+    marked = BooleanField(default=False) # whether an attended/absent value has been set by the admin
     attended = BooleanField(default=False)
     signup_time = DateTimeField(default=datetime.datetime.utcnow)
     cancelled = BooleanField(default=False)
@@ -49,11 +49,29 @@ class Volunteer_Date_Registration(Document):
 class WIS_User(User):
     is_admin = BooleanField(default=False)
     is_volunteer = BooleanField(default=True)
-    # volunteer data fields
-    signup_count = IntField(default=0)
-    completed_count = IntField(default=0)
-    missed_count = IntField(default=0)
     registrations = ListField(ReferenceField(Volunteer_Date_Registration))
+
+    @property
+    def signup_count(self):
+        return len(self.registrations)
+
+    @property
+    def completed_count(self):
+        count = 0
+        for registration in self.registrations:
+            if registration.marked:
+                if registration.attended:
+                    count+=1
+        return count
+
+    @property
+    def missed_count(self):
+        count = 0
+        for registration in self.registrations:
+            if registration.marked:
+                if not registration.attended:
+                    count+=1
+        return count
 
 
 class Allowed_User(Document):

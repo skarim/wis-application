@@ -59,14 +59,16 @@
                                     <td>{{ registration.volunteer_date.event_end|date:'g:i a' }}</td>
                                     <td>{{ registration.signup_time }}</td>
                                     <td>
-                                        {% if registration.attended %}
-                                            <span class="text-success">
-                                                <i class="fa fa-check"></i> Yes
-                                            </span>
-                                        {% elif registration.volunteer_date.is_past %}
-                                            <span class="text-danger">
-                                                <i class="fa fa-times"></i> Absent
-                                            </span>
+                                        {% if registration.marked %}
+                                            {% if registration.attended %}
+                                                <span class="text-success">
+                                                    <i class="fa fa-check"></i> Yes
+                                                </span>
+                                            {% else %}
+                                                <span class="text-danger">
+                                                    <i class="fa fa-times"></i> Absent
+                                                </span>
+                                            {% endif %}
                                         {% else %}
                                             <span class="text-warning">
                                                 <i class="fa fa-circle"></i> Pending
