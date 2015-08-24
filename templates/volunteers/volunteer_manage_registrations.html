@@ -82,7 +82,7 @@
                                                     Cannot Cancel
                                                 </button>
                                             {% else %}
-                                                <button class="btn btn-sm btn-danger date_signup" data-date-id="{{ registration.volunteer_date.id }}" data-toggle="modal" data-target="#cancelModal">
+                                                <button class="btn btn-sm btn-danger date_signup" data-date-id="{{ registration.volunteer_date.id }}" data-date-str="{{ registration.volunteer_date.event_begin|date:'D, N j' }} from {{ registration.volunteer_date.event_begin|date:'g:i a' }} to {{ registration.volunteer_date.event_end|date:'g:i a' }}" data-toggle="modal" data-target="#cancelModal">
                                                     Cancel
                                                 </button>
                                             {% endif %}
@@ -160,12 +160,17 @@
     <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-body">
+                <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="cancelModalLabel">
-                        Confirm Cancellation
-                        <small>This action cannot be undone</small>
-                    </h4>
+                    <h4 class="modal-title">Confirm Registration Cancellation</h4>
+                </div>
+                <div class="modal-body">
+                    Cancelling your registration will remove you from the list of volunteers for the selected volunteering date.
+                    <br><br>
+                    Please confirm this is the correct date before proceeding:<br>
+                    <b id="date_str" class="text-danger"></b>
+                    <br><br>
+                    This action cannot be undone.
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
@@ -197,7 +202,9 @@
         // volunteer date cancellation
         $('.date_signup').click(function(){
             var date_id = $(this).attr('data-date-id');
+            var date_str = $(this).attr('data-date-str');
             $('#date_id').val(date_id);
+            $('#date_str').html(date_str);
         });
         $('#confirm_cancel').click(function(){
             $('#date_form').submit();
