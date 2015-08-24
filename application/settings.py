@@ -102,6 +102,7 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -133,6 +134,8 @@ INSTALLED_APPS = (
     'authorization',
     'dashboard',
     'mailer',
+    # opbeat app monitoring
+    'opbeat.contrib.django',
 )
 
 # Session saving to extend logged in time
@@ -199,15 +202,9 @@ LOGGING = {
 }
 
 
-# Database (IGNORED)
-# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'django',
-#         'USER': 'django',
-#         'PASSWORD': 'tn1sHlDzJo',
-#         'HOST': 'localhost',
-#         'PORT': '',
-#     }
-# }
+# opbeat app monitoring settings
+OPBEAT = {
+    'ORGANIZATION_ID': os.getenv('OPBEAT_ORGANIZATION_ID'),
+    'APP_ID': os.getenv('OPBEAT_APP_ID'),
+    'SECRET_TOKEN': os.getenv('OPBEAT_SECRET_TOKEN'),
+}

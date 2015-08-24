@@ -1,5 +1,6 @@
 Django==1.6.1
 mongoengine==0.8.7
+opbeat==3.0.4
 pymongo==2.7.2
 pytz==2015.4
 urllib3==1.7.1
