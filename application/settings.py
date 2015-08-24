@@ -28,8 +28,8 @@ TEMPLATE_DEBUG = DEBUG
 
 # ADMINS: receive emails during errors if DEBUG=False
 ADMINS = (
-    ('Sameen Karim', 'sameenkarim@gmail.com'),
-    ('Mebsah Karim', 'mesbahul.karim@intel.com'),
+    ('WIS Admin', 'mcawisvolunteerchair@gmail.com'),
+    ('Mesbah Karim', 'mesbah@sbcglobal.net'),
 )
 
 
