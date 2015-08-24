@@ -108,9 +108,36 @@
 
         {% block modals %}{% endblock %}
 
+        <!-- loader overlay -->
+        <div id="globalLoaderOverlay">
+            <div class="row">
+                <div class="col-xs-2 col-xs-offset-5">
+                    <section class="panel bg-inverse text-center">
+                        <div class="panel-body">
+                            <img class="loading-img" src="{{ STATIC_URL }}images/loader.gif">
+                            <div class="h5 text-muted m-t m-b-n-mini">
+                                LOADING
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <!-- / loader overlay -->
+
         <!-- javascript -->
         <script src="{{ STATIC_URL }}js/jquery.min.js"></script>
         <script src="{{ STATIC_URL }}js/bootstrap.js"></script>
         {% block custom_js %}{% endblock %}
+        <script type="text/javascript">
+            // loading overlay after form submission
+            $('form').submit(function(){
+                var $overlay = $('#globalLoaderOverlay');
+                $overlay.show();
+                $overlay.css('visibility', 'visible');
+                // finally, submit form
+                $(this).get(0).submit();
+            });
+        </script>
     </body>
 </html>

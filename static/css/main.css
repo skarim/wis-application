@@ -20,3 +20,37 @@
 form.panel-body {
     margin-bottom: 0;
 }
+
+
+/* Loader Overlay styles ---------------------------------------------------- */
+#globalLoaderOverlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background: #233445;
+    opacity: 0.6;
+    filter: alpha(opacity=20);
+    z-index: 9999999;
+    display: none;
+    visibility: hidden;
+}
+
+#globalLoaderOverlay .row {
+    margin-top: 15%;
+}
+
+#globalLoaderOverlay .panel {
+    border-color: transparent;
+}
+
+#globalLoaderOverlay .panel-body {
+    background-color: #000;
+    border-radius: 5px;
+}
+
+#globalLoaderOverlay .loading-img {
+    width: 60px;
+    height: 64px;
+}
