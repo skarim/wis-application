@@ -132,6 +132,7 @@ INSTALLED_APPS = (
     # custom apps
     'authorization',
     'dashboard',
+    'mailer',
 )
 
 # Session saving to extend logged in time
