@@ -7,10 +7,10 @@ urlpatterns = patterns(
     url(r'^settings/$', 'dashboard.views.account_settings'),
 
     # admin views
-    url(r'^volunteers/$', 'dashboard.views.manage_volunteers'),
-    url(r'^volunteers/view/', 'dashboard.views.view_volunteer'),
-    url(r'^dates/$', 'dashboard.views.manage_dates'),
-    url(r'^dates/view/', 'dashboard.views.view_date'),
+    url(r'^volunteers/$', 'dashboard.views.admin_manage_volunteers'),
+    url(r'^volunteers/view/', 'dashboard.views.admin_view_volunteer'),
+    url(r'^dates/$', 'dashboard.views.admin_manage_dates'),
+    url(r'^dates/view/', 'dashboard.views.admin_view_date'),
 
     # volunteer views
     url(r'^register/', 'dashboard.views.volunteer_register'),

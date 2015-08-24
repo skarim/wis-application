@@ -10,34 +10,31 @@ from application.models import *
 def import_volunteer(email, first_name, last_name):
     success, error = ('',)*2
     if email and first_name and last_name:
+        validate_email(email)
+        # check to make sure user is new and unique
+        unique_user = True
         try:
-            validate_email(email)
-            # check to make sure user is new and unique
-            unique_user = True
-            try:
-                Allowed_User.objects.get(email=email)
-                unique_user = False
-            except DoesNotExist:
-                pass
-            try:
-                WIS_User.objects.get(email=email)
-                unique_user = False
-            except DoesNotExist:
-                pass
+            Allowed_User.objects.get(email=email)
+            unique_user = False
+        except DoesNotExist:
+            pass
+        try:
+            WIS_User.objects.get(email=email)
+            unique_user = False
+        except DoesNotExist:
+            pass
 
-            if unique_user:
-                new_user = Allowed_User()
-                new_user.email = email
-                new_user.first_name = first_name
-                new_user.last_name = last_name
-                new_user.save()
-                send_welcome_email(new_user)
-                success = 'Sent email to %s for account activation'\
-                          % new_user.email
-            else:
-                error = 'A volunteer with that email already exists'
-        except:
-            error = 'Invalid email address'
+        if unique_user:
+            new_user = Allowed_User()
+            new_user.email = email
+            new_user.first_name = first_name
+            new_user.last_name = last_name
+            new_user.save()
+            send_welcome_email(new_user)
+            success = 'Sent email to %s for account activation'\
+                      % new_user.email
+        else:
+            error = 'A volunteer with that email already exists'
     else:
         error = 'Please fill out all fields'
     return (success, error,)
@@ -46,28 +43,25 @@ def import_volunteer(email, first_name, last_name):
 def create_volunteering_date(date, start_time, end_time, slots):
     success, error = ('',)*2
     if date and start_time and end_time and slots:
-        try:
-            # parse values
-            event_begin = universalize(date, start_time)
-            event_end = universalize(date, end_time)
-            slots_total = int(slots)
+        # parse values
+        event_begin = universalize(date, start_time)
+        event_end = universalize(date, end_time)
+        slots_total = int(slots)
 
-            # handle errors
-            if event_begin >= event_end:
-                error = 'End time must be after start time'
-            elif slots_total < 1:
-                error = 'Must have at least one slot per volunteer date'
-            else:
-                new_date = Volunteer_Date(event_begin=event_begin,
-                                          event_end=event_end,
-                                          slots_total=slots_total)
-                new_date.save()
-                print 'new_date begin: {0}'.format(new_date.event_begin)
-                print 'new_date end: {0}'.format(new_date.event_end)
-                success = 'Added a volunteering date on %(d)s with %(s)s slots'\
-                          % {'d': date, 's':slots}
-        except:
-            error = 'An unexpected error occurred. Please try again.'
+        # handle errors
+        if event_begin >= event_end:
+            error = 'End time must be after start time'
+        elif slots_total < 1:
+            error = 'Must have at least one slot per volunteer date'
+        else:
+            new_date = Volunteer_Date(event_begin=event_begin,
+                                      event_end=event_end,
+                                      slots_total=slots_total)
+            new_date.save()
+            print 'new_date begin: {0}'.format(new_date.event_begin)
+            print 'new_date end: {0}'.format(new_date.event_end)
+            success = 'Added a volunteering date on %(d)s with %(s)s slots'\
+                      % {'d': date, 's':slots}
     else:
         error = 'Please fill out all fields'
     return (success, error,)
@@ -198,7 +192,7 @@ def admin_remove_volunteer_from_date(registration_id):
             success = 'Successfully removed {0} {1} from volunteering date'.format(volunteer_user.first_name,
                                                                                    volunteer_user.last_name)
         except DoesNotExist:
-            error = 'Selected date does not exist'
+            error = 'Registration does not exist'
     else:
         error = 'Incomplete form data'
     return (success, error,)

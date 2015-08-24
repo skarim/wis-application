@@ -38,51 +38,48 @@ def dashboard(request):
 
 
 @login_required
-def manage_volunteers(request):
+def admin_manage_volunteers(request):
     # send regular users back to dashboard
     if request.user.is_volunteer:
         return redirect('dashboard.views.dashboard')
 
     # handle volunteer add/import
     success, error = ('',)*2
-    try:
-        if request.method == 'POST':
-            type = request.POST.get('type')
-            if type == 'single':
-                email = request.POST.get('email')
-                first_name = request.POST.get('first_name')
-                last_name = request.POST.get('last_name')
-                success, error = import_volunteer(email, first_name, last_name)
-            elif type == 'csv':
-                # create vars to keep track of successes and errors
-                num_success = 0
-                error_users = []
-                # parse csv file
-                csv_user_list = request.FILES.get('csv_user_list')
-                user_list = csv_user_list.read().split('\r')
-                for user in user_list:
-                    user = user.split(',')
-                    email = user[2]
-                    first_name = user[0]
-                    last_name = user[1]
-                    user_success, user_error = import_volunteer(
-                        email, first_name, last_name
-                    )
-                    if user_success:
-                        num_success+=1
-                    if user_error:
-                        error_users.append(email)
-                if num_success:
-                    success = 'Sent emails to %s users for account activation'\
-                          % num_success
-                if error_users:
-                    error = 'Unable to add the following emails:'
-                    for error_user in error_users:
-                        error += '\n %s' % error_user
-            else:
-                error = 'Unable to process request'
-    except:
-        error = 'Unable to process request'
+    if request.method == 'POST':
+        type = request.POST.get('type')
+        if type == 'single':
+            email = request.POST.get('email')
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+            success, error = import_volunteer(email, first_name, last_name)
+        elif type == 'csv':
+            # create vars to keep track of successes and errors
+            num_success = 0
+            error_users = []
+            # parse csv file
+            csv_user_list = request.FILES.get('csv_user_list')
+            user_list = csv_user_list.read().split('\r')
+            for user in user_list:
+                user = user.split(',')
+                email = user[2]
+                first_name = user[0]
+                last_name = user[1]
+                user_success, user_error = import_volunteer(
+                    email, first_name, last_name
+                )
+                if user_success:
+                    num_success+=1
+                if user_error:
+                    error_users.append(email)
+            if num_success:
+                success = 'Sent emails to %s users for account activation'\
+                      % num_success
+            if error_users:
+                error = 'Unable to add the following emails:'
+                for error_user in error_users:
+                    error += '\n %s' % error_user
+        else:
+            error = 'Unable to process request'
 
     users = WIS_User.objects
     params = {
@@ -97,7 +94,7 @@ def manage_volunteers(request):
 
 
 @login_required
-def view_volunteer(request):
+def admin_view_volunteer(request):
     # send regular users back to dashboard
     if request.user.is_volunteer:
         return redirect('dashboard.views.dashboard')
@@ -105,7 +102,7 @@ def view_volunteer(request):
     volunteer_id = request.GET.get('id')
     # if there's no user_id, redirect back to manage volunteers page
     if not request.GET.get('id'):
-        return redirect('dashboard.views.manage_volunteers')
+        return redirect('dashboard.views.admin_manage_volunteers')
 
     # handle volunteer user editing/deleting
     try:
@@ -118,11 +115,11 @@ def view_volunteer(request):
             context_instance=RequestContext(request)
         )
     except DoesNotExist:
-        return redirect('dashboard.views.manage_volunteers')
+        return redirect('dashboard.views.admin_manage_volunteers')
 
 
 @login_required
-def manage_dates(request):
+def admin_manage_dates(request):
     # send regular users back to dashboard
     if request.user.is_volunteer:
         return redirect('dashboard.views.dashboard')
@@ -185,7 +182,7 @@ def manage_dates(request):
 
 
 @login_required
-def view_date(request):
+def admin_view_date(request):
     # send regular users back to dashboard
     if request.user.is_volunteer:
         return redirect('dashboard.views.dashboard')
@@ -193,7 +190,7 @@ def view_date(request):
     date_id = request.GET.get('id')
     # if there's no date_id, redirect back to manage dates page
     if not request.GET.get('id'):
-        return redirect('dashboard.views.manage_dates')
+        return redirect('dashboard.views.admin_manage_dates')
 
     # handle volunteer date reports/editing/deleting
     success, error = ('',)*2
@@ -226,7 +223,7 @@ def view_date(request):
             context_instance=RequestContext(request)
         )
     except DoesNotExist:
-        return redirect('dashboard.views.manage_dates')
+        return redirect('dashboard.views.admin_manage_dates')
 
 
 @login_required
