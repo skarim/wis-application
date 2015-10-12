@@ -170,7 +170,7 @@
     </script>
     <script type="text/javascript">
         // volunteer date signup
-        $('.date_signup').click(function(){
+        $("table").on("click", "button.date_signup", function(){
             var date_id = $(this).attr('data-date-id');
             $('#date_id').val(date_id);
             $('#date_form').submit();

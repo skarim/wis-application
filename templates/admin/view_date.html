@@ -273,7 +273,7 @@
     </script>
     <script type="text/javascript">
         // registration cancellation
-        $('.registration_remove').click(function(){
+        $("table").on("click", "button.registration_remove", function(){
             var registration_id = $(this).attr('data-registration-id');
             $('#registration_id_remove').val(registration_id);
         });
@@ -283,13 +283,13 @@
     </script>
     <script type="text/javascript">
         // show attendance action buttons
-        $('.show_attendance_actions').click(function(){
+        $("table").on("click", "button.show_attendance_actions", function(){
             var registration_id = $(this).attr('data-registration-id');
             $('#attendance_display_'+registration_id).hide();
             $('#attendance_actions_'+registration_id).show();
         });
         // set volunteer attendance
-        $('.record_attendance').click(function(){
+        $("table").on("click", "button.record_attendance", function(){
             var registration_id = $(this).attr('data-registration-id');
             var registration_state = $(this).attr('data-registration-state');
             $('#registration_id_attendance').val(registration_id);

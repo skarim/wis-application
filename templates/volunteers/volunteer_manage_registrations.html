@@ -200,7 +200,7 @@
     </script>
     <script type="text/javascript">
         // volunteer date cancellation
-        $('.date_signup').click(function(){
+        $("table").on("click", "button.date_signup", function(){
             var date_id = $(this).attr('data-date-id');
             var date_str = $(this).attr('data-date-str');
             $('#date_id').val(date_id);
