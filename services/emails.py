@@ -24,6 +24,18 @@ def send_welcome_email(user):
     send_email(user.email, 'Activate your WIS Volunteer Account', email_message)
 
 
+def send_temporary_password_email(user, password):
+    subject = 'Temporary Password for your WIS Volunteer Account'
+    email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\nWe received a request' \
+                    'to reset the password on your account. You can login to your' \
+                    'account at http://app.mcawis.org using the following ' \
+                    'temporary password: {2}\n\nIf you did not authorize this request, ' \
+                    'please immediately contact us at wis@mcabayarea.org.\n\nJazakAllah ' \
+                    'Khairan \nWIS Admin'.format(user.first_name,
+                                                 user.last_name, password)
+    send_email(user.email, subject, email_message)
+
+
 def send_date_registered_email(user, start, end):
     subject = 'WIS Volunteering Duty on {0}'.format(start.strftime('%A, %B %-d, %Y at %-I:%M %p'))
     email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\n This is a ' \

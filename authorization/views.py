@@ -2,8 +2,11 @@ from django.contrib.auth import login, logout
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.core.validators import validate_email
+from django.contrib.auth.models import User
 
 from application.models import *
+
+from services.emails import send_temporary_password_email
 
 
 def create_account(request):
@@ -106,6 +109,30 @@ def sign_in(request):
     }
     return render_to_response(
         'login.html', params,
+        context_instance=RequestContext(request)
+    )
+
+
+def forgot_password(request):
+    success, error = ('',)*2
+    if request.method == 'POST':
+        try:
+            # get user from db
+            user = WIS_User.objects.get(email=request.POST.get('email'))
+            # create a temporary password
+            temp_password = User.objects.make_random_password(length=8)
+            user.set_password(temp_password)
+            # email temporary password to user
+            send_temporary_password_email(user, temp_password)
+            success = "A temporary password has been emailed to you"
+        except DoesNotExist:
+            error = "User does not exist"
+    params = {
+        'success': success,
+        'error': error
+    }
+    return render_to_response(
+        'forgot.html', params,
         context_instance=RequestContext(request)
     )
 
