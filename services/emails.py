@@ -29,8 +29,10 @@ def send_temporary_password_email(user, password):
     email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\nWe received a request' \
                     'to reset the password on your account. You can login to your' \
                     'account at http://app.mcawis.org using the following ' \
-                    'temporary password: {2}\n\nIf you did not authorize this request, ' \
-                    'please immediately contact us at wis@mcabayarea.org.\n\nJazakAllah ' \
+                    'temporary password: {2}\n\nPlease make sure to change your ' \
+                    'password immediately (in your Account Settings) after ' \
+                    'logging in.\n\nIf you did not authorize this request, please ' \
+                    'immediately contact us at wis@mcabayarea.org.\n\nJazakAllah ' \
                     'Khairan \nWIS Admin'.format(user.first_name,
                                                  user.last_name, password)
     send_email(user.email, subject, email_message)

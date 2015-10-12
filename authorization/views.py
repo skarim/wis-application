@@ -2,7 +2,7 @@ from django.contrib.auth import login, logout
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.core.validators import validate_email
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User as DjangoUserClass
 
 from application.models import *
 
@@ -120,7 +120,7 @@ def forgot_password(request):
             # get user from db
             user = WIS_User.objects.get(email=request.POST.get('email'))
             # create a temporary password
-            temp_password = User.objects.make_random_password(length=8)
+            temp_password = DjangoUserClass.objects.make_random_password(length=8)
             user.set_password(temp_password)
             # email temporary password to user
             send_temporary_password_email(user, temp_password)
