@@ -52,7 +52,7 @@
                             {% for registration in user.registrations %}
                                 {% if not registration.cancelled %}
                                     <tr>
-                                        <td class="cat-title">{{ registration.volunteer_date.event_begin|date:'D, N j' }}</td>
+                                        <td class="cat-title">{{ registration.volunteer_date.event_begin|date:'D, M j, Y' }}</td>
                                         <td>{{ registration.volunteer_date.event_begin|date:'g:i a' }}</td>
                                         <td>{{ registration.volunteer_date.event_end|date:'g:i a' }}</td>
                                         <td>
@@ -82,7 +82,7 @@
                                                     Cannot Cancel
                                                 </button>
                                             {% else %}
-                                                <button class="btn btn-sm btn-danger date_signup" data-date-id="{{ registration.volunteer_date.id }}" data-date-str="{{ registration.volunteer_date.event_begin|date:'D, N j' }} from {{ registration.volunteer_date.event_begin|date:'g:i a' }} to {{ registration.volunteer_date.event_end|date:'g:i a' }}" data-toggle="modal" data-target="#cancelModal">
+                                                <button class="btn btn-sm btn-danger date_signup" data-date-id="{{ registration.volunteer_date.id }}" data-date-str="{{ registration.volunteer_date.event_begin|date:'D, M j, Y' }} from {{ registration.volunteer_date.event_begin|date:'g:i a' }} to {{ registration.volunteer_date.event_end|date:'g:i a' }}" data-toggle="modal" data-target="#cancelModal">
                                                     Cancel
                                                 </button>
                                             {% endif %}

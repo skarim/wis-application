@@ -98,7 +98,7 @@
                             <tbody>
                                 {% for registration in user.registrations %}
                                     <tr>
-                                        <td class="cat-title">{{ registration.volunteer_date.event_begin|date:'D, N j' }}</td>
+                                        <td class="cat-title">{{ registration.volunteer_date.event_begin|date:'D, M j, Y' }}</td>
                                         <td>{{ registration.volunteer_date.event_begin|date:'g:i a' }}</td>
                                         <td>{{ registration.volunteer_date.event_end|date:'g:i a' }}</td>
                                         <td>{{ registration.signup_time }}</td>

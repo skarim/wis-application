@@ -53,7 +53,7 @@
                             {% for date in dates %}
                                 {% if not date.is_past and not date.is_two_days_or_less_prior %}
                                     <tr>
-                                        <td class="cat-title">{{ date.event_begin|date:'D, N j' }}</td>
+                                        <td class="cat-title">{{ date.event_begin|date:'D, M j, Y' }}</td>
                                         <td>{{ date.event_begin|date:'g:i a' }}</td>
                                         <td>{{ date.event_end|date:'g:i a' }}</td>
                                         <td>{{ date.slots_available }}</td>

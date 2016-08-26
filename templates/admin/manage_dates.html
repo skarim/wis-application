@@ -53,7 +53,7 @@
                             {% for date in dates %}
                                 {% if not date.is_past %}
                                     <tr>
-                                        <td class="cat-title">{{ date.event_begin|date:'D, N j' }}</td>
+                                        <td class="cat-title">{{ date.event_begin|date:'D, M j, Y' }}</td>
                                         <td>{{ date.event_begin|date:'g:i a' }}</td>
                                         <td>{{ date.event_end|date:'g:i a' }}</td>
                                         <td>{{ date.slots_available }}</td>
@@ -90,7 +90,7 @@
                             {% for date in dates %}
                                 {% if date.is_past %}
                                     <tr>
-                                        <td class="cat-title">{{ date.event_begin|date:'D, N j' }}</td>
+                                        <td class="cat-title">{{ date.event_begin|date:'D, M j, Y' }}</td>
                                         <td>{{ date.event_begin|date:'g:i a' }}</td>
                                         <td>{{ date.event_end|date:'g:i a' }}</td>
                                         <td>{{ date.slots_filled }}</td>

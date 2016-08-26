@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ volunteer_date.event_begin|date:'D, N j' }} Volunteering Date{% endblock %}
+{% block title %}{{ volunteer_date.event_begin|date:'D, M j, Y' }} Volunteering Date{% endblock %}
 
 {% block content %}
     <div class="clearfix">
         <h3>
-            Volunteering Date: {{ volunteer_date.event_begin|date:'D, N j' }} from {{ volunteer_date.event_begin|date:'g:i a' }} to {{ volunteer_date.event_end|date:'g:i a' }}
+            Volunteering Date: {{ volunteer_date.event_begin|date:'D, M j, Y' }} from {{ volunteer_date.event_begin|date:'g:i a' }} to {{ volunteer_date.event_end|date:'g:i a' }}
             {% if volunteer_date.is_past %}
                 <span class="h5 pull-right">
                     <i class="fa fa-archive"></i>&nbsp; Past
@@ -227,7 +227,7 @@
                     Deleting this Volunteering Date will cancel all corresponding volunteers' registrations.
                     <br><br>
                     Please confirm this is the correct date you want to delete:<br>
-                    <b class="text-danger">{{ volunteer_date.event_begin|date:'D, N j' }} from {{ volunteer_date.event_begin|date:'g:i a' }} to {{ volunteer_date.event_end|date:'g:i a' }}</b>
+                    <b class="text-danger">{{ volunteer_date.event_begin|date:'D, M j, Y' }} from {{ volunteer_date.event_begin|date:'g:i a' }} to {{ volunteer_date.event_end|date:'g:i a' }}</b>
                     <br><br>
                     This action cannot be undone.
                 </div>
