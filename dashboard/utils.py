@@ -2,7 +2,8 @@ from django.core.validators import validate_email
 
 from services.emails import send_welcome_email, send_date_registered_email, \
     send_date_cancelled_email, send_admin_date_cancelled_email, \
-    send_admin_date_deleted_email
+    send_admin_date_deleted_email, send_date_attended_email,\
+    send_date_absent_email
 from services.timing import universalize, localize
 from application.models import *
 
@@ -202,6 +203,7 @@ def admin_set_volunteer_attendance(registration_id, attendance_state):
     if registration_id and attendance_state:
         try:
             volunteer_registration = Volunteer_Date_Registration.objects.get(id=registration_id)
+            volunteer_date = volunteer_registration.volunteer_date
             volunteer_user = volunteer_registration.volunteer
 
             # set appropriate attendance state
@@ -213,6 +215,16 @@ def admin_set_volunteer_attendance(registration_id, attendance_state):
 
             volunteer_user.save()
             volunteer_registration.save()
+
+            # localize the volunteer date times for emailing
+            localized_start = localize(volunteer_date.event_begin)
+            localized_end = localize(volunteer_date.event_end)
+
+            # send notification email
+            if volunteer_registration.attended:
+                send_date_attended_email(volunteer_user, localized_start, localized_end)
+            else:
+                send_date_absent_email(volunteer_user, localized_start, localized_end)
 
             success = 'Successfully saved attendance state for {0} {1}'.format(volunteer_user.first_name,
                                                                                volunteer_user.last_name)

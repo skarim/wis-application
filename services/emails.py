@@ -107,3 +107,33 @@ def send_volunteer_reminder_email(user, start, end):
                                          start.strftime('%A, %B %-d, %Y at %-I:%M %p'),
                                          end.strftime('%-I:%M %p'))
     send_email(user.email, subject, email_message)
+
+
+def send_date_attended_email(user, start, end):
+    subject = 'Completed WIS Volunteering Duty on {0}'.format(start.strftime('%A, %B %-d, %Y at %-I:%M %p'))
+    email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\n This is a ' \
+                    'confirmation that you have completed your volunteering ' \
+                    'duty on {2}. Thank you! Please save this email for your ' \
+                    'records. If you have any questions or believe this ' \
+                    'message is an error, please contact the admin at ' \
+                    'wis@mcabayarea.org.\n\nJazakAllah Khairan ' \
+                    '\nWIS Admin'.format(user.first_name, user.last_name,
+                                         start.strftime(
+                                             '%A, %B %-d, %Y at %-I:%M %p'))
+    send_email(user.email, subject, email_message)
+
+
+def send_date_absent_email(user, start, end):
+    subject = '[ALERT] Missed WIS Volunteering Duty on {0}'.format(start.strftime('%A, %B %-d, %Y at %-I:%M %p'))
+    email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\n This is a ' \
+                    'notification that you were marked absent for your ' \
+                    'volunteering duty on {2}. As per the WIS volunteering ' \
+                    'contract, you will be charged for this missed day unless ' \
+                    'you complete volunteering on a future date. If you have ' \
+                    'any questions or believe this message is an error, ' \
+                    'please contact the admin at wis@mcabayarea.org.' \
+                    '\n\nJazakAllah Khairan ' \
+                    '\nWIS Admin'.format(user.first_name, user.last_name,
+                                         start.strftime(
+                                             '%A, %B %-d, %Y at %-I:%M %p'))
+    send_email(user.email, subject, email_message)
