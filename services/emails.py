@@ -26,8 +26,8 @@ def send_welcome_email(user):
 
 def send_temporary_password_email(user, password):
     subject = 'Temporary Password for your WIS Volunteer Account'
-    email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\nWe received a request' \
-                    'to reset the password on your account. You can login to your' \
+    email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\nWe received a request ' \
+                    'to reset the password on your account. You can login to your ' \
                     'account at http://app.mcawis.org using the following ' \
                     'temporary password: {2}\n\nPlease make sure to change your ' \
                     'password immediately (in your Account Settings) after ' \
@@ -41,7 +41,7 @@ def send_temporary_password_email(user, password):
 def send_date_registered_email(user, start, end):
     subject = 'WIS Volunteering Duty on {0}'.format(start.strftime('%A, %B %-d, %Y at %-I:%M %p'))
     email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\n This is a ' \
-                    'confirmation email for your volunteering duty on' \
+                    'confirmation email for your volunteering duty on ' \
                     '{2}. Please make sure that you are at the school office 15 ' \
                     'minutes prior to get your assignment. You are required to stay ' \
                     'for the entire time until {3}. \n\n Please note that you cannot ' \
@@ -58,7 +58,7 @@ def send_date_registered_email(user, start, end):
 def send_date_cancelled_email(user, start, end):
     subject = 'WIS Volunteering Duty on {0}'.format(start.strftime('%A, %B %-d, %Y at %-I:%M %p'))
     email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\n This is a ' \
-                    'confirmation email that you cancelled your volunteering duty on' \
+                    'confirmation email that you cancelled your volunteering duty on ' \
                     '{2}. If you have any questions or believe this message is an error, ' \
                     'please update your settings immediately or contact the ' \
                     'admin at wis@mcabayarea.org.\n\nJazakAllah Khairan ' \
