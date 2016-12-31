@@ -15,7 +15,7 @@ def send_welcome_email(user):
                                             user.last_name)
     email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\nAn account has been ' \
                     'created for you on the WIS Volunteer Scheduling website. ' \
-                    'Please go to {2} to activate up your account and set your ' \
+                    'Please go to {2} to activate your account and set your ' \
                     'password. After activating your account, you can login at ' \
                     'http://app.mcawis.org. If you have any questions, please ' \
                     'contact the admin at wis@mcabayarea.org.\n\nJazakAllah ' \
