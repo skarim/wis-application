@@ -10,6 +10,7 @@ from services.timing import get_diff_from_now
 
 
 class Volunteer_Date(Document):
+    category = StringField(default='School Day')
     event_begin = DateTimeField()
     event_end = DateTimeField()
     slots_total = IntField()

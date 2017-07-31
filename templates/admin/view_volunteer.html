@@ -44,9 +44,10 @@
                     <table class="table table-striped m-b-none" data-ride="datatables">
                         <thead>
                             <tr>
-                                <th width="30%">Date</th>
-                                <th width="20%">Start Time</th>
-                                <th width="20%">End Time</th>
+                                <th width="20%">Type</th>
+                                <th width="20%">Date</th>
+                                <th width="15%">Start Time</th>
+                                <th width="15%">End Time</th>
                                 <th width="20%">Signed Up</th>
                                 <th width="10%">Attended</th>
                             </tr>
@@ -54,6 +55,7 @@
                         <tbody>
                             {% for registration in volunteer.registrations %}
                                 <tr>
+                                    <td>{{ registration.volunteer_date.category }}</td>
                                     <td class="cat-title">{{ registration.volunteer_date.event_begin|date:'D, M j, Y' }}</td>
                                     <td>{{ registration.volunteer_date.event_begin|date:'g:i a' }}</td>
                                     <td>{{ registration.volunteer_date.event_end|date:'g:i a' }}</td>
@@ -93,7 +95,10 @@
             $(this).dataTable({
                 "bProcessing": true,
                 "sDom": "<'row'<'col-sm-6'l><'col-sm-6'f>r>t<'row'<'col-sm-6'i><'col col-sm-6'p>>",
-                "sPaginationType": "full_numbers"
+                "sPaginationType": "full_numbers",
+                "aaSorting": [
+                    [ 1, "asc" ]
+                ]
             });
         });
     </script>

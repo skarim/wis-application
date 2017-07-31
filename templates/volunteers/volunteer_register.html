@@ -41,18 +41,20 @@
                     <table class="table table-striped m-b-none" data-ride="datatables">
                         <thead>
                             <tr>
-                                <th width="18%">Date</th>
-                                <th width="18%">Begin Time</th>
-                                <th width="18%">End Time</th>
-                                <th width="18%">Slots Available</th>
-                                <th width="18%">Slots Total</th>
-                                <th width="10%">Sign Up</th>
+                                <th width="20%">Type</th>
+                                <th width="20%">Date</th>
+                                <th width="17%">Begin Time</th>
+                                <th width="17%">End Time</th>
+                                <th width="10%">Slots Available</th>
+                                <th width="10%">Slots Total</th>
+                                <th width="6%">Sign Up</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for date in dates %}
                                 {% if not date.is_past and not date.is_two_days_or_less_prior %}
                                     <tr>
+                                        <td>{{ date.category }}</td>
                                         <td class="cat-title">{{ date.event_begin|date:'D, M j, Y' }}</td>
                                         <td>{{ date.event_begin|date:'g:i a' }}</td>
                                         <td>{{ date.event_end|date:'g:i a' }}</td>
@@ -162,8 +164,11 @@
                 "aoColumnDefs": [
                     {
                         "bSortable": false,
-                        "aTargets": [5]
+                        "aTargets": [6]
                     }
+                ],
+                "aaSorting": [
+                    [ 1, "asc" ]
                 ]
             });
         });

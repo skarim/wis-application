@@ -54,3 +54,16 @@ form.panel-body {
     width: 60px;
     height: 64px;
 }
+
+
+/* Form elements styles ----------------------------------------------------- */
+select {
+    font-size: 12px;
+    height: 30px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    display: inline;
+    border: 1px solid #ccc;
+    outline: 0;
+    width:100%;
+}

@@ -6,15 +6,15 @@
     <div class="clearfix">
         <h3>
             Volunteering Date: {{ volunteer_date.event_begin|date:'D, M j, Y' }} from {{ volunteer_date.event_begin|date:'g:i a' }} to {{ volunteer_date.event_end|date:'g:i a' }}
-            {% if volunteer_date.is_past %}
-                <span class="h5 pull-right">
+            <span class="h5 pull-right">
+                <i class="fa fa-tags"></i>&nbsp; {{ volunteer_date.category }}
+                &nbsp;&nbsp;
+                {% if volunteer_date.is_past %}
                     <i class="fa fa-archive"></i>&nbsp; Past
-                </span>
-            {% else %}
-                <span class="h5 pull-right">
+                {% else %}
                     <i class="fa fa-calendar"></i>&nbsp; Upcoming
-                </span>
-            {% endif %}
+                {% endif %}
+            </span>
         </h3>
     </div>
     {% if success %}

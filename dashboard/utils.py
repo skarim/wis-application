@@ -40,9 +40,9 @@ def import_volunteer(email, first_name, last_name):
     return (success, error,)
 
 
-def create_volunteering_date(date, start_time, end_time, slots):
+def create_volunteering_date(category, date, start_time, end_time, slots):
     success, error = ('',)*2
-    if date and start_time and end_time and slots:
+    if category and date and start_time and end_time and slots:
         # parse values
         event_begin = universalize(date, start_time)
         event_end = universalize(date, end_time)
@@ -54,12 +54,11 @@ def create_volunteering_date(date, start_time, end_time, slots):
         elif slots_total < 1:
             error = 'Must have at least one slot per volunteer date'
         else:
-            new_date = Volunteer_Date(event_begin=event_begin,
+            new_date = Volunteer_Date(category=category,
+                                      event_begin=event_begin,
                                       event_end=event_end,
                                       slots_total=slots_total)
             new_date.save()
-            print 'new_date begin: {0}'.format(new_date.event_begin)
-            print 'new_date end: {0}'.format(new_date.event_end)
             success = 'Added a volunteering date on %(d)s with %(s)s slots'\
                       % {'d': date, 's':slots}
     else:

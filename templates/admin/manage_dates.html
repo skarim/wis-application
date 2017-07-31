@@ -41,10 +41,11 @@
                     <table class="table table-striped m-b-none" data-ride="datatables">
                         <thead>
                             <tr>
-                                <th width="30%">Date</th>
-                                <th width="20%">Begin Time</th>
-                                <th width="20%">End Time</th>
-                                <th width="10%">Slots Available</th>
+                                <th width="20%">Type</th>
+                                <th width="20%">Date</th>
+                                <th width="15%">Begin Time</th>
+                                <th width="15%">End Time</th>
+                                <th width="10%">Slots Filled</th>
                                 <th width="10%">Slots Total</th>
                                 <th width="10%">View</th>
                             </tr>
@@ -53,6 +54,7 @@
                             {% for date in dates %}
                                 {% if not date.is_past %}
                                     <tr>
+                                        <td>{{ date.category }}</td>
                                         <td class="cat-title">{{ date.event_begin|date:'D, M j, Y' }}</td>
                                         <td>{{ date.event_begin|date:'g:i a' }}</td>
                                         <td>{{ date.event_end|date:'g:i a' }}</td>
@@ -78,9 +80,10 @@
                     <table class="table table-striped m-b-none" data-ride="datatables">
                         <thead>
                             <tr>
-                                <th width="30%">Date</th>
-                                <th width="20%">Begin Time</th>
-                                <th width="20%">End Time</th>
+                                <th width="20%">Type</th>
+                                <th width="20%">Date</th>
+                                <th width="15%">Begin Time</th>
+                                <th width="15%">End Time</th>
                                 <th width="10%">Slots Filled</th>
                                 <th width="10%">Slots Total</th>
                                 <th width="10%">View</th>
@@ -90,6 +93,7 @@
                             {% for date in dates %}
                                 {% if date.is_past %}
                                     <tr>
+                                        <td>{{ date.category }}</td>
                                         <td class="cat-title">{{ date.event_begin|date:'D, M j, Y' }}</td>
                                         <td>{{ date.event_begin|date:'g:i a' }}</td>
                                         <td>{{ date.event_end|date:'g:i a' }}</td>
@@ -114,11 +118,33 @@
                 </header>
                 <form action="/dashboard/dates/" method="POST" class="panel-body">
                     <div class="form-group">
+                        <label class="control-label">Volunteering Type</label>
+                        <select id="categorySelector" class="dropdown" required>
+                            <option disabled selected value>
+                                -- select an option --
+                            </option>
+                            <option value="School Day (Saturday)">
+                                School Day (Saturday)
+                            </option>
+                            <option value="School Day (Sunday)">
+                                School Day (Sunday)
+                            </option>
+                            <option value="Other">
+                                Other
+                            </option>
+                        </select>
+                        <div id="otherCategory" style="display:none;">
+                            <br>
+                            <input id="categoryField" type="text" name="category" class="form-control" placeholder="enter your custom volunteering type here">
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">
                                 <i class="fa fa-calendar"></i>
                             </div>
-                            <input type="date" name="date" class="form-control" placeholder="YYYY-MM-DD">
+                            <input type="date" name="date" class="form-control" placeholder="YYYY-MM-DD" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -126,16 +152,16 @@
                             <div class="input-group-addon">
                                 <i class="fa fa-clock-o"></i>
                             </div>
-                            <input type="time" name="start_time" class="form-control" placeholder="hh:mm (24 hour format)">
+                            <input type="time" name="start_time" class="form-control" placeholder="hh:mm (24 hour format)" required>
                             <div class="input-group-addon">
                                 to
                             </div>
-                            <input type="time" name="end_time" class="form-control" placeholder="hh:mm (24 hour format)">
+                            <input type="time" name="end_time" class="form-control" placeholder="hh:mm (24 hour format)" required>
                         </div>
                     </div>
                     <div class="block">
                         <label class="control-label">Number of volunteering slots</label>
-                        <input type="number" name="slots" placeholder="enter a number" class="form-control" required>
+                        <input type="number" name="slots" min="1" placeholder="enter a number" class="form-control" required>
                     </div>
                     <input type="hidden" name="form_type" value="single">
                     {% csrf_token %}
@@ -151,7 +177,7 @@
                 <form action="/dashboard/dates/" method="POST" enctype="multipart/form-data" class="panel-body">
                     <ul class="breadcrumb">
                         <li class="active">
-                            <i class="fa fa-info-circle"></i>&nbsp; CSV files need to be formatted with 3 columns in this exact order: Date (YYYY-MM-DD), Start Time (HH:MM), End Time (HH:MM), Total Slots Number. Make sure that start and end times are in 24-hour format. Do not include any column headings.
+                            <i class="fa fa-info-circle"></i>&nbsp; CSV files need to be formatted with 4 columns in this exact order: Volunteering Type, Date (YYYY-MM-DD), Start Time (HH:MM), End Time (HH:MM), Total Slots Number. Make sure that start and end times are in 24-hour format. Do not include any column headings.
                         </li>
                     </ul>
                     <input type="file" name="csv_date_list" title="Choose CSV file" accept=".csv" class="btn btn-sm btn-default m-b-small" style="left: -168.75px; top: 14px;">
@@ -177,10 +203,27 @@
                 "aoColumnDefs": [
                     {
                         "bSortable": false,
-                        "aTargets": [5]
+                        "aTargets": [6]
                     }
+                ],
+                "aaSorting": [
+                    [ 1, "asc" ]
                 ]
             });
+        });
+
+        var $typeSelector = $('#categorySelector');
+
+        $typeSelector.change(function(){
+            var selectedCategoryType = $typeSelector.val();
+
+            if (selectedCategoryType === 'Other') {
+                $('#categoryField').val('');
+                $('#otherCategory').show();
+            } else {
+                $('#otherCategory').hide();
+                $('#categoryField').val(selectedCategoryType);
+            }
         });
     </script>
 {% endblock %}

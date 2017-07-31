@@ -130,12 +130,15 @@ def admin_manage_dates(request):
         form_type = request.POST.get('form_type')
         if form_type == 'single':
             # get form data
+            category = request.POST.get('category')
             date = request.POST.get('date')
             start_time = request.POST.get('start_time')
             end_time = request.POST.get('end_time')
             slots = request.POST.get('slots')
             # create the object
-            success, error = create_volunteering_date(date, start_time, end_time, slots)
+            success, error = create_volunteering_date(category, date,
+                                                      start_time, end_time,
+                                                      slots)
         elif form_type == 'csv':
             # create vars to keep track of successes and errors
             num_success = 0
@@ -145,12 +148,13 @@ def admin_manage_dates(request):
             date_list = csv_date_list.read().split('\r')
             for volunteer_date in date_list:
                 volunteer_date = volunteer_date.split(',')
-                date = volunteer_date[0]
-                start_time = volunteer_date[1]
-                end_time = volunteer_date[2]
-                slots = volunteer_date[3]
+                category = volunteer_date[0]
+                date = volunteer_date[1]
+                start_time = volunteer_date[2]
+                end_time = volunteer_date[3]
+                slots = volunteer_date[4]
                 date_success, date_error = create_volunteering_date(
-                    date, start_time, end_time, slots
+                    category, date, start_time, end_time, slots
                 )
                 if date_success:
                     num_success+=1
