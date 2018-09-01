@@ -25,7 +25,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            ./manage.py test
+            python manage.py test
   deploy_to_staging:
     working_directory: ~/wis-application
     docker:

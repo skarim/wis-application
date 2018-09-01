@@ -1,6 +1,7 @@
 # WIS Volunteer Application
 MCA Weekend Islamic School Volunteer Scheduling Application
 
+[![CircleCI](https://circleci.com/gh/skarim/wis-application/tree/master.svg?style=svg)](https://circleci.com/gh/skarim/wis-application/tree/master)
 
 ### Set Up the Virtual Environment
     virtualenv venv
@@ -14,8 +15,9 @@ MCA Weekend Islamic School Volunteer Scheduling Application
 
 ### Send Reminder Emails
     python manage.py email_reminders --hours_from_now 168
-The optional `hours_from_now` flag sets the value for N, where email reminders 
-are sent to volunteers who have signed up for a volunteering date within the 
+
+The optional `hours_from_now` flag sets the value for N, where email reminders
+are sent to volunteers who have signed up for a volunteering date within the
 next N hours.
 
 _The default value is 168 hours (1 week)_
