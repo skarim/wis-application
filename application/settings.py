@@ -102,8 +102,6 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
-    'opbeat.contrib.django.middleware.Opbeat404CatchMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -135,8 +133,6 @@ INSTALLED_APPS = (
     'authorization',
     'dashboard',
     'mailer',
-    # opbeat app monitoring
-    'opbeat.contrib.django',
 )
 
 # Session saving to extend logged in time
@@ -173,7 +169,7 @@ EMAIL_HOST_PASSWORD = SENDGRID_PASSWORD
 EMAIL_PORT = 587
 
 
-# logging config with opbeat
+# logging config
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
@@ -183,10 +179,6 @@ LOGGING = {
         },
     },
     'handlers': {
-        'opbeat': {
-            'level': 'WARNING',
-            'class': 'opbeat.contrib.django.handlers.OpbeatHandler',
-        },
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
@@ -199,24 +191,5 @@ LOGGING = {
             'handlers': ['console'],
             'propagate': False,
         },
-        'mysite': {
-            'level': 'WARNING',
-            'handlers': ['opbeat'],
-            'propagate': False,
-        },
-        # Log errors from the Opbeat module to the console (recommended)
-        'opbeat.errors': {
-            'level': 'ERROR',
-            'handlers': ['console'],
-            'propagate': False,
-        },
     },
-}
-
-
-# opbeat app monitoring settings
-OPBEAT = {
-    'ORGANIZATION_ID': os.getenv('OPBEAT_ORGANIZATION_ID'),
-    'APP_ID': os.getenv('OPBEAT_APP_ID'),
-    'SECRET_TOKEN': os.getenv('OPBEAT_SECRET_TOKEN'),
 }
