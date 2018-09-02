@@ -75,7 +75,6 @@ def create_account(request):
                     user.is_admin = True
                     user.is_volunteer = False
                 user.set_password(password)
-                user.backend = 'mongoengine.django.auth.MongoEngineBackend'
                 login(request, user)
                 return redirect('dashboard.views.dashboard')
         except:
@@ -95,7 +94,6 @@ def sign_in(request):
         try:
             user = WIS_User.objects.get(email=request.POST.get('email'))
             if user.check_password(request.POST.get('password')):
-                user.backend = 'mongoengine.django.auth.MongoEngineBackend'
                 login(request, user)
                 next_page = request.GET.get('next',
                                             'dashboard.views.dashboard')

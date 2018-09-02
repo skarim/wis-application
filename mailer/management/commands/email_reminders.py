@@ -23,7 +23,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         try:
             hours_from_now = options.get('hours_from_now')
-            volunteer_dates = Volunteer_Date.objects
+            volunteer_dates = Volunteer_Date.objects.get()
             num_emails_sent = 0
 
             for volunteer_date in volunteer_dates:

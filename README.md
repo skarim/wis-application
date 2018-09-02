@@ -3,18 +3,25 @@ MCA Weekend Islamic School Volunteer Scheduling Application
 
 [![CircleCI](https://circleci.com/gh/skarim/wis-application/tree/master.svg?style=svg)](https://circleci.com/gh/skarim/wis-application/tree/master)
 
+
+### Prerequisites
+- Python 3
+- Pip3
+- Virtualenv
+
+
 ### Set Up the Virtual Environment
     virtualenv venv
     source venv/bin/activate
 
 ### Install Dependencies
-    pip install -r requirements.txt
+    pip3 install -r requirements.txt
 
 ### Run Server Locally
-    python manage.py runserver
+    python3 manage.py runserver
 
 ### Send Reminder Emails
-    python manage.py email_reminders --hours_from_now 168
+    python3 manage.py email_reminders --hours_from_now 168
 
 The optional `hours_from_now` flag sets the value for N, where email reminders
 are sent to volunteers who have signed up for a volunteering date within the

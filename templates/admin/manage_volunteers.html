@@ -118,8 +118,8 @@
 {% endblock %}
 
 {% block custom_js %}
-    <script src="{{ STATIC_URL }}js/file-input/bootstrap.file-input.js"></script>
-    <script src="{{ STATIC_URL }}js/datatables/jquery.dataTables.min.js"></script>
+    <script src="{% static 'js/file-input/bootstrap.file-input.js' %}"></script>
+    <script src="{% static 'js/datatables/jquery.dataTables.min.js' %}"></script>
     <script type="text/javascript">
         // set up table of locations
         $('[data-ride="datatables"]').each(function(){

@@ -1,14 +1,14 @@
-from django.conf.urls import patterns, url
+from django.urls import path
 from django.shortcuts import redirect
 
+from . import views
 
-urlpatterns = patterns(
-    '',
-    url(r'^activate/', 'authorization.views.create_account'),
-    url(r'^login/', 'authorization.views.sign_in'),
-    url(r'^forgot/', 'authorization.views.forgot_password'),
-    url(r'^logout/', 'authorization.views.logout_user'),
+urlpatterns = [
+    path('activate/', views.create_account),
+    path('login/', views.sign_in),
+    path('forgot/', views.forgot_password),
+    path('logout/', views.logout_user),
 
     # redirect everything else to login
-    url(r'', lambda _: redirect('/login/')),
-)
+    path('', lambda _: redirect('/login/')),
+]

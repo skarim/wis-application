@@ -1,13 +1,10 @@
 import datetime
 
-from django.http import HttpResponse, HttpResponseBadRequest,\
-    HttpResponseNotAllowed
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed
 from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
-
-from mongoengine import ValidationError, DoesNotExist, MultipleObjectsReturned
 
 from application.models import *
 
@@ -24,9 +21,9 @@ def dashboard(request):
     if request.user.is_admin:
         template = 'admin/dashboard.html'
         params = {
-            'num_volunteers': len(WIS_User.objects),
-            'num_registrations': len(Volunteer_Date_Registration.objects),
-            'num_dates': len(Volunteer_Date.objects),
+            'num_volunteers': WIS_User.objects.count(),
+            'num_registrations': Volunteer_Date_Registration.objects.count(),
+            'num_dates': Volunteer_Date.objects.count(),
         }
     else:
         template = 'volunteers/dashboard.html'
@@ -81,7 +78,7 @@ def admin_manage_volunteers(request):
         else:
             error = 'Unable to process request'
 
-    users = WIS_User.objects
+    users = WIS_User.objects.get()
     params = {
         'success': success,
         'error': error,
@@ -114,7 +111,7 @@ def admin_view_volunteer(request):
             'admin/view_volunteer.html', params,
             context_instance=RequestContext(request)
         )
-    except DoesNotExist:
+    except:
         return redirect('dashboard.views.admin_manage_volunteers')
 
 
@@ -173,7 +170,7 @@ def admin_manage_dates(request):
             success, error = admin_delete_volunteering_date(date_id)
         else:
             error = 'Unable to process request'
-    dates = Volunteer_Date.objects
+    dates = Volunteer_Date.get()
     params = {
         'success': success,
         'error': error,
@@ -213,9 +210,8 @@ def admin_view_date(request):
                 success, error = admin_set_volunteer_attendance(registration_id, attendance_state)
 
         # get objects for page rendering
-        volunteer_date = Volunteer_Date.objects.get(id=date_id)
-        registrations = Volunteer_Date_Registration.objects(volunteer_date=
-                                                            volunteer_date)
+        volunteer_date = Volunteer_Date.get(id=date_id)
+        registrations = Volunteer_Date_Registration.get(volunteer_date=volunteer_date)
         params = {
             'success': success,
             'error': error,
@@ -226,7 +222,7 @@ def admin_view_date(request):
             'admin/view_date.html', params,
             context_instance=RequestContext(request)
         )
-    except DoesNotExist:
+    except:
         return redirect('dashboard.views.admin_manage_dates')
 
 
@@ -240,7 +236,7 @@ def volunteer_register(request):
         date_id = request.POST.get('date_id')
         success, error = volunteer_date_register(volunteer.id, date_id)
 
-    dates = Volunteer_Date.objects
+    dates = Volunteer_Date.get()
     params = {
         'success': success,
         'error': error,
@@ -303,11 +299,11 @@ def account_settings(request):
                         try:
                             WIS_User.objects.get(email=email, is_active=True)
                             error = 'That email address is already in use'
-                        except DoesNotExist:
+                        except:
                             user.email = email
                             user.save()
                             success = 'Email successfully updated to %s' % email
-                    except ValidationError:
+                    except:
                         error = 'You must enter a valid email address'
                 else:
                     error = 'You must enter an email address'

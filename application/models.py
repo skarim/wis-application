@@ -1,20 +1,22 @@
-# coding=utf-8
-from mongoengine import Document, StringField, URLField, DateTimeField, \
-    EmbeddedDocument, ListField, ReferenceField, BooleanField, IntField, \
-    EmbeddedDocumentField, DoesNotExist, ValidationError
-from mongoengine.django.auth import User
-
 import datetime
+from django.db import models
+from django.contrib.auth.models import User
 
 from services.timing import get_diff_from_now
 
 
-class Volunteer_Date(Document):
-    category = StringField(default='School Day')
-    event_begin = DateTimeField()
-    event_end = DateTimeField()
-    slots_total = IntField()
-    volunteers = ListField(ReferenceField('WIS_User'))
+class Volunteer_Date(models.Model):
+    category = models.TextField()
+    event_begin = models.DateTimeField()
+    event_end = models.DateTimeField()
+    slots_total = models.IntegerField(default=0)
+    # volunteers = models.ManyToManyField(WIS_User)
+
+    # category = StringField(default='School Day')
+    # event_begin = DateTimeField()
+    # event_end = DateTimeField()
+    # slots_total = IntField()
+    # volunteers = ListField(ReferenceField('WIS_User'))
 
     @property
     def is_past(self):
@@ -30,31 +32,39 @@ class Volunteer_Date(Document):
 
     @property
     def slots_available(self):
-        return int(self.slots_total) - len(self.volunteers)
+        return self.slots_total - self.registrations.objects.filter(cancelled=False).count()
 
     @property
     def slots_filled(self):
-        return len(self.volunteers)
+        return self.registrations.objects.filter(cancelled=False).count()
 
 
-class Volunteer_Date_Registration(Document):
-    volunteer_date = ReferenceField(Volunteer_Date)
-    volunteer = ReferenceField('WIS_User')
-    marked = BooleanField(default=False) # whether an attended/absent value has been set by the admin
-    attended = BooleanField(default=False)
-    signup_time = DateTimeField(default=datetime.datetime.utcnow)
-    cancelled = BooleanField(default=False)
-    cancel_time = DateTimeField()
+class Volunteer_Date_Registration(models.Model):
+    volunteer = models.ForeignKey('WIS_User', related_name='registrations', on_delete=models.DO_NOTHING,)
+    volunteer_date = models.ForeignKey(Volunteer_Date, related_name='registrations', on_delete=models.DO_NOTHING,)
+    marked = models.BooleanField(default=False) # whether an attended/absent value has been set by the admin
+    attended = models.BooleanField(default=False)
+    signup_time = models.DateTimeField(default=datetime.datetime.utcnow)
+    cancelled = models.BooleanField(default=False)
+    cancel_time = models.DateTimeField()
+
+    # volunteer_date = ReferenceField(Volunteer_Date)
+    # volunteer = ReferenceField('WIS_User')
+    # marked = BooleanField(default=False) # whether an attended/absent value has been set by the admin
+    # attended = BooleanField(default=False)
+    # signup_time = DateTimeField(default=datetime.datetime.utcnow)
+    # cancelled = BooleanField(default=False)
+    # cancel_time = DateTimeField()
 
 
 class WIS_User(User):
-    is_admin = BooleanField(default=False)
-    is_volunteer = BooleanField(default=True)
-    registrations = ListField(ReferenceField(Volunteer_Date_Registration))
+    is_admin = models.BooleanField(default=False)
+    is_volunteer = models.BooleanField(default=True)
+    # registrations = ListField(ReferenceField(Volunteer_Date_Registration))
 
     @property
     def signup_count(self):
-        return len(self.registrations)
+        return self.registrations.objects.count()
 
     @property
     def completed_count(self):
@@ -75,7 +85,7 @@ class WIS_User(User):
         return count
 
 
-class Allowed_User(Document):
-    email = StringField()
-    first_name = StringField()
-    last_name = StringField()
+class Allowed_User(models.Model):
+    email = models.TextField()
+    first_name = models.TextField()
+    last_name = models.TextField()
