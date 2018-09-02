@@ -10,13 +10,6 @@ class Volunteer_Date(models.Model):
     event_begin = models.DateTimeField()
     event_end = models.DateTimeField()
     slots_total = models.IntegerField(default=0)
-    # volunteers = models.ManyToManyField(WIS_User)
-
-    # category = StringField(default='School Day')
-    # event_begin = DateTimeField()
-    # event_end = DateTimeField()
-    # slots_total = IntField()
-    # volunteers = ListField(ReferenceField('WIS_User'))
 
     @property
     def is_past(self):
@@ -32,11 +25,28 @@ class Volunteer_Date(models.Model):
 
     @property
     def slots_available(self):
-        return self.slots_total - self.registrations.objects.filter(cancelled=False).count()
+        return self.slots_total - self.slots_filled
 
     @property
     def slots_filled(self):
-        return self.registrations.objects.filter(cancelled=False).count()
+        try:
+            return self.registrations.filter(cancelled=False).count()
+        except:
+            return 0
+
+    @property
+    def num_registrations(self):
+        try:
+            return self.registrations.count()
+        except:
+            return 0
+
+    def check_if_user_registered(self, user):
+        try:
+            self.registrations.filter(volunteer=user)
+            return True
+        except:
+            return False
 
 
 class Volunteer_Date_Registration(models.Model):
@@ -46,46 +56,36 @@ class Volunteer_Date_Registration(models.Model):
     attended = models.BooleanField(default=False)
     signup_time = models.DateTimeField(default=datetime.datetime.utcnow)
     cancelled = models.BooleanField(default=False)
-    cancel_time = models.DateTimeField()
-
-    # volunteer_date = ReferenceField(Volunteer_Date)
-    # volunteer = ReferenceField('WIS_User')
-    # marked = BooleanField(default=False) # whether an attended/absent value has been set by the admin
-    # attended = BooleanField(default=False)
-    # signup_time = DateTimeField(default=datetime.datetime.utcnow)
-    # cancelled = BooleanField(default=False)
-    # cancel_time = DateTimeField()
+    cancel_time = models.DateTimeField(blank=True, null=True)
 
 
 class WIS_User(User):
     is_admin = models.BooleanField(default=False)
     is_volunteer = models.BooleanField(default=True)
-    # registrations = ListField(ReferenceField(Volunteer_Date_Registration))
 
     @property
     def signup_count(self):
-        return self.registrations.objects.count()
+        try:
+            return self.registrations.count()
+        except:
+            return 0
 
     @property
     def completed_count(self):
-        count = 0
-        for registration in self.registrations:
-            if registration.marked:
-                if registration.attended:
-                    count+=1
-        return count
+        try:
+            return self.registrations.filter(marked=True, attended=True).count()
+        except:
+            return 0
 
     @property
     def missed_count(self):
-        count = 0
-        for registration in self.registrations:
-            if registration.marked:
-                if not registration.attended:
-                    count+=1
-        return count
+        try:
+            return self.registrations.filter(marked=True, attended=False).count()
+        except:
+            return 0
 
 
 class Allowed_User(models.Model):
-    email = models.TextField()
+    email = models.TextField(unique=True)
     first_name = models.TextField()
     last_name = models.TextField()

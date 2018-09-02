@@ -54,7 +54,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for registration in volunteer.registrations %}
+                          {% if volunteer.signup_count > 0 %}
+                            {% for registration in volunteer.registrations.all %}
                                 <tr>
                                     <td>{{ registration.volunteer_date.category }}</td>
                                     <td class="cat-title">{{ registration.volunteer_date.event_begin|date:'D, M j, Y' }}</td>
@@ -80,6 +81,7 @@
                                     </td>
                                 </tr>
                             {% endfor %}
+                          {% endif %}
                         </tbody>
                     </table>
                 </div>

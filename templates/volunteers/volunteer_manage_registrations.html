@@ -51,6 +51,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                          {% if user.signup_count %}
                             {% for registration in user.registrations %}
                                 {% if not registration.cancelled %}
                                     <tr>
@@ -93,6 +94,7 @@
                                     </tr>
                                 {% endif %}
                             {% endfor %}
+                          {% endif %}
                         </tbody>
                     </table>
                 </div>

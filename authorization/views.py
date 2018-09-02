@@ -101,7 +101,7 @@ def sign_in(request):
                 return redirect(next_page)
             else:
                 state = "Incorrect username/password combination"
-        except:
+        except Exception as e:
             print(e)
             state = "User does not exist"
     params = {

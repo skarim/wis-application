@@ -16,23 +16,25 @@ from dashboard.utils import import_volunteer, create_volunteering_date, \
 
 @login_required
 def dashboard(request):
-    params = {}
+    context = {}
     user = WIS_User.objects.get(email=request.user)
     # send users to appropriate dashboard
     if user.is_admin:
         template = 'admin/dashboard.html'
-        params = {
-            'num_volunteers': WIS_User.objects.count(),
-            'num_registrations': Volunteer_Date_Registration.objects.count(),
+        context = {
+            'num_volunteers': WIS_User.objects.filter(is_volunteer=True).count(),
+            'num_registrations': Volunteer_Date_Registration.objects.filter(cancelled=False).count(),
             'num_dates': Volunteer_Date.objects.count(),
         }
     else:
         template = 'volunteers/dashboard.html'
 
+    context['user'] = user
+
     return render(
         request,
         template,
-        params,
+        context,
     )
 
 
@@ -81,8 +83,9 @@ def admin_manage_volunteers(request):
         else:
             error = 'Unable to process request'
 
-    users = WIS_User.objects.get()
-    params = {
+    users = WIS_User.objects.all()
+    context = {
+        'user': user,
         'success': success,
         'error': error,
         'users': users,
@@ -90,14 +93,15 @@ def admin_manage_volunteers(request):
     return render(
         request,
         'admin/manage_volunteers.html',
-        params,
+        context,
     )
 
 
 @login_required
 def admin_view_volunteer(request):
+    user = WIS_User.objects.get(email=request.user)
     # send regular users back to dashboard
-    if request.user.is_volunteer:
+    if user.is_volunteer:
         return redirect('dashboard')
 
     volunteer_id = request.GET.get('id')
@@ -105,25 +109,23 @@ def admin_view_volunteer(request):
     if not request.GET.get('id'):
         return redirect('admin_manage_volunteers')
 
-    # handle volunteer user editing/deleting
-    try:
-        volunteer = WIS_User.objects.get(id=volunteer_id)
-        params = {
-            'volunteer': volunteer,
-        }
-        return render(
-            request,
-            'admin/view_volunteer.html',
-            params,
-        )
-    except:
-        return redirect('admin_manage_volunteers')
+    volunteer = WIS_User.objects.get(id=volunteer_id)
+    context = {
+        'user': user,
+        'volunteer': volunteer,
+    }
+    return render(
+        request,
+        'admin/view_volunteer.html',
+        context,
+    )
 
 
 @login_required
 def admin_manage_dates(request):
+    user = WIS_User.objects.get(email=request.user)
     # send regular users back to dashboard
-    if request.user.is_volunteer:
+    if user.is_volunteer:
         return redirect('dashboard')
 
     # handle volunteer date add/editing
@@ -175,8 +177,10 @@ def admin_manage_dates(request):
             success, error = admin_delete_volunteering_date(date_id)
         else:
             error = 'Unable to process request'
-    dates = Volunteer_Date.get()
-    params = {
+
+    dates = Volunteer_Date.objects.all()
+    context = {
+        'user': user,
         'success': success,
         'error': error,
         'dates': dates,
@@ -184,14 +188,15 @@ def admin_manage_dates(request):
     return render(
         request,
         'admin/manage_dates.html',
-        params,
+        context,
     )
 
 
 @login_required
 def admin_view_date(request):
+    user = WIS_User.objects.get(email=request.user)
     # send regular users back to dashboard
-    if request.user.is_volunteer:
+    if user.is_volunteer:
         return redirect('dashboard')
 
     date_id = request.GET.get('id')
@@ -201,50 +206,48 @@ def admin_view_date(request):
 
     # handle volunteer date reports/editing/deleting
     success, error = ('',)*2
-    try:
-        # handle form submissions
-        if request.method == 'POST':
-            form_type = request.POST.get('form_type')
-            if form_type == 'remove_volunteer_registration':
-                # remove volunteer registration
-                registration_id = request.POST.get('registration_id')
-                success, error = admin_remove_volunteer_from_date(registration_id)
-            elif form_type == 'volunteer_attendance':
-                # set volunteer attendance
-                registration_id = request.POST.get('registration_id')
-                attendance_state = request.POST.get('attendance_state')
-                success, error = admin_set_volunteer_attendance(registration_id, attendance_state)
 
-        # get objects for page rendering
-        volunteer_date = Volunteer_Date.get(id=date_id)
-        registrations = Volunteer_Date_Registration.get(volunteer_date=volunteer_date)
-        params = {
-            'success': success,
-            'error': error,
-            'volunteer_date': volunteer_date,
-            'registrations': registrations,
-        }
-        return render(
-            request,
-            'admin/view_date.html',
-            params,
-        )
-    except:
-        return redirect('admin_manage_dates')
+    # handle form submissions
+    if request.method == 'POST':
+        form_type = request.POST.get('form_type')
+        if form_type == 'remove_volunteer_registration':
+            # remove volunteer registration
+            registration_id = request.POST.get('registration_id')
+            success, error = admin_remove_volunteer_from_date(registration_id)
+        elif form_type == 'volunteer_attendance':
+            # set volunteer attendance
+            registration_id = request.POST.get('registration_id')
+            attendance_state = request.POST.get('attendance_state')
+            success, error = admin_set_volunteer_attendance(registration_id, attendance_state)
+
+    # get objects for page rendering
+    volunteer_date = Volunteer_Date.objects.get(id=date_id)
+    context = {
+        'user': user,
+        'success': success,
+        'error': error,
+        'volunteer_date': volunteer_date,
+    }
+    return render(
+        request,
+        'admin/view_date.html',
+        context,
+    )
 
 
 @login_required
 def volunteer_register(request):
     success, error = ('',)*2
-    volunteer = request.user
+    volunteer = WIS_User.objects.get(email=request.user)
 
     # handle volunteer date registration
     if request.method == 'POST':
         date_id = request.POST.get('date_id')
         success, error = volunteer_date_register(volunteer.id, date_id)
 
-    dates = Volunteer_Date.get()
-    params = {
+    dates = Volunteer_Date.objects.all()
+    context = {
+        'user': volunteer,
         'success': success,
         'error': error,
         'dates': dates,
@@ -252,37 +255,39 @@ def volunteer_register(request):
     return render(
         request,
         'volunteers/volunteer_register.html',
-        params,
+        context,
     )
 
 
 @login_required
 def volunteer_manage_registrations(request):
     success, error = ('',)*2
-    volunteer = request.user
+    volunteer = WIS_User.objects.get(email=request.user)
 
     # handle volunteer date cancellation
     if request.method == 'POST':
         date_id = request.POST.get('date_id')
         success, error = volunteer_date_cancellation(volunteer.id, date_id)
 
-    params = {
+    context = {
+        'user': volunteer,
         'success': success,
         'error': error,
     }
     return render(
         request,
         'volunteers/volunteer_manage_registrations.html',
-        params,
+        context,
     )
 
 
 @login_required
 def account_settings(request):
     success, error = ('',)*2
+    user = WIS_User.objects.get(email=request.user)
     try:
         if request.method == 'POST':
-            user = request.user
+            # user = WIS_User.objects.get(email=request.user)
             identifier = request.POST.get('identifier')
             # update name
             if identifier == 'name':
@@ -310,6 +315,7 @@ def account_settings(request):
                             error = 'That email address is already in use'
                         except:
                             user.email = email
+                            user.username = email
                             user.save()
                             success = 'Email successfully updated to %s' % email
                     except:
@@ -337,12 +343,13 @@ def account_settings(request):
                 error = 'Invalid submission'
     except:
         error = 'Error saving changes'
-    params = {
+    context = {
+        'user': user,
         'success': success,
         'error': error
     }
     return render(
         request,
         'settings.html',
-        params,
+        context,
     )

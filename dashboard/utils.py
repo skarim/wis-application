@@ -12,19 +12,19 @@ def import_volunteer(email, first_name, last_name):
     success, error = ('',)*2
     if email and first_name and last_name:
         validate_email(email)
-        # check to make sure user does not already have an account
+        # check to see if user is already in the system
         user_exists = False
         try:
-            WIS_User.get(email=email)
+            Allowed_User.objects.get(email=email)
             user_exists = True
-        except DoesNotExist:
+        except:
             pass
 
         if not user_exists:
             try:
                 # send email even if already been invited previously
-                new_user = Allowed_User.get(email=email)
-            except DoesNotExist:
+                new_user = Allowed_User.objects.get(email=email)
+            except:
                 new_user = Allowed_User()
                 new_user.email = email
                 new_user.first_name = first_name
@@ -70,8 +70,8 @@ def volunteer_date_register(volunteer_id, date_id):
     success, error = ('',)*2
     if volunteer_id and date_id:
         try:
-            volunteer_user = WIS_User.get(id=volunteer_id)
-            volunteer_date = Volunteer_Date.get(id=date_id)
+            volunteer_user = WIS_User.objects.get(id=volunteer_id)
+            volunteer_date = Volunteer_Date.objects.get(id=date_id)
 
             if volunteer_date.slots_available < 1:
                 error = 'There are no slots available for that date'
@@ -79,21 +79,22 @@ def volunteer_date_register(volunteer_id, date_id):
                 error = 'You cannot signup for a date that has already passed'
             elif volunteer_date.is_two_days_or_less_prior:
                 error = 'You cannot signup for a date less than 48 hours in advance'
-            elif volunteer_user in volunteer_date.volunteers:
+            elif volunteer_date.check_if_user_registered(volunteer_user):
                 error = 'You have already registered for this date'
             else:
                 # create registration object
                 registration = Volunteer_Date_Registration(volunteer_date=volunteer_date,
+
                                                            volunteer=volunteer_user)
                 registration.save()
 
                 # add registration to the volunteer's list
-                volunteer_user.registrations.append(registration)
-                volunteer_user.save()
+                # volunteer_user.registrations.append(registration)
+                # volunteer_user.save()
 
                 # add volunteer to list of volunteers for the date
-                volunteer_date.volunteers.append(volunteer_user)
-                volunteer_date.save()
+                # volunteer_date.registrations.append(volunteer_user)
+                # volunteer_date.save()
 
                 # localize the volunteer date times for displaying
                 localized_start = localize(volunteer_date.event_begin)
@@ -106,7 +107,7 @@ def volunteer_date_register(volunteer_id, date_id):
                           '{0} from {1} to {2}'.format(localized_start.strftime('%A, %B %-d, %Y'),
                                                        localized_start.strftime('%-I:%M %p'),
                                                        localized_end.strftime('%-I:%M %p'))
-        except DoesNotExist:
+        except:
             error = 'Selected date does not exist'
     else:
         error = 'Incomplete form data'
@@ -117,8 +118,8 @@ def volunteer_date_cancellation(volunteer_id, date_id):
     success, error = ('',)*2
     if volunteer_id and date_id:
         try:
-            volunteer_user = WIS_User.get(id=volunteer_id)
-            volunteer_date = Volunteer_Date.get(id=date_id)
+            volunteer_user = WIS_User.objects.get(id=volunteer_id)
+            volunteer_date = Volunteer_Date.objects.get(id=date_id)
 
             if volunteer_date.is_past:
                 error = 'You cannot cancel registration for a date that has already passed'
@@ -132,7 +133,7 @@ def volunteer_date_cancellation(volunteer_id, date_id):
                     if registration.volunteer_date.id == volunteer_date.id:
                         volunteer_user.registrations.remove(registration)
                         # update the registration object
-                        volunteer_registration = Volunteer_Date_Registration.get(id=registration.id)
+                        volunteer_registration = Volunteer_Date_Registration.objects.get(id=registration.id)
                         volunteer_registration.cancelled = True
                         volunteer_registration.cancel_time = datetime.datetime.utcnow()
                         volunteer_registration.save()
@@ -153,7 +154,7 @@ def volunteer_date_cancellation(volunteer_id, date_id):
                           '{0} from {1} to {2}'.format(localized_start.strftime('%A, %B %-d, %Y'),
                                                        localized_start.strftime('%-I:%M %p'),
                                                        localized_end.strftime('%-I:%M %p'))
-        except DoesNotExist:
+        except:
             error = 'Selected date does not exist'
     else:
         error = 'Incomplete form data'
@@ -164,7 +165,7 @@ def admin_remove_volunteer_from_date(registration_id):
     success, error = ('',)*2
     if registration_id:
         try:
-            volunteer_registration = Volunteer_Date_Registration.get(id=registration_id)
+            volunteer_registration = Volunteer_Date_Registration.objects.get(id=registration_id)
             volunteer_date = volunteer_registration.volunteer_date
             volunteer_user = volunteer_registration.volunteer
 
@@ -190,7 +191,7 @@ def admin_remove_volunteer_from_date(registration_id):
 
             success = 'Successfully removed {0} {1} from volunteering date'.format(volunteer_user.first_name,
                                                                                    volunteer_user.last_name)
-        except DoesNotExist:
+        except:
             error = 'Registration does not exist'
     else:
         error = 'Incomplete form data'
@@ -201,7 +202,7 @@ def admin_set_volunteer_attendance(registration_id, attendance_state):
     success, error = ('',)*2
     if registration_id and attendance_state:
         try:
-            volunteer_registration = Volunteer_Date_Registration.get(id=registration_id)
+            volunteer_registration = Volunteer_Date_Registration.objects.get(id=registration_id)
             volunteer_date = volunteer_registration.volunteer_date
             volunteer_user = volunteer_registration.volunteer
 
@@ -227,7 +228,7 @@ def admin_set_volunteer_attendance(registration_id, attendance_state):
 
             success = 'Successfully saved attendance state for {0} {1}'.format(volunteer_user.first_name,
                                                                                volunteer_user.last_name)
-        except DoesNotExist:
+        except:
             error = 'Registration does not exist'
     else:
         error = 'Incomplete form data'
@@ -238,7 +239,7 @@ def admin_delete_volunteering_date(date_id):
     success, error = ('',)*2
     if date_id:
         try:
-            volunteer_date = Volunteer_Date.get(id=date_id)
+            volunteer_date = Volunteer_Date.objects.get(id=date_id)
 
             # localize the volunteer date times for emailing
             localized_start = localize(volunteer_date.event_begin)
@@ -263,7 +264,7 @@ def admin_delete_volunteering_date(date_id):
                       '{0} from {1} to {2}'.format(localized_start.strftime('%A, %B %-d, %Y'),
                                                    localized_start.strftime('%-I:%M %p'),
                                                    localized_end.strftime('%-I:%M %p'))
-        except DoesNotExist:
+        except:
             error = 'Volunteering date does not exist'
     else:
         error = 'Incomplete form data'

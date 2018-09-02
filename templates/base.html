@@ -32,7 +32,7 @@
         {% block navbar %}
             <header id="header" class="navbar bg bg-black">
                 <ul class="nav navbar-nav pull-right">
-                    {% if user.is_admin and not user.is_volunteer %}
+                    {% if user.is_admin %}
                         <li>
                             <div class="m-t-small">
                                 <a href="/dashboard/volunteers/" class="btn btn-sm btn-inverse">

@@ -82,7 +82,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for registration in registrations %}
+                            {% if volunteer_date.num_registrations > 0 %}
+                            {% for registration in volunteer_date.registrations %}
                                 {% if not registration.cancelled %}
                                     <tr>
                                         <td class="cat-title">{{ registration.volunteer.last_name }}</td>
@@ -134,6 +135,7 @@
                                     </tr>
                                 {% endif %}
                             {% endfor %}
+                            {% endif %}
                         </tbody>
                     </table>
                 </div>
@@ -160,7 +162,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for registration in registrations %}
+                          {% if volunteer_date.num_registrations > 0 %}
+                            {% for registration in volunteer_date.registrations %}
                                 {% if registration.cancelled %}
                                     <tr>
                                         <td class="cat-title">{{ registration.volunteer.last_name }}</td>
@@ -176,6 +179,7 @@
                                     </tr>
                                 {% endif %}
                             {% endfor %}
+                          {% endif %}
                         </tbody>
                     </table>
                 </div>
