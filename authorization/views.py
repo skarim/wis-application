@@ -29,7 +29,7 @@ def create_account(request):
                 # check to see if volunteer user is allowed
                 try:
                     Allowed_User.objects.get(email=email)
-                except DoesNotExist:
+                except:
                     state = 'Email not registered with WIS. ' \
                             'Please contact the admin for help.'
 
@@ -38,7 +38,7 @@ def create_account(request):
                 try:
                     WIS_User.objects.get(email=email)
                     state = 'A user with that email already exists'
-                except DoesNotExist:
+                except:
                     pass
 
             # validate email address
@@ -101,7 +101,7 @@ def sign_in(request):
                 return redirect(next_page)
             else:
                 state = "Incorrect username/password combination"
-        except DoesNotExist:
+        except:
             state = "User does not exist"
     params = {
         'state': state
@@ -125,7 +125,7 @@ def forgot_password(request):
             # email temporary password to user
             send_temporary_password_email(user, temp_password)
             success = "A temporary password has been emailed to you"
-        except DoesNotExist:
+        except:
             error = "User does not exist"
     params = {
         'success': success,
