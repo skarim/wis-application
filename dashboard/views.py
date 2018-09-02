@@ -17,8 +17,9 @@ from dashboard.utils import import_volunteer, create_volunteering_date, \
 @login_required
 def dashboard(request):
     params = {}
+    user = WIS_User.objects.get(email=request.user)
     # send users to appropriate dashboard
-    if request.user.is_admin:
+    if user.is_admin:
         template = 'admin/dashboard.html'
         params = {
             'num_volunteers': WIS_User.objects.count(),
@@ -29,7 +30,7 @@ def dashboard(request):
         template = 'volunteers/dashboard.html'
 
     return render(
-        render,
+        request,
         template,
         params,
     )
@@ -37,9 +38,10 @@ def dashboard(request):
 
 @login_required
 def admin_manage_volunteers(request):
+    user = WIS_User.objects.get(email=request.user)
     # send regular users back to dashboard
-    if request.user.is_volunteer:
-        return redirect('dashboard.views.dashboard')
+    if user.is_volunteer:
+        return redirect('dashboard')
 
     # handle volunteer add/import
     success, error = ('',)*2
@@ -96,12 +98,12 @@ def admin_manage_volunteers(request):
 def admin_view_volunteer(request):
     # send regular users back to dashboard
     if request.user.is_volunteer:
-        return redirect('dashboard.views.dashboard')
+        return redirect('dashboard')
 
     volunteer_id = request.GET.get('id')
     # if there's no user_id, redirect back to manage volunteers page
     if not request.GET.get('id'):
-        return redirect('dashboard.views.admin_manage_volunteers')
+        return redirect('admin_manage_volunteers')
 
     # handle volunteer user editing/deleting
     try:
@@ -115,14 +117,14 @@ def admin_view_volunteer(request):
             params,
         )
     except:
-        return redirect('dashboard.views.admin_manage_volunteers')
+        return redirect('admin_manage_volunteers')
 
 
 @login_required
 def admin_manage_dates(request):
     # send regular users back to dashboard
     if request.user.is_volunteer:
-        return redirect('dashboard.views.dashboard')
+        return redirect('dashboard')
 
     # handle volunteer date add/editing
     success, error = ('',)*2
@@ -190,12 +192,12 @@ def admin_manage_dates(request):
 def admin_view_date(request):
     # send regular users back to dashboard
     if request.user.is_volunteer:
-        return redirect('dashboard.views.dashboard')
+        return redirect('dashboard')
 
     date_id = request.GET.get('id')
     # if there's no date_id, redirect back to manage dates page
     if not request.GET.get('id'):
-        return redirect('dashboard.views.admin_manage_dates')
+        return redirect('admin_manage_dates')
 
     # handle volunteer date reports/editing/deleting
     success, error = ('',)*2
@@ -228,7 +230,7 @@ def admin_view_date(request):
             params,
         )
     except:
-        return redirect('dashboard.views.admin_manage_dates')
+        return redirect('admin_manage_dates')
 
 
 @login_required

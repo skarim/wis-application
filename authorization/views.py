@@ -75,8 +75,9 @@ def create_account(request):
                     user.is_admin = True
                     user.is_volunteer = False
                 user.set_password(password)
+                user.save()
                 login(request, user)
-                return redirect('dashboard.views.dashboard')
+                return redirect('dashboard')
         except:
             state = 'Unable to process request'
     params = {
@@ -96,12 +97,12 @@ def sign_in(request):
             user = WIS_User.objects.get(email=request.POST.get('email'))
             if user.check_password(request.POST.get('password')):
                 login(request, user)
-                next_page = request.GET.get('next',
-                                            'dashboard.views.dashboard')
+                next_page = request.GET.get('next', 'dashboard')
                 return redirect(next_page)
             else:
                 state = "Incorrect username/password combination"
         except:
+            print(e)
             state = "User does not exist"
     params = {
         'state': state
@@ -140,4 +141,4 @@ def forgot_password(request):
 
 def logout_user(request):
     logout(request)
-    return redirect('authorization.views.sign_in')
+    return redirect('sign_in')
