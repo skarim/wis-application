@@ -3,7 +3,7 @@ import datetime
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed
 from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render, redirect
 from django.template import RequestContext
 
 from application.models import *
@@ -28,9 +28,10 @@ def dashboard(request):
     else:
         template = 'volunteers/dashboard.html'
 
-    return render_to_response(
-        template, params,
-        context_instance=RequestContext(request)
+    return render(
+        render,
+        template,
+        params,
     )
 
 
@@ -84,9 +85,10 @@ def admin_manage_volunteers(request):
         'error': error,
         'users': users,
     }
-    return render_to_response(
-        'admin/manage_volunteers.html', params,
-        context_instance=RequestContext(request)
+    return render(
+        request,
+        'admin/manage_volunteers.html',
+        params,
     )
 
 
@@ -107,9 +109,10 @@ def admin_view_volunteer(request):
         params = {
             'volunteer': volunteer,
         }
-        return render_to_response(
-            'admin/view_volunteer.html', params,
-            context_instance=RequestContext(request)
+        return render(
+            request,
+            'admin/view_volunteer.html',
+            params,
         )
     except:
         return redirect('dashboard.views.admin_manage_volunteers')
@@ -176,9 +179,10 @@ def admin_manage_dates(request):
         'error': error,
         'dates': dates,
     }
-    return render_to_response(
-        'admin/manage_dates.html', params,
-        context_instance=RequestContext(request)
+    return render(
+        request,
+        'admin/manage_dates.html',
+        params,
     )
 
 
@@ -218,9 +222,10 @@ def admin_view_date(request):
             'volunteer_date': volunteer_date,
             'registrations': registrations,
         }
-        return render_to_response(
-            'admin/view_date.html', params,
-            context_instance=RequestContext(request)
+        return render(
+            request,
+            'admin/view_date.html',
+            params,
         )
     except:
         return redirect('dashboard.views.admin_manage_dates')
@@ -242,9 +247,10 @@ def volunteer_register(request):
         'error': error,
         'dates': dates,
     }
-    return render_to_response(
-        'volunteers/volunteer_register.html', params,
-        context_instance=RequestContext(request)
+    return render(
+        request,
+        'volunteers/volunteer_register.html',
+        params,
     )
 
 
@@ -262,9 +268,10 @@ def volunteer_manage_registrations(request):
         'success': success,
         'error': error,
     }
-    return render_to_response(
-        'volunteers/volunteer_manage_registrations.html', params,
-        context_instance=RequestContext(request)
+    return render(
+        request,
+        'volunteers/volunteer_manage_registrations.html',
+        params,
     )
 
 
@@ -332,7 +339,8 @@ def account_settings(request):
         'success': success,
         'error': error
     }
-    return render_to_response(
-        'settings.html', params,
-        context_instance=RequestContext(request)
+    return render(
+        request,
+        'settings.html',
+        params,
     )

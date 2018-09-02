@@ -1,5 +1,5 @@
 from django.contrib.auth import login, logout
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.core.validators import validate_email
 from django.contrib.auth.models import User as DjangoUserClass
@@ -82,9 +82,10 @@ def create_account(request):
     params = {
         'state': state
     }
-    return render_to_response(
-        'signup.html', params,
-        context_instance=RequestContext(request)
+    return render(
+        request,
+        'signup.html',
+        params,
     )
 
 
@@ -105,9 +106,10 @@ def sign_in(request):
     params = {
         'state': state
     }
-    return render_to_response(
-        'login.html', params,
-        context_instance=RequestContext(request)
+    return render(
+        request,
+        'login.html',
+        params,
     )
 
 
@@ -129,9 +131,10 @@ def forgot_password(request):
         'success': success,
         'error': error
     }
-    return render_to_response(
-        'forgot.html', params,
-        context_instance=RequestContext(request)
+    return render(
+        request,
+        'forgot.html',
+        params,
     )
 
 
