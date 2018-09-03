@@ -20,6 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Set environment
 ENVIRONMENT = os.getenv('DJANGO_ENV', 'development')
 DEBUG = False if ENVIRONMENT == 'production' else True
+DEBUG_EMAIL = os.getenv('DEBUG_EMAIL')
 
 SECRET_KEY = os.getenv('SECRET_KEY', '2vo=8c^67u1-vl$%74#svb10enjyzg58^@f+w^t3qj_=k-r1(6')
 
@@ -87,9 +88,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DB_NAME', 'wisapplication'),
-        'USER': os.getenv('DB_USER', 'sameenkarim'),
-        'PASSWORD': os.getenv('DB_PASSWORD', ''),
-        'HOST':os.getenv('DB_HOST', 'localhost'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST', 'localhost'),
         'PORT': '5432',
     }
 }
@@ -134,8 +135,8 @@ STATICFILES_DIRS = [
 # Email Sending Configuration
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = os.getenv('SENDGRID_USER', 'mcawis-test')
-EMAIL_HOST_PASSWORD = os.getenv('SENDGRID_PASSWORD', 'mcawis00admin')
+EMAIL_HOST_USER = os.getenv('SENDGRID_USER')
+EMAIL_HOST_PASSWORD = os.getenv('SENDGRID_PASSWORD')
 EMAIL_PORT = 587
 
 

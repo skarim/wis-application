@@ -1,12 +1,21 @@
 # Email sending service
 from django.core.mail import EmailMultiAlternatives
 
+from application.settings import ENVIRONMENT, DEBUG, DEBUG_EMAIL
+
 
 def send_email(to, subject, message):
     text_content = message
     from_email = 'wis@mcabayarea.org'
-    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-    msg.send()
+
+    if ENVIRONMENT == 'development':
+        print('email send to: %s' % to)
+        print('subject: %s' % subject)
+        print('message:\n%s' % text_content)
+    elif ENVIRONMENT == 'staging' and DEBUG_EMAIL:
+        to = DEBUG_EMAIL
+    else:
+        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
 
 
 def send_welcome_email(user):
