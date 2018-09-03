@@ -149,10 +149,8 @@ def admin_remove_volunteer_from_date(registration_id):
             volunteer_date = volunteer_registration.volunteer_date
             volunteer_user = volunteer_registration.volunteer
 
-            # update the registration object
-            volunteer_registration.cancelled = True
-            volunteer_registration.cancel_time = datetime.datetime.utcnow()
-            volunteer_registration.save()
+            # delete the registration object
+            volunteer_registration.delete()
 
             # localize the volunteer date times for emailing
             localized_start = localize(volunteer_date.event_begin)
