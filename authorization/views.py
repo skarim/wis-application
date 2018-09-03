@@ -5,6 +5,7 @@ from django.core.validators import validate_email
 from django.contrib.auth.models import User as DjangoUserClass
 
 from application.models import *
+from application.settings import ADMIN_KEY
 
 from services.emails import send_temporary_password_email
 
@@ -23,7 +24,7 @@ def create_account(request):
 
             # validate form data
             if account_type == 'admin':
-                if request.POST.get('admin_key') != 'mcawis3003':
+                if request.POST.get('admin_key') != ADMIN_KEY:
                     state = 'Invalid admin sign up key'
             else:
                 # check to see if volunteer user is allowed

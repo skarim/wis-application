@@ -21,6 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ENVIRONMENT = os.getenv('DJANGO_ENV', 'development')
 DEBUG = False if ENVIRONMENT == 'production' else True
 DEBUG_EMAIL = os.getenv('DEBUG_EMAIL')
+ADMIN_KEY = os.getenv('ADMIN_KEY', 'key')
 
 SECRET_KEY = os.getenv('SECRET_KEY', '2vo=8c^67u1-vl$%74#svb10enjyzg58^@f+w^t3qj_=k-r1(6')
 
