@@ -69,6 +69,10 @@
                                                         <i class="fa fa-times"></i> Absent
                                                     </span>
                                                 {% endif %}
+                                            {% elif registration.cancelled %}
+                                                <span class="text-info">
+                                                    <i class="fa fa-times"></i> Cancelled
+                                                </span>
                                             {% else %}
                                                 <span class="text-warning">
                                                     <i class="fa fa-circle"></i> Pending
