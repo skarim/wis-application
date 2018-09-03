@@ -3,7 +3,7 @@ jobs:
   build_and_test:
     working_directory: ~/wis-application
     docker:
-      - image: circleci/python:2.7
+      - image: circleci/python:3.7
         environment:
           SERVER_ENV: test
     steps:
@@ -30,7 +30,7 @@ jobs:
   deploy_to_staging:
     working_directory: ~/wis-application
     docker:
-      - image: circleci/python:2.7
+      - image: circleci/python:3.7
     steps:
       - checkout
       - deploy:
@@ -39,7 +39,7 @@ jobs:
   deploy_to_production:
     working_directory: ~/wis-application
     docker:
-      - image: circleci/python:2.7
+      - image: circleci/python:3.7
     steps:
       - checkout
       - deploy:
