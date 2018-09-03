@@ -45,6 +45,9 @@ jobs:
       - deploy:
           name: deploy to heroku
           command: git push https://heroku:$HEROKU_API_KEY@git.heroku.com/wis-application-production.git master
+      - deploy:
+          name: run migrations
+          command: heroku run python manage.py migrate
 
 workflows:
   version: 2
