@@ -58,6 +58,7 @@ workflows:
             branches:
               only:
                 - master
+                - /feature.*/
       - deploy_to_production:
           requires:
             - build_and_test
