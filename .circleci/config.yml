@@ -36,6 +36,9 @@ jobs:
       - image: circleci/python:3.7
     steps:
       - checkout
+      - run:
+          name: install heroku cli
+          command: sudo curl https://cli-assets.heroku.com/install.sh | sh
       - deploy:
           name: deploy to heroku
           command: git push https://heroku:$HEROKU_API_KEY@git.heroku.com/wis-application-staging.git master
@@ -48,6 +51,9 @@ jobs:
       - image: circleci/python:3.7
     steps:
       - checkout
+      - run:
+          name: install heroku cli
+          command: sudo curl https://cli-assets.heroku.com/install.sh | sh
       - deploy:
           name: deploy to heroku
           command: git push https://heroku:$HEROKU_API_KEY@git.heroku.com/wis-application-production.git master
