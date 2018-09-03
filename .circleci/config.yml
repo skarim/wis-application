@@ -25,8 +25,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            # python manage.py test
-            echo 'todo: add tests'
+            python manage.py test
   deploy_to_staging:
     working_directory: ~/wis-application
     docker:
@@ -36,6 +35,9 @@ jobs:
       - deploy:
           name: deploy to heroku
           command: git push https://heroku:$HEROKU_API_KEY@git.heroku.com/wis-application-staging.git master
+      - deploy:
+          name: run migrations
+          command: heroku run python manage.py migrate
   deploy_to_production:
     working_directory: ~/wis-application
     docker:

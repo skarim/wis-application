@@ -12,9 +12,9 @@ def send_email(to, subject, message):
         print('email send to: %s' % to)
         print('subject: %s' % subject)
         print('message:\n%s' % text_content)
-    elif ENVIRONMENT == 'staging' and DEBUG_EMAIL:
-        to = DEBUG_EMAIL
     else:
+        if ENVIRONMENT == 'staging' and DEBUG_EMAIL:
+            to = DEBUG_EMAIL
         msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
 
 
