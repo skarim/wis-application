@@ -54,7 +54,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                          {% if volunteer.signup_count > 0 %}
                             {% for registration in volunteer.registrations.all %}
                                 <tr>
                                     <td>{{ registration.volunteer_date.category }}</td>
@@ -81,7 +80,6 @@
                                     </td>
                                 </tr>
                             {% endfor %}
-                          {% endif %}
                         </tbody>
                     </table>
                 </div>

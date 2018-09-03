@@ -51,8 +51,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                          {% if user.signup_count %}
-                            {% for registration in user.registrations %}
+                            {% for registration in user.registrations.all %}
                                 {% if not registration.cancelled %}
                                     <tr>
                                         <td>{{ registration.volunteer_date.category }}</td>
@@ -94,7 +93,6 @@
                                     </tr>
                                 {% endif %}
                             {% endfor %}
-                          {% endif %}
                         </tbody>
                     </table>
                 </div>

@@ -52,7 +52,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for date in dates %}
+                            {% for date in dates.all %}
                                 {% if not date.is_past and not date.is_two_days_or_less_prior %}
                                     <tr>
                                         <td>{{ date.category }}</td>

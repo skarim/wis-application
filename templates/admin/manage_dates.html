@@ -52,7 +52,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for date in dates %}
+                            {% for date in dates.all %}
                                 {% if not date.is_past %}
                                     <tr>
                                         <td>{{ date.category }}</td>
@@ -91,7 +91,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for date in dates %}
+                            {% for date in dates.all %}
                                 {% if date.is_past %}
                                     <tr>
                                         <td>{{ date.category }}</td>
