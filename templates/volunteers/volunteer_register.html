@@ -62,7 +62,7 @@
                                         <td>{{ date.slots_available }}</td>
                                         <td>{{ date.slots_total }}</td>
                                         <td class="cat-btn">
-                                            {% if user in date.volunteers %}
+                                            {% if date in registered_dates %}
                                                 <button class="btn btn-sm btn-success" disabled>
                                                     <i class="fa fa-check"></i>
                                                     Signed Up
