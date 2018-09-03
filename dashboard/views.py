@@ -240,10 +240,18 @@ def volunteer_register(request):
     success, error = ('',)*2
     volunteer = WIS_User.objects.get(email=request.user)
 
+    try:
+        num_registrations = volunteer.registrations.filter(cancelled=False).count()
+    except:
+        num_registrations = 0
+
     # handle volunteer date registration
     if request.method == 'POST':
         date_id = request.POST.get('date_id')
-        success, error = volunteer_date_register(volunteer.id, date_id)
+        if num_registrations >= volunteer.max_registrations:
+            error = 'You have exceeded your %s maximium registration slots.' % volunteer.max_registrations
+        else:
+            success, error = volunteer_date_register(volunteer.id, date_id)
 
     dates = Volunteer_Date.objects.all()
     context = {
