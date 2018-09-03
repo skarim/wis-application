@@ -75,6 +75,8 @@ def create_account(request):
                 if account_type == 'admin':
                     user.is_admin = True
                     user.is_volunteer = False
+                    user.is_superuser = True
+                    user.is_staff = True
                 user.set_password(password)
                 user.save()
                 login(request, user)
