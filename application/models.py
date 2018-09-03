@@ -43,8 +43,10 @@ class Volunteer_Date(models.Model):
 
     def check_if_user_registered(self, user):
         try:
-            self.registrations.filter(volunteer=user)
-            return True
+            if self.registrations.filter(volunteer=user, cancelled=False).count() > 0:
+                return True
+            else:
+                return False
         except:
             return False
 
@@ -89,3 +91,7 @@ class Allowed_User(models.Model):
     email = models.TextField(unique=True)
     first_name = models.TextField()
     last_name = models.TextField()
+
+
+# signals for pre/post create/save/delete actions
+from .signals import *
