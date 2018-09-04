@@ -5,18 +5,18 @@ from application.settings import ENVIRONMENT, DEBUG, DEBUG_EMAIL
 
 
 def send_email(to, subject, message):
-    text_content = message
+    message = message
     from_email = 'wis@mcabayarea.org'
+    recipient_list = [to]
 
     if ENVIRONMENT == 'development':
         print('email send to: %s' % to)
         print('subject: %s' % subject)
-        print('message:\n%s' % text_content)
+        print('message:\n%s' % message)
     else:
         if ENVIRONMENT == 'staging' and DEBUG_EMAIL:
-            to = DEBUG_EMAIL
-            text_content = ('email send to: %s \n\n' % to) + message
-        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+            recipient_list.append(DEBUG_EMAIL)
+        msg = EmailMultiAlternatives(subject, message, from_email, recipient_list)
         msg.send()
 
 
