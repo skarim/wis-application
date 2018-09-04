@@ -15,6 +15,7 @@ def send_email(to, subject, message):
     else:
         if ENVIRONMENT == 'staging' and DEBUG_EMAIL:
             to = DEBUG_EMAIL
+            text_content = ('email send to: %s \n\n' % to) + message
         msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
         msg.send()
 
