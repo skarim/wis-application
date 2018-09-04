@@ -10,20 +10,21 @@ class Command(BaseCommand):
     help = 'Sends email reminders to volunteers who have signed up for a ' \
            'volunteering date within the next N hours'
 
-    option_list = BaseCommand.option_list + (
-            make_option('--hours_from_now',
-                action='store_true',
-                dest='hours_from_now',
-                default=168,
-                help='Set value for N, where email reminders are sent to '
-                     'volunteers who have signed up for a volunteering date '
-                     'within the next N hours'),
-            )
+    def add_arguments(self, parser):
+       parser.add_argument(
+            '--hours_from_now',
+            action='store_true',
+            dest='hours_from_now',
+            default=168,
+            help='Set value for N, where email reminders are sent to '
+                 'volunteers who have signed up for a volunteering date '
+                 'within the next N hours',
+        )
 
     def handle(self, *args, **options):
         try:
             hours_from_now = options.get('hours_from_now')
-            volunteer_dates = Volunteer_Date.objects.get()
+            volunteer_dates = Volunteer_Date.objects.all()
             num_emails_sent = 0
 
             for volunteer_date in volunteer_dates:
@@ -34,8 +35,8 @@ class Command(BaseCommand):
                     localized_end = localize(volunteer_date.event_end)
 
                     # send volunteers reminder emails
-                    for volunteer in volunteer_date.volunteers:
-                        send_volunteer_reminder_email(volunteer,
+                    for registration in volunteer_date.registrations.all():
+                        send_volunteer_reminder_email(registration.volunteer,
                                                       localized_start,
                                                       localized_end)
                         num_emails_sent+=1
