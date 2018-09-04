@@ -140,6 +140,10 @@ EMAIL_HOST_USER = os.getenv('SENDGRID_USERNAME')
 EMAIL_HOST_PASSWORD = os.getenv('SENDGRID_PASSWORD')
 EMAIL_PORT = 587
 
+# Days of Week when email reminders as sent
+# Uses ISO format (Sunday=0, Monday=1, etc.)
+EMAIL_REMINDER_DAYS = [4, 6]
+
 
 # Configure Django App for Heroku
 # https://devcenter.heroku.com/articles/django-app-configuration
