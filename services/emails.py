@@ -1,7 +1,9 @@
 # Email sending service
 from django.core.mail import EmailMultiAlternatives
 
-from application.settings import ENVIRONMENT, DEBUG, DEBUG_EMAIL
+from application.settings import ENVIRONMENT, DEBUG, DEBUG_EMAIL, SERVER_HOST, HOST_SSL
+
+HOST_DOMAIN = 'http{0}://{1}'.format('s' if HOST_SSL else '', SERVER_HOST)
 
 
 def send_email(to, subject, message):
@@ -21,17 +23,18 @@ def send_email(to, subject, message):
 
 
 def send_welcome_email(user):
-    activate_link = 'http://app.mcawis.org/activate/?email={0}&first_name={1}' \
+    activate_link = '{3}/activate/?email={0}&first_name={1}' \
                     '&last_name={2}'.format(user.email, user.first_name,
-                                            user.last_name)
+                                            user.last_name, HOST_DOMAIN)
     email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\nAn account has been ' \
                     'created for you on the WIS Volunteer Scheduling website. ' \
                     'Please go to {2} to activate your account and set your ' \
                     'password. After activating your account, you can login at ' \
-                    'http://app.mcawis.org. If you have any questions, please ' \
+                    '{3}. If you have any questions, please ' \
                     'contact the admin at wis@mcabayarea.org.\n\nJazakAllah ' \
                     'Khairan \nWIS Admin'.format(user.first_name,
-                                                 user.last_name, activate_link)
+                                                 user.last_name, activate_link,
+                                                 HOST_DOMAIN)
     send_email(user.email, 'Activate your WIS Volunteer Account', email_message)
 
 
@@ -39,13 +42,14 @@ def send_temporary_password_email(user, password):
     subject = 'Temporary Password for your WIS Volunteer Account'
     email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\nWe received a request ' \
                     'to reset the password on your account. You can login to your ' \
-                    'account at http://app.mcawis.org using the following ' \
+                    'account at {3} using the following ' \
                     'temporary password: {2}\n\nPlease make sure to change your ' \
                     'password immediately (in your Account Settings) after ' \
                     'logging in.\n\nIf you did not authorize this request, please ' \
                     'immediately contact us at wis@mcabayarea.org.\n\nJazakAllah ' \
                     'Khairan \nWIS Admin'.format(user.first_name,
-                                                 user.last_name, password)
+                                                 user.last_name, password,
+                                                 HOST_DOMAIN)
     send_email(user.email, subject, email_message)
 
 
@@ -94,11 +98,12 @@ def send_admin_date_deleted_email(user, start, end):
     email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\n This is a ' \
                     'notification email that the volunteering date you had ' \
                     'signed up for on {2} has been cancelled by the administration. Please login ' \
-                    'to the WIS Volunteering Portal at http://app.mcawis.org to sign up ' \
+                    'to the WIS Volunteering Portal at {3} to sign up ' \
                     'for a new volunteering date. If you have any questions, ' \
                     'please contact the admin at wis@mcabayarea.org.\n\nJazakAllah Khairan ' \
                     '\nWIS Admin'.format(user.first_name, user.last_name,
-                                         start.strftime('%A, %B %-d, %Y at %-I:%M %p'))
+                                         start.strftime('%A, %B %-d, %Y at %-I:%M %p'),
+                                         HOST_DOMAIN)
     send_email(user.email, subject, email_message)
 
 

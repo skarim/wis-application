@@ -22,15 +22,15 @@ ENVIRONMENT = os.getenv('DJANGO_ENV', 'development')
 DEBUG = False if ENVIRONMENT == 'production' else True
 DEBUG_EMAIL = os.getenv('DEBUG_EMAIL')
 ADMIN_KEY = os.getenv('ADMIN_KEY', 'key')
+SERVER_HOST = os.getenv('HOST', 'localhost')
+HOST_SSL = False if DEBUG else True
 
 SECRET_KEY = os.getenv('SECRET_KEY', '2vo=8c^67u1-vl$%74#svb10enjyzg58^@f+w^t3qj_=k-r1(6')
 
-
-ALLOWED_HOSTS = [
-    'app.mcawis.org',
-    'staging.mcawis.org',
-    'localhost',
-]
+if not DEBUG:
+    ALLOWED_HOSTS = [
+        '*.mcawis.org',
+    ]
 
 
 # Application definition
