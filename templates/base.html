@@ -32,6 +32,13 @@
         {% block navbar %}
             <header id="header" class="navbar bg bg-black">
                 <ul class="nav navbar-nav pull-right">
+                    <li>
+                        <div class="m-t-small">
+                            <a href="https://drive.google.com/open?id=1PBy1KCqzSXjfSBjJ5M5H70OaaI13dVk_" target="_blank" class="btn btn-sm btn-inverse">
+                                <i class="fa fa-fw fa-external-link"></i>&nbsp; Homework Assignments
+                            </a>
+                        </div>
+                    </li>
                     {% if user.is_admin %}
                         <li>
                             <div class="m-t-small">
@@ -48,13 +55,6 @@
                             </div>
                         </li>
                     {% else %}
-                        <li>
-                            <div class="m-t-small">
-                                <a href="https://drive.google.com/open?id=1PBy1KCqzSXjfSBjJ5M5H70OaaI13dVk_" target="_blank" class="btn btn-sm btn-inverse">
-                                    <i class="fa fa-fw fa-external-link"></i>&nbsp; Homework Assignments
-                                </a>
-                            </div>
-                        </li>
                         <li>
                             <div class="m-t-small">
                                 <a href="/dashboard/register/" class="btn btn-sm btn-inverse">
