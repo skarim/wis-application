@@ -126,6 +126,7 @@ def forgot_password(request):
             # create a temporary password
             temp_password = DjangoUserClass.objects.make_random_password(length=8)
             user.set_password(temp_password)
+            user.save()
             # email temporary password to user
             send_temporary_password_email(user, temp_password)
             success = "A temporary password has been emailed to you"
