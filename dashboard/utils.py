@@ -1,4 +1,5 @@
 from django.core.validators import validate_email
+from django.contrib.auth.models import User as DjangoUserClass
 
 from services.emails import send_welcome_email, send_date_registered_email, \
     send_date_cancelled_email, send_admin_date_cancelled_email, \
@@ -12,27 +13,31 @@ def import_volunteer(email, first_name, last_name):
     success, error = ('',)*2
     if email and first_name and last_name:
         validate_email(email)
-        # check to see if user is already in the system
-        user_exists = False
-        try:
-            Allowed_User.objects.get(email=email)
-            user_exists = True
-        except:
-            pass
 
-        if not user_exists:
-            try:
-                # send email even if already been invited previously
-                new_user = Allowed_User.objects.get(email=email)
-            except:
-                new_user = Allowed_User()
-                new_user.email = email
-                new_user.first_name = first_name
-                new_user.last_name = last_name
-                new_user.save()
-            send_welcome_email(new_user)
+        try:
+            imported_user = WIS_User.objects.get(email=email)
+            if imported_user.is_active:
+                # error if active user exists
+                error = 'An account with that email already exists'
+            else:
+                # resend activation email if user is inactive
+                send_welcome_email(imported_user)
+                success = 'Resent email to %s for account activation'\
+                          % imported_user.email
+        except:
+            # if no user exists, create user and send activation email
+            imported_user = WIS_User(
+                email=email,
+                username=email,
+                first_name=first_name,
+                last_name=last_name,
+                is_active=False,
+            )
+            imported_user.nonce = DjangoUserClass.objects.make_random_password(length=16)
+            imported_user.save()
+            send_welcome_email(imported_user)
             success = 'Sent email to %s for account activation'\
-                      % new_user.email
+                      % imported_user.email
         else:
             error = 'An account with that email already exists'
     else:

@@ -23,9 +23,10 @@ def send_email(to, subject, message):
 
 
 def send_welcome_email(user):
-    activate_link = '{3}/activate/?email={0}&first_name={1}' \
-                    '&last_name={2}'.format(user.email, user.first_name,
-                                            user.last_name, HOST_DOMAIN)
+    activate_link = '{3}/signup/?email={0}&first_name={1}' \
+                    '&last_name={2}&nonce={4}'.format(user.email, user.first_name,
+                                                      user.last_name, HOST_DOMAIN,
+                                                      user.nonce)
     email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\nAn account has been ' \
                     'created for you on the WIS Volunteer Scheduling website. ' \
                     'Please go to {2} to activate your account and set your ' \
@@ -38,18 +39,18 @@ def send_welcome_email(user):
     send_email(user.email, 'Activate your WIS Volunteer Account', email_message)
 
 
-def send_temporary_password_email(user, password):
-    subject = 'Temporary Password for your WIS Volunteer Account'
+def send_password_reset_email(user):
+    subject = 'Reset Password for your WIS Volunteer Account'
+    reset_link = '{0}/reset/?email={1}&nonce={2}'.format(HOST_DOMAIN,
+                                                         user.email,
+                                                         user.nonce)
     email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\nWe received a request ' \
-                    'to reset the password on your account. You can login to your ' \
-                    'account at {3} using the following ' \
-                    'temporary password: {2}\n\nPlease make sure to change your ' \
-                    'password immediately (in your Account Settings) after ' \
-                    'logging in.\n\nIf you did not authorize this request, please ' \
+                    'to reset the password on your account. You can rest your ' \
+                    'password using the following link: {2}\n\n' \
+                    'If you did not authorize this request, please ' \
                     'immediately contact us at wis@mcabayarea.org.\n\nJazakAllah ' \
                     'Khairan \nWIS Admin'.format(user.first_name,
-                                                 user.last_name, password,
-                                                 HOST_DOMAIN)
+                                                 user.last_name, reset_link)
     send_email(user.email, subject, email_message)
 
 

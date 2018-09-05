@@ -65,6 +65,7 @@ class WIS_User(User):
     is_admin = models.BooleanField(default=False)
     is_volunteer = models.BooleanField(default=True)
     max_registrations = models.IntegerField(default=8)
+    nonce = models.TextField(blank=True, null=True)
 
     @property
     def signup_count(self):
@@ -86,12 +87,6 @@ class WIS_User(User):
             return self.registrations.filter(marked=True, attended=False).count()
         except:
             return 0
-
-
-class Allowed_User(models.Model):
-    email = models.TextField(unique=True)
-    first_name = models.TextField()
-    last_name = models.TextField()
 
 
 # signals for pre/post create/save/delete actions

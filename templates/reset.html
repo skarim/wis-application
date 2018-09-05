@@ -1,13 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}
-  {% if request.GET.nonce %}
-    Activate Account
-  {% else %}
-    Sign Up
-  {% endif %}
-{% endblock %}
+{% block title %}Reset Password{% endblock %}
 
 {% block navbar %}
     <header id="header" class="navbar bg bg-black">
@@ -23,11 +17,7 @@
         <div class="col-lg-4 col-lg-offset-4 m-t-large">
             <section class="panel">
                 <header class="panel-heading text-center">
-                    {% if request.GET.nonce %}
-                      Activate your account
-                    {% else %}
-                      Sign Up for an account
-                    {% endif %}
+                    Reset your password
                 </header>
                 <form action="" method="POST" class="panel-body">
                     {% if state %}
@@ -40,43 +30,19 @@
                     {% endif %}
                     <div class="block">
                         <label class="control-label">Email</label>
-                        <input type="email" name="email" placeholder="youremail@mail.com" class="form-control" value="{{ request.GET.email }}" required {% if request.GET.email %}readonly{% endif %}>
+                        <input type="email" name="email" value="{{ request.GET.email }}" class="form-control" required readonly>
                     </div>
                     <div class="block">
-                        <label class="control-label">First Name</label>
-                        <input type="text" name="first_name" placeholder="John" class="form-control" value="{{ request.GET.first_name }}" required>
+                        <label class="control-label">New Password</label>
+                        <input type="password" name="password" placeholder="your new password (min 8 characters)" class="form-control" required>
                     </div>
                     <div class="block">
-                        <label class="control-label">Last Name</label>
-                        <input type="text" name="last_name" placeholder="Smith" class="form-control" value="{{ request.GET.last_name }}" required>
+                        <label class="control-label">Confirm New Password</label>
+                        <input type="password" name="confirm_password" placeholder="retype your new password" class="form-control" required>
                     </div>
-                    <div class="block">
-                        <label class="control-label">Password</label>
-                        <input type="password" name="password" placeholder="your password (minimum 8 characters)" class="form-control" required>
-                    </div>
-                    <div class="block">
-                        <label class="control-label">Confirm Password</label>
-                        <input type="password" name="confirm_password" placeholder="retype password" class="form-control" required>
-                    </div>
-                    {% if request.GET.admin == 'true' %}
-                        <div class="block">
-                            <label class="control-label">Admin Sign Up Key</label>
-                            <input type="text" name="admin_key" placeholder="admin signup key" class="form-control" value="{{ request.GET.key }}" required readonly>
-                        </div>
-                    {% endif %}
-                    <input type="hidden" name="type" value="{% if request.GET.admin == 'true' %}admin{% else %}volunteer{% endif %}">
                     <input type="hidden" name="nonce" value="{{ request.GET.nonce }}">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-inverse btn-block m-b-small"><i class="fa fa-lock pull-left"></i>
-                      {% if request.GET.nonce %}
-                        Activate Account
-                      {% else %}
-                        Create Account
-                      {% endif %}
-                    </button>
-                    <div class="line line-dashed"></div>
-                    <p class="text-muted text-center"><small>Already have an account?</small></p>
-                    <a href="/login/" class="btn btn-white btn-block">Sign in</a>
+                    <button type="submit" class="btn btn-inverse btn-block"><i class="fa fa-lock pull-left"></i>Set New Password</button>
                 </form>
             </section>
         </div>
