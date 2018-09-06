@@ -5,10 +5,15 @@ jobs:
     docker:
       - image: circleci/python:3.7
         environment:
-          SERVER_ENV: test
+          DJANGO_SETTINGS_MODULE: application.settings
+          DJANGO_ENV: test
+          DB_NAME: testdb
+          DB_USER: test
+          DB_PASSWORD: password
       - image: circleci/postgres:9.5
-        environment:
-          POSTGRES_DB: wisapplication
+          POSTGRES_DB: testdb
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: password
     steps:
       - checkout
       - restore_cache:
@@ -28,9 +33,8 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            # python manage.py test
-            echo 'add tests in future'
-  deploy_to_staging:
+            python manage.py test
+  deploy_to_heroku:
     working_directory: ~/wis-application
     docker:
       - image: circleci/python:3.7
@@ -41,32 +45,27 @@ jobs:
           command: sudo curl https://cli-assets.heroku.com/install.sh | sh
       - deploy:
           name: deploy to heroku
-          command: git push https://heroku:$HEROKU_API_KEY@git.heroku.com/wis-application-staging.git master
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              git push https://heroku:$HEROKU_API_KEY@git.heroku.com/wis-application-production.git master
+            else
+              git push https://heroku:$HEROKU_API_KEY@git.heroku.com/wis-application-staging.git master
+            fi
       - deploy:
           name: run migrations
-          command: heroku run python manage.py migrate -a wis-application-staging
-  deploy_to_production:
-    working_directory: ~/wis-application
-    docker:
-      - image: circleci/python:3.7
-    steps:
-      - checkout
-      - run:
-          name: install heroku cli
-          command: sudo curl https://cli-assets.heroku.com/install.sh | sh
-      - deploy:
-          name: deploy to heroku
-          command: git push https://heroku:$HEROKU_API_KEY@git.heroku.com/wis-application-production.git master
-      - deploy:
-          name: run migrations
-          command: heroku run python manage.py migrate -a wis-application-production
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              heroku run python manage.py migrate -a wis-application-production
+            else
+              heroku run python manage.py migrate -a wis-application-staging
+            fi
 
 workflows:
   version: 2
   build_test_deploy:
     jobs:
       - build_and_test
-      - deploy_to_staging:
+      - deploy_to_heroku:
           requires:
             - build_and_test
           filters:
@@ -74,13 +73,3 @@ workflows:
               only:
                 - master
                 - /feature.*/
-      - deploy_to_production:
-          requires:
-            - build_and_test
-          filters:
-            tags:
-              only:
-                - /v.*/
-            branches:
-              ignore:
-                - /.*/
