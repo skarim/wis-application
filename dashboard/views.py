@@ -1,4 +1,5 @@
-import datetime
+import datetime, csv
+from io import TextIOWrapper
 
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed
 from django.contrib.auth.decorators import login_required
@@ -59,13 +60,13 @@ def admin_manage_volunteers(request):
             num_success = 0
             error_users = []
             # parse csv file
-            csv_user_list = request.FILES.get('csv_user_list')
-            user_list = csv_user_list.read().split('\r')
-            for user in user_list:
-                user = user.split(',')
-                email = user[2]
-                first_name = user[0]
-                last_name = user[1]
+            csv_file = request.FILES.get('csv_user_list')
+            decoded_file = TextIOWrapper(csv_file.file, encoding=request.encoding)
+            reader = csv.DictReader(decoded_file)
+            for row in reader:
+                email = row.get('Email')
+                first_name = row.get('First_Name')
+                last_name = row.get('Last_Name')
                 user_success, user_error = import_volunteer(
                     email, first_name, last_name
                 )
@@ -148,15 +149,15 @@ def admin_manage_dates(request):
             num_success = 0
             error_dates = []
             # parse csv file
-            csv_date_list = request.FILES.get('csv_date_list')
-            date_list = csv_date_list.read().split('\r')
-            for volunteer_date in date_list:
-                volunteer_date = volunteer_date.split(',')
-                category = volunteer_date[0]
-                date = volunteer_date[1]
-                start_time = volunteer_date[2]
-                end_time = volunteer_date[3]
-                slots = volunteer_date[4]
+            csv_file = request.FILES.get('csv_date_list')
+            decoded_file = TextIOWrapper(csv_file.file, encoding=request.encoding)
+            reader = csv.DictReader(decoded_file)
+            for row in reader:
+                category = row.get('Category')
+                date = row.get('Date')
+                start_time = row.get('Start_Time')
+                end_time = row.get('End_Time')
+                slots = row.get('Slots')
                 date_success, date_error = create_volunteering_date(
                     category, date, start_time, end_time, slots
                 )

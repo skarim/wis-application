@@ -178,7 +178,14 @@
                 <form action="/dashboard/dates/" method="POST" enctype="multipart/form-data" class="panel-body">
                     <ul class="breadcrumb">
                         <li class="active">
-                            <i class="fa fa-info-circle"></i>&nbsp; CSV files need to be formatted with 4 columns in this exact order: Volunteering Type, Date (YYYY-MM-DD), Start Time (HH:MM), End Time (HH:MM), Total Slots Number. Make sure that start and end times are in 24-hour format. Do not include any column headings.
+                            <i class="fa fa-info-circle"></i>&nbsp;
+                            CSV files need to have 4 columns with these exact headings: Category, Date, Start_Time, End_Time, Slots.
+                            <br /><br />
+                            Category = Volunteering Type<br />
+                            Date format: YYYY-MM-DD<br />
+                            Start Time format: HH:MM (24hr time)<br />
+                            End Time format: HH:MM (24hr time)<br />
+                            Slots = Number of Total Slots
                         </li>
                     </ul>
                     <input type="file" name="csv_date_list" title="Choose CSV file" accept=".csv" class="btn btn-sm btn-default m-b-small" style="left: -168.75px; top: 14px;">
