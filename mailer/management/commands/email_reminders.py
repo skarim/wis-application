@@ -1,4 +1,4 @@
-import datetime, timedelta
+import datetime
 from django.core.management.base import BaseCommand, CommandError
 from optparse import make_option
 
@@ -39,7 +39,7 @@ class Command(BaseCommand):
                         localized_end = localize(volunteer_date.event_end)
 
                         # calculate cutoff time for cancelling
-                        cutoff_time = localized_start - timedelta(days=CANCELLATION_CUTOFF_DAYS)
+                        cutoff_time = localized_start - datetime.timedelta(days=CANCELLATION_CUTOFF_DAYS)
 
                         # send volunteers reminder emails
                         for registration in volunteer_date.registrations.all():
