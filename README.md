@@ -8,6 +8,7 @@ MCA Weekend Islamic School Volunteer Scheduling Application
 - Python 3
 - Pip3
 - Virtualenv
+- PostgreSQL
 
 
 ### Set Up the Virtual Environment
@@ -15,13 +16,13 @@ MCA Weekend Islamic School Volunteer Scheduling Application
     source venv/bin/activate
 
 ### Install Dependencies
-    pip3 install -r requirements.txt
+    pip install -r requirements.txt
 
 ### Run Server Locally
-    python3 manage.py runserver
+    python manage.py runserver
 
 ### Send Reminder Emails
-    python3 manage.py email_reminders --hours_from_now 168
+    python manage.py email_reminders --hours_from_now 168
 
 The optional `hours_from_now` flag sets the value for N, where email reminders
 are sent to volunteers who have signed up for a volunteering date within the
