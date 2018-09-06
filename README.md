@@ -3,6 +3,14 @@ MCA Weekend Islamic School Volunteer Scheduling Application
 
 [![CircleCI](https://circleci.com/gh/skarim/wis-application/tree/master.svg?style=svg)](https://circleci.com/gh/skarim/wis-application/tree/master)
 
+
+### Prerequisites
+- Python 3
+- Pip3
+- Virtualenv
+- PostgreSQL
+
+
 ### Set Up the Virtual Environment
     virtualenv venv
     source venv/bin/activate

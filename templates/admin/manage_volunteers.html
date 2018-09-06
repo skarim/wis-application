@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Manage Volunteers{% endblock %}
 
@@ -51,7 +52,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for user in users %}
+                            {% for user in users.all %}
                                 {% if user.is_volunteer %}
                                     <tr>
                                         <td class="cat-title">{{ user.last_name }}</td>
@@ -104,7 +105,8 @@
                 <form action="/dashboard/volunteers/" method="POST" enctype="multipart/form-data" class="panel-body">
                     <ul class="breadcrumb">
                         <li class="active">
-                            <i class="fa fa-info-circle"></i>&nbsp; CSV files need to be formatted with 3 colums in this exact order: First Name, Last Name, Email. Do not include any column headings.
+                            <i class="fa fa-info-circle"></i>&nbsp;
+                            CSV files need to have 3 columns with these exact headings: Email, First_Name, Last_Name.
                         </li>
                     </ul>
                     <input type="file" name="csv_user_list" title="Choose CSV file" accept=".csv" class="btn btn-sm btn-default m-b-small" style="left: -168.75px; top: 14px;">
@@ -118,8 +120,8 @@
 {% endblock %}
 
 {% block custom_js %}
-    <script src="{{ STATIC_URL }}js/file-input/bootstrap.file-input.js"></script>
-    <script src="{{ STATIC_URL }}js/datatables/jquery.dataTables.min.js"></script>
+    <script src="{% static 'js/file-input/bootstrap.file-input.js' %}"></script>
+    <script src="{% static 'js/datatables/jquery.dataTables.min.js' %}"></script>
     <script type="text/javascript">
         // set up table of locations
         $('[data-ride="datatables"]').each(function(){

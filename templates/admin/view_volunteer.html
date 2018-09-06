@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}{{ volunteer.last_name }}, {{ volunteer.first_name }}{% endblock %}
 
@@ -6,11 +7,6 @@
     <div class="clearfix">
         <h3>
             Volunteer: {{ volunteer.last_name }}, {{ volunteer.first_name }}
-            {% if volunteer.is_admin %}
-                <span class="h5 pull-right">
-                    <i class="fa fa-user"></i>&nbsp; Admin Access
-                </span>
-            {% endif %}
         </h3>
     </div>
     <div class="row">
@@ -53,7 +49,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for registration in volunteer.registrations %}
+                            {% for registration in volunteer.registrations.all %}
                                 <tr>
                                     <td>{{ registration.volunteer_date.category }}</td>
                                     <td class="cat-title">{{ registration.volunteer_date.event_begin|date:'D, M j, Y' }}</td>
@@ -71,6 +67,10 @@
                                                     <i class="fa fa-times"></i> Absent
                                                 </span>
                                             {% endif %}
+                                        {% elif registration.cancelled %}
+                                            <span class="text-info">
+                                                <i class="fa fa-times"></i> Cancelled
+                                            </span>
                                         {% else %}
                                             <span class="text-warning">
                                                 <i class="fa fa-circle"></i> Pending
@@ -88,7 +88,7 @@
 {% endblock %}
 
 {% block custom_js %}
-    <script src="{{ STATIC_URL }}js/datatables/jquery.dataTables.min.js"></script>
+    <script src="{% static 'js/datatables/jquery.dataTables.min.js' %}"></script>
     <script type="text/javascript">
         // set up table of locations
         $('[data-ride="datatables"]').each(function(){

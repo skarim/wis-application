@@ -1,28 +1,19 @@
-# coding=utf-8
-from mongoengine import Document, StringField, URLField, DateTimeField, \
-    EmbeddedDocument, ListField, ReferenceField, BooleanField, IntField, \
-    EmbeddedDocumentField, DoesNotExist, ValidationError
-from mongoengine.django.auth import User
-
 import datetime
+from django.db import models
+from django.contrib.auth.models import User
 
 from services.timing import get_diff_from_now
 
 
-class Volunteer_Date(Document):
-    category = StringField(default='School Day')
-    event_begin = DateTimeField()
-    event_end = DateTimeField()
-    slots_total = IntField()
-    volunteers = ListField(ReferenceField('WIS_User'))
+class Volunteer_Date(models.Model):
+    category = models.TextField()
+    event_begin = models.DateTimeField()
+    event_end = models.DateTimeField()
+    slots_total = models.IntegerField(default=0)
 
     @property
     def is_past(self):
         return get_diff_from_now(self.event_end) < 0
-
-    @property
-    def is_one_week_or_less_prior(self):
-        return get_diff_from_now(self.event_begin) < 168
 
     @property
     def is_two_days_or_less_prior(self):
@@ -30,52 +21,69 @@ class Volunteer_Date(Document):
 
     @property
     def slots_available(self):
-        return int(self.slots_total) - len(self.volunteers)
+        return self.slots_total - self.slots_filled
 
     @property
     def slots_filled(self):
-        return len(self.volunteers)
+        try:
+            return self.registrations.filter(cancelled=False).count()
+        except:
+            return 0
+
+    @property
+    def num_registrations(self):
+        try:
+            return self.registrations.count()
+        except:
+            return 0
+
+    def check_if_user_registered(self, user):
+        try:
+            if self.registrations.filter(volunteer=user, cancelled=False).count() > 0:
+                return True
+            else:
+                return False
+        except:
+            return False
 
 
-class Volunteer_Date_Registration(Document):
-    volunteer_date = ReferenceField(Volunteer_Date)
-    volunteer = ReferenceField('WIS_User')
-    marked = BooleanField(default=False) # whether an attended/absent value has been set by the admin
-    attended = BooleanField(default=False)
-    signup_time = DateTimeField(default=datetime.datetime.utcnow)
-    cancelled = BooleanField(default=False)
-    cancel_time = DateTimeField()
+class Volunteer_Date_Registration(models.Model):
+    volunteer = models.ForeignKey('WIS_User', related_name='registrations', on_delete=models.DO_NOTHING,)
+    volunteer_date = models.ForeignKey(Volunteer_Date, related_name='registrations', on_delete=models.DO_NOTHING,)
+    marked = models.BooleanField(default=False) # whether an attended/absent value has been set by the admin
+    attended = models.BooleanField(default=False)
+    signup_time = models.DateTimeField(default=datetime.datetime.utcnow)
+    cancelled = models.BooleanField(default=False)
+    cancel_time = models.DateTimeField(blank=True, null=True)
 
 
 class WIS_User(User):
-    is_admin = BooleanField(default=False)
-    is_volunteer = BooleanField(default=True)
-    registrations = ListField(ReferenceField(Volunteer_Date_Registration))
+    is_admin = models.BooleanField(default=False)
+    is_volunteer = models.BooleanField(default=True)
+    max_registrations = models.IntegerField(default=8)
+    nonce = models.TextField(blank=True, null=True)
 
     @property
     def signup_count(self):
-        return len(self.registrations)
+        try:
+            return self.registrations.count()
+        except:
+            return 0
 
     @property
     def completed_count(self):
-        count = 0
-        for registration in self.registrations:
-            if registration.marked:
-                if registration.attended:
-                    count+=1
-        return count
+        try:
+            return self.registrations.filter(marked=True, attended=True).count()
+        except:
+            return 0
 
     @property
     def missed_count(self):
-        count = 0
-        for registration in self.registrations:
-            if registration.marked:
-                if not registration.attended:
-                    count+=1
-        return count
+        try:
+            return self.registrations.filter(marked=True, attended=False).count()
+        except:
+            return 0
 
 
-class Allowed_User(Document):
-    email = StringField()
-    first_name = StringField()
-    last_name = StringField()
+# signals for pre/post create/save/delete actions
+from .signals import *

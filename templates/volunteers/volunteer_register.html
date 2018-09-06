@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Sign Up for Volunteering Dates{% endblock %}
 
@@ -51,8 +52,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for date in dates %}
-                                {% if not date.is_past and not date.is_two_days_or_less_prior %}
+                            {% for date in dates.all %}
+                                {% if not date.is_past %}
                                     <tr>
                                         <td>{{ date.category }}</td>
                                         <td class="cat-title">{{ date.event_begin|date:'D, M j, Y' }}</td>
@@ -61,7 +62,7 @@
                                         <td>{{ date.slots_available }}</td>
                                         <td>{{ date.slots_total }}</td>
                                         <td class="cat-btn">
-                                            {% if user in date.volunteers %}
+                                            {% if date in registered_dates %}
                                                 <button class="btn btn-sm btn-success" disabled>
                                                     <i class="fa fa-check"></i>
                                                     Signed Up
@@ -93,23 +94,6 @@
                 <ul class="list-group">
                     <li class="list-group-item">
                         <div class="media">
-                            <div class="pull-right text-success m-t-small fa fa-calendar-o"></div>
-                            <div class="media-body">
-                                <div>
-                                    <span class="h5">
-                                        Sign Up Cutoff Times
-                                    </span>
-                                </div>
-                                <small class="text-muted">
-                                    You can only sign up for a volunteering slot 48 hours in advance.
-                                </small>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        <div class="media">
                             <div class="pull-right text-danger m-t-small fa fa-times-circle"></div>
                             <div class="media-body">
                                 <div>
@@ -118,7 +102,7 @@
                                     </span>
                                 </div>
                                 <small class="text-muted">
-                                    You can cancel your registration anytime, but will be unable to change or cancel within one week of the volunteer date.
+                                    You can cancel your registration anytime 48 hours (2 days) before the volunteer date. After that time, you will be able to cancel.
                                 </small>
                             </div>
                         </div>
@@ -141,6 +125,23 @@
                         </div>
                     </li>
                 </ul>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <div class="media">
+                            <div class="pull-right text-success m-t-small fa fa-calendar-o"></div>
+                            <div class="media-body">
+                                <div>
+                                    <span class="h5">
+                                        Sign Up Limits
+                                    </span>
+                                </div>
+                                <small class="text-muted">
+                                    You can sign up for a maximum of {{ user.max_registrations }} volunteering slots.
+                                </small>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
             </section>
         </div>
     </div>
@@ -152,8 +153,8 @@
 {% endblock %}
 
 {% block custom_js %}
-    <script src="{{ STATIC_URL }}js/file-input/bootstrap.file-input.js"></script>
-    <script src="{{ STATIC_URL }}js/datatables/jquery.dataTables.min.js"></script>
+    <script src="{% static 'js/file-input/bootstrap.file-input.js' %}"></script>
+    <script src="{% static 'js/datatables/jquery.dataTables.min.js' %}"></script>
     <script type="text/javascript">
         // set up table of locations
         $('[data-ride="datatables"]').each(function(){

@@ -1,12 +1,19 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Activate Account{% endblock %}
+{% block title %}
+  {% if request.GET.nonce %}
+    Activate Account
+  {% else %}
+    Sign Up
+  {% endif %}
+{% endblock %}
 
 {% block navbar %}
     <header id="header" class="navbar bg bg-black">
         <a href="#modal" data-toggle="modal" class="btn btn-link pull-right m-t-mini"><i class="fa fa-question fa-lg text-default"></i></a>
         <a class="navbar-brand" href="/">
-            <img src="{{ STATIC_URL }}images/logo.png">
+            <img src="{% static 'images/logo.png' %}">
         </a>
     </header>
 {% endblock %}
@@ -16,7 +23,11 @@
         <div class="col-lg-4 col-lg-offset-4 m-t-large">
             <section class="panel">
                 <header class="panel-heading text-center">
-                    Activate your account
+                    {% if request.GET.nonce %}
+                      Activate your account
+                    {% else %}
+                      Sign Up for an account
+                    {% endif %}
                 </header>
                 <form action="" method="POST" class="panel-body">
                     {% if state %}
@@ -54,8 +65,15 @@
                         </div>
                     {% endif %}
                     <input type="hidden" name="type" value="{% if request.GET.admin == 'true' %}admin{% else %}volunteer{% endif %}">
+                    <input type="hidden" name="nonce" value="{{ request.GET.nonce }}">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-inverse btn-block m-b-small"><i class="fa fa-lock pull-left"></i>Activate Account</button>
+                    <button type="submit" class="btn btn-inverse btn-block m-b-small"><i class="fa fa-lock pull-left"></i>
+                      {% if request.GET.nonce %}
+                        Activate Account
+                      {% else %}
+                        Create Account
+                      {% endif %}
+                    </button>
                     <div class="line line-dashed"></div>
                     <p class="text-muted text-center"><small>Already have an account?</small></p>
                     <a href="/login/" class="btn btn-white btn-block">Sign in</a>

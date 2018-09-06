@@ -1,18 +1,18 @@
-from django.conf.urls import patterns, url
+from django.urls import include, path
 
+from . import views
 
-urlpatterns = patterns(
-    '',
-    url(r'^$', 'dashboard.views.dashboard'),
-    url(r'^settings/$', 'dashboard.views.account_settings'),
-
+urlpatterns = [
     # admin views
-    url(r'^volunteers/$', 'dashboard.views.admin_manage_volunteers'),
-    url(r'^volunteers/view/', 'dashboard.views.admin_view_volunteer'),
-    url(r'^dates/$', 'dashboard.views.admin_manage_dates'),
-    url(r'^dates/view/', 'dashboard.views.admin_view_date'),
+    path('volunteers/', views.admin_manage_volunteers, name='admin_manage_volunteers'),
+    path('volunteers/view/', views.admin_view_volunteer, name='admin_view_volunteer'),
+    path('dates/', views.admin_manage_dates, name='admin_manage_dates'),
+    path('dates/view/', views.admin_view_date, name='admin_view_date'),
 
     # volunteer views
-    url(r'^register/', 'dashboard.views.volunteer_register'),
-    url(r'^manage/', 'dashboard.views.volunteer_manage_registrations'),
-)
+    path('register/', views.volunteer_register, name='volunteer_register'),
+    path('manage/', views.volunteer_manage_registrations, name='volunteer_manage_registrations'),
+
+    path('', views.dashboard, name='dashboard'),
+    path('settings/', views.account_settings, name='account_settings'),
+]

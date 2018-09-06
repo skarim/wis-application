@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Admin Dashboard{% endblock %}
 
@@ -7,7 +8,11 @@
         <h3>
             Welcome, {{ user.first_name }}!
             <span class="h5 pull-right">
-                <i class="fa fa-user"></i>&nbsp; Admin Access
+                <i class="fa fa-user"></i>&nbsp; Admin Access |&nbsp;
+                <a href="/admin/" target="_blank">
+                    Admin Portal
+                    &nbsp;<i class="fa fa-external-link"></i>
+                </a>
             </span>
         </h3>
     </div>
