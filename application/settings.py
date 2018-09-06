@@ -142,7 +142,7 @@ EMAIL_PORT = 587
 
 # Days of Week when email reminders as sent
 # Uses ISO format (Sunday=0, Monday=1, etc.)
-EMAIL_REMINDER_DAYS = [4, 6]
+EMAIL_REMINDER_DAYS = [3, 5]
 
 
 # Configure Django App for Heroku
