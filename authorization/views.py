@@ -86,6 +86,14 @@ def create_account(request):
 
 
 def sign_in(request):
+    # redirect to dashboard is user already logged in
+    if request.user:
+        try:
+            user = WIS_User.objects.get(email=request.user, is_active=True)
+            return redirect('dashboard')
+        except:
+            pass
+
     state = ''
     if request.method == 'POST':
         try:
