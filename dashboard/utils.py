@@ -6,6 +6,7 @@ from services.emails import send_welcome_email, send_date_registered_email, \
     send_admin_date_deleted_email, send_date_attended_email,\
     send_date_absent_email
 from services.timing import parse_date_time_string, localize
+from application.settings import CANCELLATION_CUTOFF_DAYS
 from application.models import *
 
 
@@ -94,8 +95,11 @@ def volunteer_date_register(volunteer_id, date_id):
                 localized_start = localize(volunteer_date.event_begin)
                 localized_end = localize(volunteer_date.event_end)
 
+                # calculate cutoff time for cancelling
+                cutoff_time = localized_start - datetime.timedelta(days=CANCELLATION_CUTOFF_DAYS)
+
                 # send confirmation email
-                send_date_registered_email(volunteer_user, localized_start, localized_end)
+                send_date_registered_email(volunteer_user, localized_start, localized_end, cutoff_time)
 
                 success = 'You have successfully signed up for volunteering on ' \
                           '{0} from {1} to {2}'.format(localized_start.strftime('%A, %B %-d, %Y'),
