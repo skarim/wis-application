@@ -16,10 +16,6 @@ class Volunteer_Date(models.Model):
         return get_diff_from_now(self.event_end) < 0
 
     @property
-    def is_one_week_or_less_prior(self):
-        return get_diff_from_now(self.event_begin) < 168
-
-    @property
     def is_two_days_or_less_prior(self):
         return get_diff_from_now(self.event_begin) < 48
 

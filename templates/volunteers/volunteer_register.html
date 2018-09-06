@@ -53,7 +53,7 @@
                         </thead>
                         <tbody>
                             {% for date in dates.all %}
-                                {% if not date.is_past and not date.is_two_days_or_less_prior %}
+                                {% if not date.is_past %}
                                     <tr>
                                         <td>{{ date.category }}</td>
                                         <td class="cat-title">{{ date.event_begin|date:'D, M j, Y' }}</td>
@@ -94,23 +94,6 @@
                 <ul class="list-group">
                     <li class="list-group-item">
                         <div class="media">
-                            <div class="pull-right text-success m-t-small fa fa-calendar-o"></div>
-                            <div class="media-body">
-                                <div>
-                                    <span class="h5">
-                                        Sign Up Cutoff Times
-                                    </span>
-                                </div>
-                                <small class="text-muted">
-                                    You can only sign up for a volunteering slot 48 hours in advance.
-                                </small>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        <div class="media">
                             <div class="pull-right text-danger m-t-small fa fa-times-circle"></div>
                             <div class="media-body">
                                 <div>
@@ -119,7 +102,7 @@
                                     </span>
                                 </div>
                                 <small class="text-muted">
-                                    You can cancel your registration anytime, but will be unable to change or cancel within one week of the volunteer date.
+                                    You can cancel your registration anytime 48 hours (2 days) before the volunteer date. After that time, you will be able to cancel.
                                 </small>
                             </div>
                         </div>
@@ -137,6 +120,23 @@
                                 </div>
                                 <small class="text-muted">
                                     You must check-in with the designated volunteer coordinator 15 minutes <b>prior</b> to the start of your assigned time. In the case that you are late or do not show, you will be marked as a no-show and will have to make up those hours on a later date.
+                                </small>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <div class="media">
+                            <div class="pull-right text-success m-t-small fa fa-calendar-o"></div>
+                            <div class="media-body">
+                                <div>
+                                    <span class="h5">
+                                        Sign Up Limits
+                                    </span>
+                                </div>
+                                <small class="text-muted">
+                                    You can sign up for a maximum of {{ user.max_registrations }} volunteering slots.
                                 </small>
                             </div>
                         </div>

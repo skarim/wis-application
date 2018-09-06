@@ -5,7 +5,7 @@ from services.emails import send_welcome_email, send_date_registered_email, \
     send_date_cancelled_email, send_admin_date_cancelled_email, \
     send_admin_date_deleted_email, send_date_attended_email,\
     send_date_absent_email
-from services.timing import universalize, localize
+from services.timing import parse_date_time_string, localize
 from application.models import *
 
 
@@ -49,8 +49,8 @@ def create_volunteering_date(category, date, start_time, end_time, slots):
     success, error = ('',)*2
     if category and date and start_time and end_time and slots:
         # parse values
-        event_begin = universalize(date, start_time)
-        event_end = universalize(date, end_time)
+        event_begin = parse_date_time_string(date, start_time)
+        event_end = parse_date_time_string(date, end_time)
         slots_total = int(slots)
 
         # handle errors
@@ -82,8 +82,6 @@ def volunteer_date_register(volunteer_id, date_id):
                 error = 'There are no slots available for that date'
             elif volunteer_date.is_past:
                 error = 'You cannot signup for a date that has already passed'
-            elif volunteer_date.is_two_days_or_less_prior:
-                error = 'You cannot signup for a date less than 48 hours in advance'
             elif volunteer_date.check_if_user_registered(volunteer_user):
                 error = 'You have already registered for this date'
             else:
@@ -121,7 +119,7 @@ def volunteer_date_cancellation(volunteer_id, date_id):
         if volunteer_date.is_past:
             error = 'You cannot cancel registration for a date that has already passed'
         elif volunteer_date.is_two_days_or_less_prior:
-            error = 'You cannot cancel registration for a date less than 1 week in advance'
+            error = 'You cannot cancel registration for a date less than 48 hours in advance'
         elif volunteer_registration.cancelled:
             error = 'You have already cancelled this registration'
         else:

@@ -118,7 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Los_Angeles'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -142,8 +142,11 @@ EMAIL_PORT = 587
 
 # Days of Week when email reminders as sent
 # Uses ISO format (Sunday=0, Monday=1, etc.)
-EMAIL_REMINDER_DAYS = [3, 4, 5]
+EMAIL_REMINDER_DAYS = [3, 5]
 
+# Cutoff (in number of days) for when a volunteer
+# can cancel a registration before a given date
+CANCELLATION_CUTOFF_DAYS = 2
 
 # Configure Django App for Heroku
 # https://devcenter.heroku.com/articles/django-app-configuration

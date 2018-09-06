@@ -108,21 +108,22 @@ def send_admin_date_deleted_email(user, start, end):
     send_email(user.email, subject, email_message)
 
 
-def send_volunteer_reminder_email(user, start, end):
+def send_volunteer_reminder_email(user, start, end, cutoff):
     subject = '[REMINDER] WIS Volunteering Duty on {0}'.format(start.strftime('%A, %B %-d, %Y at %-I:%M %p'))
     email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\nThis is a ' \
                     'reminder for your volunteering duty on {2}. ' \
                     'Please make sure that you are at the school office 15 ' \
                     'minutes prior to get your assignment. You are required to stay ' \
-                    'for the entire time until {3}. \n\nPlease note that you cannot ' \
-                    'change your volunteering registration within 1 week of ' \
-                    'the date. If you can no longer make this date, please ' \
+                    'for the entire time until {3}. \n\nPlease note that the cutoff ' \
+                    'for cancelling is {4}, and you will be unable to change or cancel' \
+                    'after this time. If you can no longer make this date, please ' \
                     'update your settings immediately or contact the admin ' \
                     'at wis@mcabayarea.org. \n\nThank you for your cooperation ' \
                     'and we look forward to seeing you soon!\n\nJazakAllah Khairan ' \
                     '\nWIS Admin'.format(user.first_name, user.last_name,
                                          start.strftime('%A, %B %-d, %Y at %-I:%M %p'),
-                                         end.strftime('%-I:%M %p'))
+                                         end.strftime('%-I:%M %p'),
+                                         cutoff.strftime('%A, %B %-d, %Y at %-I:%M %p'))
     send_email(user.email, subject, email_message)
 
 

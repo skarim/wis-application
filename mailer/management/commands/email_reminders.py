@@ -5,7 +5,7 @@ from optparse import make_option
 from services.timing import localize
 from services.emails import send_volunteer_reminder_email
 from application.models import *
-from application.settings import EMAIL_REMINDER_DAYS
+from application.settings import EMAIL_REMINDER_DAYS, CANCELLATION_CUTOFF_DAYS
 
 
 class Command(BaseCommand):
@@ -38,11 +38,15 @@ class Command(BaseCommand):
                         localized_start = localize(volunteer_date.event_begin)
                         localized_end = localize(volunteer_date.event_end)
 
+                        # calculate cutoff time for cancelling
+                        cutoff_time = localized_start - timedelta(days=CANCELLATION_CUTOFF_DAYS)
+
                         # send volunteers reminder emails
                         for registration in volunteer_date.registrations.all():
                             send_volunteer_reminder_email(registration.volunteer,
                                                           localized_start,
-                                                          localized_end)
+                                                          localized_end,
+                                                          cutoff_time)
                             num_emails_sent+=1
 
                 self.stdout.write('Successfully emailed %d volunteers with '
