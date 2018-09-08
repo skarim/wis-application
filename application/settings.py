@@ -149,7 +149,7 @@ EMAIL_REMINDER_DAYS = [3, 5]
 CANCELLATION_CUTOFF_DAYS = 2
 
 # Maximum number of registrations a volunteer can sign up for
-MAX_REGISTRATIONS_PER_VOLUNTEER = os.getenv('MAX_REGISTRATIONS', 4)
+MAX_REGISTRATIONS_PER_VOLUNTEER = int(os.getenv('MAX_REGISTRATIONS', 4))
 
 # Configure Django App for Heroku
 # https://devcenter.heroku.com/articles/django-app-configuration
