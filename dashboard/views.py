@@ -271,15 +271,19 @@ def volunteer_register(request):
             success, error = volunteer_date_register(volunteer.id, date_id)
 
     dates = Volunteer_Date.objects.all()
-    registered_dates = []
-    for registration in Volunteer_Date_Registration.objects.filter(volunteer=volunteer):
-        registered_dates.append(registration.volunteer_date)
+    registrations = {}
+    for registration in Volunteer_Date_Registration.objects.filter(volunteer=volunteer, cancelled=False):
+        registrations[registration.volunteer_date] = {
+            'marked': registration.marked,
+            'attended': registration.attended,
+            'cancelled': registration.cancelled,
+        }
     context = {
         'user': volunteer,
         'success': success,
         'error': error,
         'dates': dates,
-        'registered_dates': registered_dates,
+        'registrations': registrations,
         'max_registrations': MAX_REGISTRATIONS_PER_VOLUNTEER,
     }
     return render(

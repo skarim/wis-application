@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load filter_tags %}
 
 {% block title %}Sign Up for Volunteering Dates{% endblock %}
 
@@ -62,11 +63,27 @@
                                         <td>{{ date.slots_available }}</td>
                                         <td>{{ date.slots_total }}</td>
                                         <td class="cat-btn">
-                                            {% if date in registered_dates %}
-                                                <button class="btn btn-sm btn-success" disabled>
-                                                    <i class="fa fa-check"></i>
-                                                    Signed Up
-                                                </button>
+                                            {% if date in registrations %}
+                                                {% with registration=registrations|get_item:date %}
+                                                    {% if registration.marked %}
+                                                        {% if registration.attended %}
+                                                            <button class="btn btn-sm btn-success" disabled>
+                                                                <i class="fa fa-check"></i>
+                                                                Attended
+                                                            </button>
+                                                        {% else %}
+                                                            <button class="btn btn-sm btn-danger" disabled>
+                                                                <i class="fa fa-times"></i>
+                                                                Absent
+                                                            </button>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <button class="btn btn-sm btn-warning" disabled>
+                                                            <i class="fa fa-circle-o"></i>
+                                                            Signed Up
+                                                        </button>
+                                                    {% endif %}
+                                                {% endwith %}
                                             {% elif date.slots_available %}
                                                 <button class="btn btn-sm btn-white date_signup" data-date-id="{{ date.id }}">
                                                     Sign Up
