@@ -1,4 +1,5 @@
 # Email sending service
+import urllib.parse
 from django.core.mail import EmailMultiAlternatives
 
 from application.settings import ENVIRONMENT, DEBUG, DEBUG_EMAIL, SERVER_HOST, HOST_SSL
@@ -24,7 +25,8 @@ def send_email(to, subject, message):
 
 def send_welcome_email(user):
     activate_link = '{3}/signup/?email={0}&first_name={1}' \
-                    '&last_name={2}&nonce={4}'.format(user.email, user.first_name,
+                    '&last_name={2}&nonce={4}'.format(urllib.parse.quote_plus(user.email),
+                                                      user.first_name,
                                                       user.last_name, HOST_DOMAIN,
                                                       user.nonce)
     email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\nAn account has been ' \
@@ -42,7 +44,7 @@ def send_welcome_email(user):
 def send_password_reset_email(user):
     subject = 'Reset Password for your WIS Volunteer Account'
     reset_link = '{0}/reset/?email={1}&nonce={2}'.format(HOST_DOMAIN,
-                                                         user.email,
+                                                         urllib.parse.quote_plus(user.email),
                                                          user.nonce)
     email_message = 'Dear {0} {1}, \n\nAssalamuAlaikum \n\nWe received a request ' \
                     'to reset the password on your account. You can rest your ' \
