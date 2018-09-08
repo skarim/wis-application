@@ -14,6 +14,7 @@ from dashboard.utils import import_volunteer, create_volunteering_date, \
     volunteer_date_register, volunteer_date_cancellation, \
     admin_remove_volunteer_from_date, admin_set_volunteer_attendance, \
     admin_delete_volunteering_date
+from services.emails import send_welcome_email
 
 
 @login_required
@@ -24,7 +25,7 @@ def dashboard(request):
     if user.is_admin:
         template = 'admin/dashboard.html'
         context = {
-            'num_volunteers': WIS_User.objects.filter(is_volunteer=True).count(),
+            'num_volunteers': WIS_User.objects.filter(is_volunteer=True, is_active=True).count(),
             'num_registrations': Volunteer_Date_Registration.objects.filter(cancelled=False).count(),
             'num_dates': Volunteer_Date.objects.count(),
         }
@@ -51,7 +52,21 @@ def admin_manage_volunteers(request):
     success, error = ('',)*2
     if request.method == 'POST':
         type = request.POST.get('type')
-        if type == 'single':
+        if type == 'resend_invite':
+            try:
+                volunteer = WIS_User.objects.get(id=request.POST.get('volunteer_id'))
+                if volunteer.is_active:
+                    # error if user already activated
+                    error = 'User %s has already activated their account' \
+                            % volunteer.email
+                else:
+                    # resend activation email
+                    send_welcome_email(volunteer)
+                    success = 'Resent email to %s for account activation'\
+                              % volunteer.email
+            except:
+                error = 'User not found'
+        elif type == 'single':
             email = request.POST.get('email')
             first_name = request.POST.get('first_name')
             last_name = request.POST.get('last_name')
