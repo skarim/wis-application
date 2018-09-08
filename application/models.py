@@ -60,7 +60,6 @@ class Volunteer_Date_Registration(models.Model):
 class WIS_User(User):
     is_admin = models.BooleanField(default=False)
     is_volunteer = models.BooleanField(default=True)
-    max_registrations = models.IntegerField(default=8)
     nonce = models.TextField(blank=True, null=True)
 
     @property

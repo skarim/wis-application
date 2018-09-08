@@ -36,10 +36,10 @@
             <section class="panel">
                 <header class="panel-heading">
                     <i class="fa fa-users"></i>&nbsp;
-                    All Volunteers
+                    Registered Volunteers
                 </header>
                 <div class="table-responsive">
-                    <table class="table table-striped m-b-none" data-ride="datatables">
+                    <table class="table table-striped m-b-none" data-ride="datatables" id="active-volunteers-table">
                         <thead>
                             <tr>
                                 <th width="20%">Last Name</th>
@@ -53,7 +53,7 @@
                         </thead>
                         <tbody>
                             {% for user in users.all %}
-                                {% if user.is_volunteer %}
+                                {% if user.is_volunteer and user.is_active %}
                                     <tr>
                                         <td class="cat-title">{{ user.last_name }}</td>
                                         <td>{{ user.first_name }}</td>
@@ -63,6 +63,40 @@
                                         <td>{{ user.missed_count }}</td>
                                         <td class="cat-btn">
                                             <a href="/dashboard/volunteers/view/?id={{ user.id }}" class="btn btn-sm btn-white">View</a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <section class="panel">
+                <header class="panel-heading">
+                    <i class="fa fa-envelope"></i>&nbsp;
+                    Invited Volunteers
+                </header>
+                <div class="table-responsive">
+                    <table class="table table-striped m-b-none" data-ride="datatables" id="invited-volunteers-table">
+                        <thead>
+                            <tr>
+                                <th width="20%">Last Name</th>
+                                <th width="20%">First Name</th>
+                                <th width="20%">Email</th>
+                                <th width="10%">Resend Invite</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users.all %}
+                                {% if user.is_volunteer and not user.is_active %}
+                                    <tr>
+                                        <td class="cat-title">{{ user.last_name }}</td>
+                                        <td>{{ user.first_name }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td class="cat-btn">
+                                            <button class="btn btn-sm btn-white volunteer_invite_resend" data-volunteer-id="{{ user.id }}">
+                                                Resend Invite
+                                            </button>
                                         </td>
                                     </tr>
                                 {% endif %}
@@ -117,25 +151,49 @@
             </section>
         </div>
     </div>
+
+    <form action="/dashboard/volunteers/" method="POST" class="hidden hide text-hide" id="resend_invite_form" style="display: none">
+        <input type="hidden" name="volunteer_id" id="volunteer_id">
+        <input type="hidden" name="type" value="resend_invite">
+        {% csrf_token %}
+    </form>
 {% endblock %}
 
 {% block custom_js %}
     <script src="{% static 'js/file-input/bootstrap.file-input.js' %}"></script>
     <script src="{% static 'js/datatables/jquery.dataTables.min.js' %}"></script>
     <script type="text/javascript">
-        // set up table of locations
-        $('[data-ride="datatables"]').each(function(){
-            $(this).dataTable({
-                "bProcessing": true,
-                "sDom": "<'row'<'col-sm-6'l><'col-sm-6'f>r>t<'row'<'col-sm-6'i><'col col-sm-6'p>>",
-                "sPaginationType": "full_numbers",
-                "aoColumnDefs": [
-                    {
-                        "bSortable": false,
-                        "aTargets": [6]
-                    }
-                ]
-            });
+        // set up table of active volunteers
+        $('#active-volunteers-table').dataTable({
+            "bProcessing": true,
+            "sDom": "<'row'<'col-sm-6'l><'col-sm-6'f>r>t<'row'<'col-sm-6'i><'col col-sm-6'p>>",
+            "sPaginationType": "full_numbers",
+            "aoColumnDefs": [
+                {
+                    "bSortable": false,
+                    "aTargets": [6]
+                }
+            ]
+        });
+        // set up table of invited volunteers
+        $('#invited-volunteers-table').dataTable({
+            "bProcessing": true,
+            "sDom": "<'row'<'col-sm-6'l><'col-sm-6'f>r>t<'row'<'col-sm-6'i><'col col-sm-6'p>>",
+            "sPaginationType": "full_numbers",
+            "aoColumnDefs": [
+                {
+                    "bSortable": false,
+                    "aTargets": [3]
+                }
+            ]
+        });
+    </script>
+    <script type="text/javascript">
+        // resend volunteer invite
+        $("table").on("click", "button.volunteer_invite_resend", function(){
+            var volunteer_id = $(this).attr('data-volunteer-id');
+            $('#volunteer_id').val(volunteer_id);
+            $('#resend_invite_form').submit();
         });
     </script>
 {% endblock %}
