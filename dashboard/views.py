@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from django.template import RequestContext
 
 from application.models import *
+from application.settings import MAX_REGISTRATIONS_PER_VOLUNTEER
 
 from dashboard.utils import import_volunteer, create_volunteering_date, \
     volunteer_date_register, volunteer_date_cancellation, \
@@ -249,8 +250,8 @@ def volunteer_register(request):
     # handle volunteer date registration
     if request.method == 'POST':
         date_id = request.POST.get('date_id')
-        if num_registrations >= volunteer.max_registrations:
-            error = 'You have exceeded your %s maximium registration slots.' % volunteer.max_registrations
+        if num_registrations >= MAX_REGISTRATIONS_PER_VOLUNTEER:
+            error = 'You have exceeded your %s maximium registration slots.' % MAX_REGISTRATIONS_PER_VOLUNTEER
         else:
             success, error = volunteer_date_register(volunteer.id, date_id)
 
@@ -264,6 +265,7 @@ def volunteer_register(request):
         'error': error,
         'dates': dates,
         'registered_dates': registered_dates,
+        'max_registrations': MAX_REGISTRATIONS_PER_VOLUNTEER,
     }
     return render(
         request,
@@ -286,6 +288,7 @@ def volunteer_manage_registrations(request):
         'user': volunteer,
         'success': success,
         'error': error,
+        'max_registrations': MAX_REGISTRATIONS_PER_VOLUNTEER,
     }
     return render(
         request,
