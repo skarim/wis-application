@@ -7,7 +7,7 @@ from django.contrib.auth.models import User as DjangoUserClass
 from application.models import *
 from application.settings import ADMIN_KEY
 
-from services.emails import send_password_reset_email
+from services.emails import send_password_reset_email, send_welcome_email
 
 
 def create_account(request):
@@ -123,12 +123,18 @@ def forgot_password(request):
         try:
             # get user from db
             user = WIS_User.objects.get(email=request.POST.get('email'))
-            # set new nonce
-            user.nonce = DjangoUserClass.objects.make_random_password(length=16)
-            user.save()
-            # send password reset email to user
-            send_password_reset_email(user)
-            success = "A password reset link has been emailed to you"
+            if not user.is_active:
+                # if user hasn't activated yet, resend their activation email
+                send_welcome_email(user)
+                success = 'You have not activated your account yet. Please check '\
+                          'your inbox for an account activation link.'
+            else:
+                # set new nonce
+                user.nonce = DjangoUserClass.objects.make_random_password(length=16)
+                user.save()
+                # send password reset email to user
+                send_password_reset_email(user)
+                success = "A password reset link has been emailed to you"
         except:
             error = "User does not exist"
     params = {
