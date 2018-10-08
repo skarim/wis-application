@@ -63,7 +63,7 @@ def send_date_registered_email(user, start, end, cutoff):
                     '{2}. Please make sure that you are at the school office 15 ' \
                     'minutes prior to get your assignment. You are required to stay ' \
                     'for the entire time until {3}. \n\nPlease note that the cutoff ' \
-                    'for cancelling is {4}, and you will be unable to change or cancel' \
+                    'for cancelling is {4}, and you will be unable to change or cancel ' \
                     'after this time. If you can no longer make this date, please ' \
                     'update your settings immediately or contact the admin ' \
                     'at wis@mcabayarea.org. \n\nThank you for your cooperation ' \
@@ -119,7 +119,7 @@ def send_volunteer_reminder_email(user, start, end, cutoff):
                     'Please make sure that you are at the school office 15 ' \
                     'minutes prior to get your assignment. You are required to stay ' \
                     'for the entire time until {3}. \n\nPlease note that the cutoff ' \
-                    'for cancelling is {4}, and you will be unable to change or cancel' \
+                    'for cancelling is {4}, and you will be unable to change or cancel ' \
                     'after this time. If you can no longer make this date, please ' \
                     'update your settings immediately or contact the admin ' \
                     'at wis@mcabayarea.org. \n\nThank you for your cooperation ' \
