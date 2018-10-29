@@ -43,11 +43,12 @@ class Command(BaseCommand):
 
                         # send volunteers reminder emails
                         for registration in volunteer_date.registrations.all():
-                            send_volunteer_reminder_email(registration.volunteer,
-                                                          localized_start,
-                                                          localized_end,
-                                                          cutoff_time)
-                            num_emails_sent+=1
+                            if not registration.cancelled:                    
+                                send_volunteer_reminder_email(registration.volunteer,
+                                                            localized_start,
+                                                            localized_end,
+                                                            cutoff_time)
+                                num_emails_sent+=1
 
                 self.stdout.write('Successfully emailed %d volunteers with '
                                   'registrations %d hours from now' %
