@@ -48,7 +48,7 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               git push https://heroku:$HEROKU_API_KEY@git.heroku.com/wis-application-production.git master
             else
-              git push https://heroku:$HEROKU_API_KEY@git.heroku.com/wis-application-staging.git master
+              git push https://heroku:$HEROKU_API_KEY@git.heroku.com/wis-application-staging.git $CIRCLE_BRANCH:master
             fi
       - deploy:
           name: run migrations
