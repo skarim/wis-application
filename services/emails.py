@@ -9,7 +9,8 @@ HOST_DOMAIN = 'http{0}://{1}'.format('s' if HOST_SSL else '', SERVER_HOST)
 
 def send_email(to, subject, message):
     message = message
-    from_email = 'wis@mcabayarea.org'
+    from_email = 'notifications@mcawis.org'
+    reply_to = ['wis@mcabayarea.org']
     recipient_list = [to]
 
     if ENVIRONMENT == 'development':
@@ -19,7 +20,7 @@ def send_email(to, subject, message):
     else:
         if ENVIRONMENT == 'staging' and DEBUG_EMAIL:
             recipient_list.append(DEBUG_EMAIL)
-        msg = EmailMultiAlternatives(subject, message, from_email, recipient_list)
+        msg = EmailMultiAlternatives(subject, message, from_email, recipient_list, reply_to=reply_to)
         msg.send()
 
 
